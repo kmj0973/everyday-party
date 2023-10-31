@@ -2,9 +2,12 @@ const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
+const mongoose = require("mongoose");
 
 const app = express();
 dotenv.config();
+
+mongoose.connect(process.env.MONGODB_URL);
 
 app.set("views", path.join(__dirname, "views"));
 // app.set("view engine", "pug")
