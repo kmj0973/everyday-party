@@ -1,0 +1,20 @@
+{
+    "name": "everyday-party",
+    "version": "1.0.0",
+    "description": "파티용품 판매 쇼핑몰",
+    "main": "app.js",
+    "scripts": {
+        "start": "node app.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://kdt-gitlab.elice.io/sw_track/class_07/web_project/team07/everyday-party.git"
+    },
+    "author": "Team07",
+    "license": "ISC",
+    "dependencies": {
+        "cookie-parser": "^1.4.6",
+        "dotenv": "^16.3.1",
+        "express": "^4.18.2"
+    }
+}
