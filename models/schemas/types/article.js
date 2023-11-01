@@ -1,3 +1,5 @@
+const { Schema } = require("mongoose");
+
 const article = {
     author: {
         type: Schema.Types.ObjectId,

@@ -1,6 +1,6 @@
 const { Schema } = require("mongoose");
 const fileSchema = require("./types/file");
-const CommentSchema = require("./comment");
+const article = require("./types/article");
 
 const ReviewSchema = new Schema({
     author: {
@@ -16,9 +16,7 @@ const ReviewSchema = new Schema({
     file: {
         type: fileSchema,
     },
-    comment: {
-        type: CommentSchema,
-    },
+    article,
 });
 
 module.exports = ReviewSchema;
