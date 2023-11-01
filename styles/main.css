@@ -1,0 +1,313 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Noto Sans KR", sans-serif;
+}
+/*============header Part============*/
+.header {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    background-color: #f9e103;
+}
+.header-container {
+    width: 1200px;
+    display: flex;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    justify-content: space-between;
+    align-items: center;
+}
+.navbar-logo {
+    margin: 10px;
+}
+.navbar-logo a {
+    text-decoration: none;
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+}
+.logo-image {
+    margin: 0 5px;
+}
+.logo-name {
+    margin-top: 5px;
+    color: black;
+    font-family: "Gluten", cursive;
+}
+.navbar-end {
+    display: flex;
+    margin: 10px;
+}
+#navbar {
+    display: flex;
+    list-style: none;
+}
+#navbar li:not(:last-child) {
+    cursor: pointer;
+    margin-right: 15px;
+}
+/*============header Part============*/
+
+/*============menu Part============*/
+
+.menu-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.menu {
+    list-style: none;
+    width: 1200px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px;
+}
+.menu li a {
+    text-decoration: none;
+    color: black;
+}
+#all-category-btn {
+    padding-top: 5px;
+}
+.all-category-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    overflow: hidden;
+    width: 100%;
+}
+.semi-container {
+    width: 1200px;
+    height: 0px;
+    transition: all 0.5s ease-out;
+}
+.all-category {
+    background-color: white;
+    width: 1200px;
+    height: 250px;
+    list-style: none;
+}
+
+/*============menu Part============*/
+
+/*============Event Slider Part============*/
+.slide-section {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.slide-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3px;
+}
+.slider-list {
+    list-style: none;
+    width: 100%;
+    height: 400px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    overflow: hidden;
+}
+.slider-list li img {
+    width: 600px;
+    height: 400px;
+}
+/*============Event Slider Part============*/
+
+/*============Best Products Part============*/
+.title-best-products {
+    margin-top: 80px;
+    margin-bottom: 30px;
+    font-size: 20px;
+    text-align: center;
+}
+.best-products-section {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.best-products-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1200px;
+}
+.best-products-list {
+    list-style: none;
+    width: 1040px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+/*============Best Products Part============*/
+
+/*============Best Products Card Part============*/
+#best_card_container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    justify-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.menu_card {
+    max-height: 560px;
+    cursor: pointer;
+}
+
+.card_img_wrap {
+    overflow: hidden;
+}
+
+.card_img {
+    display: block;
+    width: 285px;
+    height: 320px;
+    transition: all 0.6s;
+}
+
+.card_img:hover {
+    transform: scale(1.1);
+}
+
+.card_title {
+    font-size: 18px;
+    font-weight: 400;
+    padding: 10px 0;
+}
+
+.purchase_info_wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.card_price {
+    font-size: 18px;
+    font-weight: 900;
+}
+
+.card_cart_button {
+    width: 24px;
+    height: 24px;
+    text-indent: -9999px;
+    border: none;
+    transition: all 0.4s;
+    background: url("https://api.iconify.design/bi/bag.svg?color=%23181619&width=24") no-repeat center center / contain;
+}
+
+.card_cart_button:hover {
+    background: url("https://api.iconify.design/bi/bag-fill.svg?color=%23181619&width=24") no-repeat center center /
+        contain;
+}
+
+.card_review {
+    font-size: 14px;
+    color: #888;
+}
+
+.card_review::before {
+    display: inline-block;
+    content: "";
+    width: 12px;
+    height: 12px;
+    margin-right: 5px;
+    background: url("https://api.iconify.design/teenyicons/chat-outline.svg?color=%23888&width=12") no-repeat center
+        center / contain;
+}
+/*============Best Products Card Part============*/
+
+/*============Events Collection Part============*/
+.title-events-collection {
+    margin-top: 50px;
+    margin-bottom: 30px;
+    font-size: 20px;
+    text-align: center;
+}
+.events-collection-section {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.events-collection-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1200px;
+}
+.events-collection-list {
+    list-style: none;
+    width: 1080px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+.events-collection-list li img {
+    width: 350px;
+    height: 200px;
+    margin: 5px;
+}
+/*============Events Collection Part============*/
+
+/*============Reviews Part============*/
+.title-reviews {
+    margin-top: 80px;
+    margin-bottom: 30px;
+    font-size: 20px;
+    text-align: center;
+}
+.reviews-section {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.reviews-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1200px;
+}
+.reviews-list {
+    list-style: none;
+    width: 980px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.reviews-list li img {
+    width: 230px;
+    height: 200px;
+    margin: 5px;
+}
+/*============Reviews Part============*/
+
+/*============Footer Part============*/
+.footer-logo {
+    margin-top: 80px;
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fcedc4;
+}
+.footer-logo a {
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+/*============Footer Part============*/
