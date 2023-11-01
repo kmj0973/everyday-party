@@ -3,8 +3,9 @@ const fileSchema = require("./types/file");
 const CommentSchema = require("./comment");
 
 const ReviewSchema = new Schema({
-    title: {
-        type: String,
+    author: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
         required: true,
     },
     product: {

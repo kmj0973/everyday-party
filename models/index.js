@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+const CategorySchema = require("./schemas/category");
 const CommentSchema = require("./schemas/comment");
 const OrderSchema = require("./schemas/order");
 const PostSchema = require("./schemas/post");
@@ -7,6 +8,7 @@ const ProductSchema = require("./schemas/product");
 const ReviewSchema = require("./schemas/review");
 const UserSchema = require("./schemas/user");
 
+exports.Category = mongoose.model("Category", CategorySchema);
 exports.Comment = mongoose.model("Comment", CommentSchema);
 exports.Order = mongoose.model("Order", OrderSchema);
 exports.Post = mongoose.model("Post", PostSchema);
