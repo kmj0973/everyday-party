@@ -8,7 +8,7 @@ const numInput = document.querySelector('.number-select input');
 console.log(plusBtn,minusBtn,numInput.value);
 plusBtn.onclick = function(){
     console.log('+ clicked');
-    numInput.value++;
+    numInput.value++; 
 }
 minusBtn.onclick=function(){
     if(numInput.value<=1){
