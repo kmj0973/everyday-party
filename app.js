@@ -4,8 +4,7 @@ const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 
-const mainRouter = require("./routers/mainRouter");
-const cartRouter = require("./routers/cartRouter");
+const router = require("./routers/index");
 
 const app = express();
 dotenv.config();
@@ -19,12 +18,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(cookieParser());
 
-app.use("/", mainRouter);
-app.use("/carts", cartRouter);
+app.use("/api", router.router);
 
 app.use((err, req, res, next) => {
     res.status(err.status || 500);
-    res.render("error");
+    res.json("error");
 });
 
 app.listen(process.env.PORT, () => {
