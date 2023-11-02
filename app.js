@@ -4,8 +4,8 @@ const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 
-const orderRouter = require("./routers/order-router");
-const productRouter = require("./routers/product-router");
+const orderRouter = require("./routers/orderRouter");
+const productRouter = require("./routers/productRouter");
 
 //const apiRouter = require("./routers");
 
@@ -22,8 +22,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(cookieParser());
 
-app.use("/order", orderRouter);
-app.use("/products", productRouter);
+app.use("/api/order", orderRouter);
+app.use("/api/products", productRouter);
 
 //app.use("/api", apiRouter.v1);
 

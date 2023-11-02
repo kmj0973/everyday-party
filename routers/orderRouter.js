@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { Order } = require('../models/schemas/order');
+const { Order } = require('../models');
 
 const orderRouter = Router();
 
@@ -8,8 +8,8 @@ const orderRouter = Router();
 orderRouter.get('/', async (req, res, next) => {
     console.log('주문 조회 라우텅에 들어왔습니다.');
     try {
-        const orderlist = Order.find({});
-        res.json(orderlist);
+        const orderlist = await Order.find({});
+        res.json({orderlist});
     } catch (err) {
         next(err);
         return;
@@ -23,10 +23,14 @@ orderRouter.post('/', async (req, res, next) => {
     //console.log(data);
     console.log('주문 라우터에 들어왔습니다.');
     try {
-        const order = await Order.create({
-            name, price
+        const newOrder = await Order.create({
+            name, 
+            price
         });
-        return res.status(201).json(order);
+        res.json( {
+            status: 201,
+            newOrder 
+        });
     } catch (err) {
         next(err);
         return;
@@ -43,7 +47,7 @@ orderRouter.put('/:id', async (req, res, next) => {
         const order = await Order.update({ name, price});
         res.json( {
             status: 201,
-            data: order 
+            order 
         });
     } catch (err) {
         next(err);

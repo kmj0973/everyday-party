@@ -66,7 +66,7 @@ itemRouter.post('/', async (req, res, next) => {
         //생성된 아이템 
          res.json( {
             status: 201,
-            data: newProduct 
+            newProduct 
         });
 
     } catch (err) {
