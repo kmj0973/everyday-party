@@ -57,9 +57,10 @@ router.get("/", async (req, res, next) => {
             });
         }
     } else {
+        const allProducts = await ProductService.getAllProducts();
         return res.json({
             status: 200,
-            products: returnProducts,
+            products: allProducts,
         });
     }
 });
