@@ -33,19 +33,19 @@ router.get("/", async (req, res, next) => {
         const arrOfNotExistProductId = []; //Products 컬렉션 내 존재하지 않는 요청 물품 데이터의 아이디
         let eachProduct = 0;
 
-        try {
-            for (eachProduct = 0; eachProduct < arrOfProductId.length; eachProduct++) {
+        for (eachProduct = 0; eachProduct < arrOfProductId.length; eachProduct++) {
+            try {
                 arrOfProductData.push(await ProductService.getProductById(arrOfProductId.at(eachProduct)));
+            } catch (error) {
+                arrOfNotExistProductId.push(arrOfProductId.at(eachProduct));
             }
-        } catch (error) {
-            arrOfNotExistProductId.push(arrOfProductId.at(eachProduct));
         }
 
         if (returnProducts.length > 0) {
             //카테고리로 이미 반환받은 데이터가 있다면
             //필터로 카테고리 내에 존재하는 물품을 반환
-            returnProducts = returnProducts.filter((product) => {
-                return arrOfProductData.includes(product);
+            returnProducts = arrOfProductData.filter((product) => {
+                return product.category === category;
             });
         } else {
             returnProducts = arrOfProductData;

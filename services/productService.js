@@ -38,7 +38,7 @@ class ProductService {
      */
     async getProductsByCategory(category) {
         const products = await Product.find({ category });
-        if (!products) {
+        if (products.length === 0) {
             throw new Error("No Exist Category");
         } else {
             return products;
