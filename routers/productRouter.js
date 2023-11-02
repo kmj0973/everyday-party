@@ -7,6 +7,14 @@ router.get("/", async (req, res, next) => {
     const { products, category } = req.query;
     let returnProducts = []; //전체적으로 데이터를 반환 할 배열
 
+    if (!category && !products) {
+        returnProducts = await ProductService.getAllProducts();
+        return res.json({
+            status: 200,
+            products: returnProducts,
+        });
+    }
+
     //카테고리가 존재하는 경우 카테고리를 기준으로 물품 데이터를 받아옴
     if (category) {
         try {
@@ -57,10 +65,9 @@ router.get("/", async (req, res, next) => {
             });
         }
     } else {
-        const allProducts = await ProductService.getAllProducts();
         return res.json({
             status: 200,
-            products: allProducts,
+            products: returnProducts,
         });
     }
 });
