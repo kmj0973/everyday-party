@@ -7,7 +7,7 @@
         "start": "node app.js"
     },
     "repository": {
-        "type": "git",
+        "type": "git", 
         "url": "https://kdt-gitlab.elice.io/sw_track/class_07/web_project/team07/everyday-party.git"
     },
     "author": "Team07",
