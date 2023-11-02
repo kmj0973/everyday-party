@@ -18,12 +18,14 @@ orderRouter.get('/', async (req, res, next) => {
 
 //주문생성
 orderRouter.post('/', async (req, res, next) => {
-    // const { name, price, discountRate, category, description, option, file } = req.body;
-    const data = req.body;
-    console.log(data);
+    const { name, price, discountRate, category, description, option, file } = req.body;
+    //const data = req.body;
+    //console.log(data);
     console.log('주문 라우터에 들어왔습니다.');
     try {
-        const order = await Order.create(data);
+        const order = await Order.create({
+            name, price
+        });
         return res.status(201).json(order);
     } catch (err) {
         next(err);
@@ -33,12 +35,12 @@ orderRouter.post('/', async (req, res, next) => {
 
 //주문 수정
 orderRouter.put('/:id', async (req, res, next) => {
-    // const { name, price, discountRate, category, description, option, file } = req.body;
-    const data = req.body;
-    console.log(data);
+    const { name, price, discountRate, category, description, option, file } = req.body;
+    //const data = req.body;
+    //console.log(data);
     console.log('주문 수정 라우터에 들어왔습니다.');
     try {
-        const order = await Order.update(data);
+        const order = await Order.update({ name, price});
         res.json( {
             status: 201,
             data: order 
