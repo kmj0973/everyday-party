@@ -1,10 +1,11 @@
 const { Schema } = require("mongoose");
 const fileSchema = require("./types/file");
-const CommentSchema = require("./comment");
+const article = require("./types/article");
 
 const ReviewSchema = new Schema({
-    title: {
-        type: String,
+    author: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
         required: true,
     },
     product: {
@@ -15,9 +16,7 @@ const ReviewSchema = new Schema({
     file: {
         type: fileSchema,
     },
-    comment: {
-        type: CommentSchema,
-    },
+    article,
 });
 
 module.exports = ReviewSchema;

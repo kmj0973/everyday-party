@@ -1,21 +1,14 @@
-// const { Router } = require("express");
+const authRouter = require("./authRouter");
+const productRouter = require("./productRouter");
+const orderRouter = require("./orderRouter");
 
-// //const CommentRouter = require("./comment-router");
-// const OrderRouter = require("./order-router");
-// //const PostRouter = require("./post-router");
-// const ProductRouter = require("./product-router");
-// //const ReviewRouter = require("./review-router");
-// //const UserRouter = require("./user-router");
+const { Router } = require("express");
+const router = Router();
 
-// const v1Router = Router();
+router.use("/auth", authRouter);
+router.use("/products", productRouter);
+router.use("/order", orderRouter);
 
-// //Alv1RouterlRouter.use("/comment", CommentRouter);
-// v1Router.use("/order", OrderRouter);
-// //v1Router.use("/post", PostRouter);
-// v1Router.use("/products", ProductRouter);
-// //v1Router.use("/review", ReviewRouter);
-// //v1Router.use("/user", UserRouter);
-
-// module.exports = {
-//     v1: v1Router,
-// };
+module.exports = {
+    router,
+};
