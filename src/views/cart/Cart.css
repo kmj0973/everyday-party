@@ -1,3 +1,24 @@
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #181619;
+}
+
+/* item 디자인 */
+.itemDiv {
+  display: flex;
+  justify-content: space-evenly;
+  width: 95%;
+  height: 180px;
+  align-content: center;
+  border: solid #ddd 1px;
+  margin-bottom: 15px;
+}
+
+.removeButton {
+}
+
 .cart_title {
   font-weight: bold;
   text-align: center;
@@ -61,16 +82,6 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-}
-
-.item {
-  display: flex;
-  justify-content: space-evenly;
-  width: 95%;
-  height: 180px;
-  align-content: center;
-  border: solid #ddd 1px;
-  margin-bottom: 15px;
 }
 
 .image_is_96x96_helper {
@@ -228,7 +239,7 @@ input[type='checkbox'] {
   justify-content: space-between;
   width: 100%;
 }
-.all_order_btn {
+.all_order_button {
   background-color: #181619;
   color: white;
   font-weight: bold;
@@ -237,7 +248,7 @@ input[type='checkbox'] {
   font-size: large;
 }
 
-.selected_order_btn {
+.selected_order_button {
   background-color: #f9e103;
   color: #181619;
   font-weight: bold;
@@ -246,12 +257,12 @@ input[type='checkbox'] {
   font-size: large;
 }
 
-.keep_shopping_btn_helper {
+.keep_shopping_button_helper {
   display: flex;
   margin-top: 20px;
 }
 
-.keep_shopping_btn {
+.keep_shopping_button {
   background-color: transparent;
   font-weight: bold;
   width: 100%;
