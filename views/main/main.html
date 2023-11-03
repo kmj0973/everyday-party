@@ -3,7 +3,11 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="../styles/main.css" />
+        <link rel="stylesheet" href="./main.css" />
+        <!-- 배너 슬라이더 바 라이브러리 -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
         <!--로고 이름 폰트-->
         <style>
             @import url("https://fonts.googleapis.com/css2?family=Gluten:wght@400;500;600&family=Noto+Sans+KR&display=swap");
@@ -13,11 +17,12 @@
         <title>Document</title>
     </head>
     <body>
+        <!-- Header Part -->
         <header class="header">
             <div class="header-container">
                 <div class="navbar-logo">
                     <a href="/"
-                        ><img class="logo-image" src="../images/logo.png" width="30" height="30" /><span
+                        ><img class="logo-image" src="./images/logo.png" width="30" height="30" /><span
                             class="logo-name"
                             >EVERYDAY<br />PARTY</span
                         >
@@ -32,6 +37,7 @@
                 </div>
             </div>
         </header>
+        <!-- MenuBar -->
         <nav class="nav">
             <div class="menu-container">
                 <ul class="menu">
@@ -56,17 +62,20 @@
                 </div>
             </div>
         </nav>
-        <section class="slide-section">
-            <div class="slide-container">
-                <ul class="slider-list">
-                    <li><img src="../images/파티1.PNG" /></li>
-                    <li><img src="../images/파티2.PNG" /></li>
-                    <li><img src="../images/파티3.PNG" /></li>
-                    <li><img src="../images/파티4.PNG" /></li>
-                    <li><img src="../images/파티1.PNG" /></li>
-                </ul>
+        <!-- Banner Slide Part -->
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide slide05"><img src="./images/파티2.PNG" /></div>
+                <div class="swiper-slide slide01"><img src="./images/파티1.PNG" /></div>
+                <div class="swiper-slide slide02"><img src="./images/파티2.png" /></div>
+                <div class="swiper-slide slide03"><img src="./images/파티3.PNG" /></div>
+                <div class="swiper-slide slide04"><img src="./images/파티4.PNG" /></div>
+                <div class="swiper-slide slide05"><img src="./images/파티2.PNG" /></div>
             </div>
-        </section>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+        </div>
+        <!-- Best Products Part -->
         <h1 class="title-best-products">베스트 상품</h1>
         <section class="best-products-section">
             <div class="best-products-container">
@@ -75,7 +84,7 @@
                         <article id="best_card_container">
                             <div class="menu_card">
                                 <div class="card_img_wrap">
-                                    <img class="card_img" src="../images/파티1.PNG" alt="테스트 이미지" />
+                                    <img class="card_img" src="./images/파티1.PNG" alt="테스트 이미지" />
                                 </div>
                                 <div class="card_contents">
                                     <h3 class="card_title">크리스마스 카드</h3>
@@ -88,7 +97,7 @@
                             </div>
                             <div class="menu_card">
                                 <div class="card_img_wrap">
-                                    <img class="card_img" src="../images/파티1.PNG" alt="테스트 이미지" />
+                                    <img class="card_img" src="./images/파티1.PNG" alt="테스트 이미지" />
                                 </div>
                                 <div class="card_contents">
                                     <h3 class="card_title">크리스마스 카드</h3>
@@ -101,7 +110,7 @@
                             </div>
                             <div class="menu_card">
                                 <div class="card_img_wrap">
-                                    <img class="card_img" src="../images/파티1.PNG" alt="테스트 이미지" />
+                                    <img class="card_img" src="./images/파티1.PNG" alt="테스트 이미지" />
                                 </div>
                                 <div class="card_contents">
                                     <h3 class="card_title">크리스마스 카드</h3>
@@ -114,7 +123,7 @@
                             </div>
                             <div class="menu_card">
                                 <div class="card_img_wrap">
-                                    <img class="card_img" src="../images/파티1.PNG" alt="테스트 이미지" />
+                                    <img class="card_img" src="./images/파티1.PNG" alt="테스트 이미지" />
                                 </div>
                                 <div class="card_contents">
                                     <h3 class="card_title">크리스마스 카드</h3>
@@ -131,7 +140,7 @@
                         <article id="best_card_container">
                             <div class="menu_card">
                                 <div class="card_img_wrap">
-                                    <img class="card_img" src="../images/파티1.PNG" alt="테스트 이미지" />
+                                    <img class="card_img" src="./images/파티1.PNG" alt="테스트 이미지" />
                                 </div>
                                 <div class="card_contents">
                                     <h3 class="card_title">크리스마스 카드</h3>
@@ -144,7 +153,7 @@
                             </div>
                             <div class="menu_card">
                                 <div class="card_img_wrap">
-                                    <img class="card_img" src="../images/파티1.PNG" alt="테스트 이미지" />
+                                    <img class="card_img" src="./images/파티1.PNG" alt="테스트 이미지" />
                                 </div>
                                 <div class="card_contents">
                                     <h3 class="card_title">크리스마스 카드</h3>
@@ -157,7 +166,7 @@
                             </div>
                             <div class="menu_card">
                                 <div class="card_img_wrap">
-                                    <img class="card_img" src="../images/파티1.PNG" alt="테스트 이미지" />
+                                    <img class="card_img" src="./images/파티1.PNG" alt="테스트 이미지" />
                                 </div>
                                 <div class="card_contents">
                                     <h3 class="card_title">크리스마스 카드</h3>
@@ -170,7 +179,7 @@
                             </div>
                             <div class="menu_card">
                                 <div class="card_img_wrap">
-                                    <img class="card_img" src="../images/파티1.PNG" alt="테스트 이미지" />
+                                    <img class="card_img" src="./images/파티1.PNG" alt="테스트 이미지" />
                                 </div>
                                 <div class="card_contents">
                                     <h3 class="card_title">크리스마스 카드</h3>
@@ -186,39 +195,42 @@
                 </ul>
             </div>
         </section>
+        <!-- Event Collection Part -->
         <h1 class="title-events-collection">이벤트 모아보기</h1>
         <section class="events-collection-section">
             <div class="events-collection-container">
                 <ul class="events-collection-list">
-                    <li><img src="../images/파티1.PNG" /></li>
-                    <li><img src="../images/파티2.PNG" /></li>
-                    <li><img src="../images/파티3.PNG" /></li>
-                    <li><img src="../images/파티4.PNG" /></li>
-                    <li><img src="../images/파티1.PNG" /></li>
-                    <li><img src="../images/파티3.PNG" /></li>
+                    <li><img src="./images/파티1.PNG" /></li>
+                    <li><img src="./images/파티2.PNG" /></li>
+                    <li><img src="./images/파티3.PNG" /></li>
+                    <li><img src="./images/파티4.PNG" /></li>
+                    <li><img src="./images/파티1.PNG" /></li>
+                    <li><img src="./images/파티3.PNG" /></li>
                 </ul>
             </div>
         </section>
+        <!-- Review Part -->
         <h1 class="title-reviews">리뷰</h1>
         <section class="reviews-section">
             <div class="reviews-container">
                 <ul class="reviews-list">
-                    <li><img src="../images/파티1.PNG" /></li>
-                    <li><img src="../images/파티2.PNG" /></li>
-                    <li><img src="../images/파티3.PNG" /></li>
-                    <li><img src="../images/파티4.PNG" /></li>
+                    <li><img src="./images/파티1.PNG" /></li>
+                    <li><img src="./images/파티2.PNG" /></li>
+                    <li><img src="./images/파티3.PNG" /></li>
+                    <li><img src="./images/파티4.PNG" /></li>
                 </ul>
             </div>
         </section>
+        <!-- Footer Part -->
         <footer class="footer">
             <div class="footer-logo">
                 <a href="/"
-                    ><img class="logo-image" src="../images/logo.png" width="30" height="30" /><span class="logo-name"
+                    ><img class="logo-image" src="./images/logo.png" width="30" height="30" /><span class="logo-name"
                         >EVERYDAY<br />PARTY</span
                     >
                 </a>
             </div>
         </footer>
     </body>
-    <script type="module" src="../utils/showAllCategory.js"></script>
+    <script type="module" src="./main.js"></script>
 </html>
