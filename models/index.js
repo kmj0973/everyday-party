@@ -12,6 +12,6 @@ exports.Category = mongoose.model("Category", CategorySchema);
 exports.Comment = mongoose.model("Comment", CommentSchema);
 exports.Order = mongoose.model("Order", OrderSchema);
 exports.Post = mongoose.model("Post", PostSchema);
-exports.Product = mongoose.model("Product", ProductSchema);
+exports.Product = mongoose.model("Product", ProductSchema); //수정
 exports.Review = mongoose.model("Review", ReviewSchema);
 exports.User = mongoose.model("User", UserSchema);
