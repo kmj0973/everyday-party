@@ -9,19 +9,17 @@ const mongoose = require("mongoose");
 
 const router = require("./routers/index");
 
-
 const app = express();
 dotenv.config();
 
 mongoose.connect(process.env.MONGODB_URL);
 
-app.set("views", path.join(__dirname, "src/views"));
+app.set("views", path.join(__dirname, "views"));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "views")));
 app.use(cookieParser());
-
 
 // app.use("/api/order", orderRouter);
 // app.use("/api/products", productRouter);
@@ -36,11 +34,11 @@ app.use("/api", router.router);
 
 app.use((req, res, next) => {
     res.status(404);
-    res.send({ 
-      result: 'fail', 
-      error: `Page not found ${req.path}`
+    res.send({
+        result: "fail",
+        error: `Page not found ${req.path}`,
     });
-  });
+});
 
 app.use((err, req, res, next) => {
     res.status(err.status || 500);
