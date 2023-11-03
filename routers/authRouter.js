@@ -37,4 +37,12 @@ router.post("/login", async (req, res, next) => {
     });
 });
 
+router.post('/logout', async(req, res, next) => {
+    req.session.destroy(); // 세션 해제
+    res.json({ message: '로그아웃되었습니다.' });
+
+    //로그아웃 버튼 눌리면 토큰 지우고
+    localStorage.removeItem('token');
+})
+
 module.exports = router;
