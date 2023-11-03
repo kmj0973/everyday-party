@@ -3,7 +3,6 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
-const cors = required("cors");
 
 // const orderRouter = require("./routers/orderRouter");
 // const productRouter = require("./routers/productRouter");
@@ -16,13 +15,12 @@ dotenv.config();
 
 mongoose.connect(process.env.MONGODB_URL);
 
-app.set("views", path.join(__dirname, "views"));
+app.set("views", path.join(__dirname, "src/views"));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(cookieParser());
-app.use(cors());
 
 
 // app.use("/api/order", orderRouter);
