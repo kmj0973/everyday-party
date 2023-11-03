@@ -11,12 +11,15 @@ dotenv.config();
 
 mongoose.connect(process.env.MONGODB_URL);
 
-app.set("views", path.join(__dirname, "views"));
+//app.set("views", path.join(__dirname, "views"));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, "public")));
+
+app.use(express.static(path.join(__dirname, "src/views")));
 app.use(cookieParser());
+
+
 
 app.use("/api", router.router);
 
@@ -28,3 +31,5 @@ app.use((err, req, res, next) => {
 app.listen(process.env.PORT, () => {
     console.log(`server on port ${process.env.PORT}`);
 });
+
+

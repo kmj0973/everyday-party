@@ -19,7 +19,7 @@
     <div class="content-container">
         <div class="product-top-info-container">
             <div class="product-top-info-right">
-                <img src="../image 28.png" alt="상품이미지">
+                <img src="image 28.png" alt="상품이미지">
             </div>
             <div class="product-top-info-left">
                 <div class="product-name">할로윈 풍선 3종세트</div>
@@ -28,14 +28,14 @@
                 <div class="line"></div>
                 <div class='number-container'>
                     <div class="number-tag">개수</div>
-                    <div class="number-select"><span class="number-btn" id="down">−</span><input type="number" value="1" /><span class="number-btn" id="up">+</span></div>
+                    <div class="number-select"><span class="number-btn" id="down">−</span><input id="productNumber" type="number" value="1" /><span class="number-btn" id="up">+</span></div>
                 </div>
                 <div class="option-container">
                     <div class="option-tag">옵션</div>
-                    <select name="option-select">
-                        <option value="first">First Value</option>
-                        <option value="second" selected>Second Value</option>
-                        <option value="third">Third Value</option>
+                    <select  class="option-select">
+                        <option name="option-select" value="first">First Value</option>
+                        <option name="option-select" value="second" selected>Second Value</option>
+                        <option name="option-select" value="third">Third Value</option>
                     </select>
                 </div>
                 <div class="btn-container">
@@ -48,11 +48,11 @@
         <div class="product-bottom-info-container">
             <div class="tab-container">
                 <ul class="tab-list">
-                    <li class="active">
+                    <li class="active" id="productDetail">
                         <a href="#tab1">상품 상세정보</a>
                     </li>
-                    <li>
-                        <a href="#tab2">상품 상세정보</a>
+                    <li id="productReview">
+                        <a href="#tab2">리뷰</a>
                     </li>
                     <li>
                         <a href="#tab3">상품 상세정보</a>
@@ -64,7 +64,7 @@
                 <div class="tab-content-container">
                     <div id="tab1" class="tab active">
                         <div>첫번째 탭 내용</div>
-                        <img src="../detailImg.jpg" alt="상품설명이미지">
+                        <img src="detailImg.jpg" alt="상품설명이미지">
                     </div>
                     <div id="tab2" class="tab">
                         <div>두번째 탭 내용</div>
