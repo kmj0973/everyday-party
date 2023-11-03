@@ -37,12 +37,40 @@ router.post("/login", async (req, res, next) => {
     });
 });
 
-router.post('/logout', async(req, res, next) => {
-    req.session.destroy(); // 세션 해제
-    res.json({ message: '로그아웃되었습니다.' });
+router.post('/logout', async (req, res, next) => {
+    //토큰이 없을 때
+    console.log(req.header("Authorization"));
+    token = req.header("Authorization").split(" ")[1];
+    if (!token) {
+        return res.json({
+            status: 401,
+            message: '토큰이 필요합니다.'
+        });
+    }
 
-    //로그아웃 버튼 눌리면 토큰 지우고
-    localStorage.removeItem('token');
+    //로그아웃 성공
+    try {
+        // 토큰 검증
+        jwtUtil.verifyToken(token, (err, decoded) => {
+            if (err) {
+                return res.json({ 
+                    status: 401,
+                    message: '토큰이 유효하지 않습니다.' 
+                });
+            }
+
+            return res.json({ message: '로그아웃되었습니다.' });
+
+            //로그아웃 버튼 눌리면 토큰 지우고
+            //localStorage.removeItem('token');
+        })
+    } catch (err) {
+        console.log(err);
+        res.json({
+            status: 500,
+            message: "서버 오류"
+        })
+    }
 })
 
 module.exports = router;
