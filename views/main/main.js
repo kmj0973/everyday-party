@@ -1,12 +1,12 @@
 const bestCardContainer = document.querySelector(".best-products-container");
 
-getDataFromApi(); // API로 데이터 불러오기
+getData(); // API로 데이터 불러오기
 
-async function getDataFromApi() {
+async function getData() {
     const data = await fetch("/api/products");
     const products = await data.json().then((result) => result.products);
     console.log(products[0]);
-
+    //try catch
     bestCardContainer.appendChild(createBestCard(products));
 }
 
@@ -17,7 +17,7 @@ function createBestCard(products) {
         cardContainer.innerHTML += `<div class="menu_card">
         <div class="card_img_wrap">
         <img class="card_img" src="./images/파티1.PNG" alt="테스트 이미지" />
-    </div>
+        </div>
     <div class="card_contents">
         <h3 class="card_title">${products[i].name}</h3>
         <div class="purchase_info_wrap">
@@ -25,7 +25,7 @@ function createBestCard(products) {
             <button class="card_cart_button">장바구니 버튼</button>
         </div>
         <p class="card_review">${products[i].review.length}</p>
-    </div>
+        </div>
     </div>`;
     }
     return cardContainer;
@@ -51,6 +51,7 @@ allCategoryBtn.addEventListener("click", onClickAllCategory);
 
 // 배너 슬라이드 바 이벤트
 const swiper = new Swiper(".swiper", {
+    //swiper 라이브러리 사용
     loop: true,
     centeredSlides: true,
     spaceBetween: 2,
@@ -77,82 +78,65 @@ const swiper = new Swiper(".swiper", {
 
 // 리뷰 슬라이드 바 이벤트
 const slideList = document.querySelector(".reviews-list");
-let slide = document.querySelectorAll(".reviews-list li");
+const slides = document.querySelectorAll(".reviews-list li");
 
-let currentIdx = 0; //현재 인덱스
-let slideCount = slide.length;
-console.log(slideCount);
-let slideWidth = 200;
-let slideMargin = 20;
+function reviewSlideEvent() {
+    let currentIdx = 0; //현재 인덱스
+    let slideCount = slides.length; //슬라이드 개수
+    let slideWidth = 250;
+    let slideMargin = 20;
 
-makeClone(); //초기 클론 생성
+    makeClone(); //초기 클론 생성
 
-function makeClone() {
-    for (var i = 0; i < slideCount; i++) {
-        var clonSlide = slide[i].cloneNode(true); // 원본 list 복제하기
-        clonSlide.classList.add("clone");
-        slideList.appendChild(clonSlide);
-    }
-    for (var i = slideCount - 1; i >= 0; i--) {
-        var clonSlide = slide[i].cloneNode(true);
-        clonSlide.classList.add("clone");
-        slideList.prepend(clonSlide);
-    }
-    updateWidth(); //너비 설정
-    setInitialPos(); //위치 설정
-    setTimeout(() => {
-        // 새로고침 시 애니메이션 보이지 않게 하기위해 비동기처리
-        slideList.classList.add("animated");
-    }, 100);
-}
-
-function updateWidth() {
-    const currentSlides = document.querySelectorAll(".reviews-list li"); //복제된 list 가져오기
-    const newSlideCount = currentSlides.length; // 복제된 리스트 길이
-
-    const newWidth = (slideWidth + slideMargin) * newSlideCount - slideMargin + "px"; // 복제된 list 길이 구하기
-    slideList.style.width = newWidth; // 총 width값 전달
-}
-function setInitialPos() {
-    // 처음 위치 설정
-    const initialTranslateValue = -(slideWidth + slideMargin) * slideCount;
-    slideList.style.transform = `translateX(${initialTranslateValue}px)`;
-}
-
-function moveSlide(num) {
-    slideList.style.left = -num * (slideWidth + slideMargin) + "px";
-    currentIdx = num;
-    if (currentIdx === slideCount || currentIdx === -slideCount) {
+    function makeClone() {
+        for (var i = 0; i < slideCount; i++) {
+            var clonSlide = slides[i].cloneNode(true); // 원본 list 복제하기
+            clonSlide.classList.add("clone");
+            slideList.appendChild(clonSlide);
+        }
+        for (var i = slideCount - 1; i >= 0; i--) {
+            var clonSlide = slides[i].cloneNode(true); // 원본 list 복제하기
+            clonSlide.classList.add("clone");
+            slideList.prepend(clonSlide);
+        }
+        updateWidth(); //너비 설정
+        setInitialPos(); //위치 설정
         setTimeout(() => {
-            slideList.classList.remove("animated");
-            slideList.style.left = "0px";
-            currentIdx = 0;
-        }, 1000);
-        setTimeout(() => {
+            // 새로고침 시 애니메이션 보이지 않게 하기위해 비동기처리
             slideList.classList.add("animated");
-        }, 1100);
+        }, 100);
     }
-}
 
-var timer = undefined;
+    function updateWidth() {
+        const currentSlides = document.querySelectorAll(".reviews-list li"); //복제된 list 가져오기
+        const newSlideCount = currentSlides.length; // 복제된 리스트 길이
 
-function autoSlide() {
-    if (timer === undefined) {
-        timer = setInterval(() => {
-            moveSlide(currentIdx + 1);
-        }, 3000);
+        const newWidth = (slideWidth + slideMargin) * newSlideCount - slideMargin + "px"; // 복제된 list 길이 구하기
+        slideList.style.width = newWidth; // 총 width값 전달
     }
+    function setInitialPos() {
+        // 처음 위치 설정
+        const initialTranslateValue = -(slideWidth + slideMargin) * slideCount;
+        slideList.style.transform = `translateX(${initialTranslateValue}px)`;
+    }
+
+    function moveSlide(num) {
+        slideList.style.left = -num * (slideWidth + slideMargin) + "px"; //이동거리
+        currentIdx = num;
+        if (currentIdx === slideCount || currentIdx === -slideCount) {
+            setTimeout(() => {
+                slideList.classList.remove("animated"); //트랜지션이 끝난 후 눈 속임을 위한 애니메이션 제거
+                slideList.style.left = "0px";
+                currentIdx = 0;
+            }, 1000);
+            setTimeout(() => {
+                slideList.classList.add("animated"); //
+            }, 1100);
+        }
+    }
+    setInterval(() => {
+        moveSlide(currentIdx + 1);
+    }, 3000);
 }
 
-autoSlide();
-
-function stopSlide() {
-    clearInterval(timer);
-    timer = undefined;
-}
-slideList.addEventListener("mouseenter", () => {
-    stopSlide();
-});
-slideList.addEventListener("mouseleave", () => {
-    autoSlide();
-});
+reviewSlideEvent();
