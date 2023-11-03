@@ -21,9 +21,8 @@ function setUserToken(user) {
  * @param token {String} 검증하고자하는 토큰 값
  * @return {Jwt} decode된 토큰 값
  */
-function verifyToken(token) {
-    const isValidToken = jwt.verify(token, process.env.SECRET_KEY);
-    return isValidToken;
+function verifyToken(token, callback) {
+    jwt.verify(token, process.env.SECRET_KEY, callback);
 }
 
 module.exports = {

@@ -55,4 +55,4 @@ const ProductSchema = new Schema({
     },
 });
 
-module.exports = ProductSchema;
+module.exports = {OptionSchema, ProductSchema};
