@@ -1,3 +1,36 @@
+const bestCardContainer = document.querySelector(".best-products-container");
+
+getDataFromApi(); // API로 데이터 불러오기
+
+async function getDataFromApi() {
+    const data = await fetch("/api/products");
+    const products = await data.json().then((result) => result.products);
+    console.log(products[0]);
+
+    bestCardContainer.appendChild(createBestCard(products));
+}
+
+function createBestCard(products) {
+    const cardContainer = document.createElement("article");
+    cardContainer.setAttribute("id", "best_card_container");
+    for (let i = 0; i < products.length; i++) {
+        cardContainer.innerHTML += `<div class="menu_card">
+        <div class="card_img_wrap">
+        <img class="card_img" src="./images/파티1.PNG" alt="테스트 이미지" />
+    </div>
+    <div class="card_contents">
+        <h3 class="card_title">${products[i].name}</h3>
+        <div class="purchase_info_wrap">
+            <span class="card_price">${products[i].price}원</span>
+            <button class="card_cart_button">장바구니 버튼</button>
+        </div>
+        <p class="card_review">${products[i].review.length}</p>
+    </div>
+    </div>`;
+    }
+    return cardContainer;
+}
+
 // 메뉴바 드롭다운 이벤트
 const allCategoryBtn = document.querySelector("#all-category-btn");
 const allCategoryContainer = document.querySelector(".semi-container");
@@ -52,7 +85,7 @@ console.log(slideCount);
 let slideWidth = 200;
 let slideMargin = 20;
 
-makeClone(); //초기 클론 생성, 위치 설정, 너비 설정
+makeClone(); //초기 클론 생성
 
 function makeClone() {
     for (var i = 0; i < slideCount; i++) {
@@ -65,9 +98,10 @@ function makeClone() {
         clonSlide.classList.add("clone");
         slideList.prepend(clonSlide);
     }
-    updateWidth();
-    setInitialPos();
+    updateWidth(); //너비 설정
+    setInitialPos(); //위치 설정
     setTimeout(() => {
+        // 새로고침 시 애니메이션 보이지 않게 하기위해 비동기처리
         slideList.classList.add("animated");
     }, 100);
 }
@@ -80,6 +114,7 @@ function updateWidth() {
     slideList.style.width = newWidth; // 총 width값 전달
 }
 function setInitialPos() {
+    // 처음 위치 설정
     const initialTranslateValue = -(slideWidth + slideMargin) * slideCount;
     slideList.style.transform = `translateX(${initialTranslateValue}px)`;
 }

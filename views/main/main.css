@@ -152,14 +152,6 @@
     align-items: center;
     width: 1200px;
 }
-.best-products-list {
-    list-style: none;
-    width: 1040px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-}
 /*============Best Products Part============*/
 
 /*============Best Products Card Part============*/
