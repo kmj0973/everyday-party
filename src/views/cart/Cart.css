@@ -11,13 +11,15 @@ body {
   justify-content: space-evenly;
   width: 95%;
   height: 180px;
-  align-content: center;
+  /* align-content: center; */
+  align-items: center;
   border: solid #ddd 1px;
   margin-bottom: 15px;
+  font-size: 25px;
 }
 
-.removeButton {
-}
+/* .removeButton {
+} */
 
 .cart_title {
   font-weight: bold;
@@ -75,13 +77,6 @@ body {
   font-weight: bold;
   margin-left: 15px;
   background-color: #f0f0f5;
-}
-
-/* FIXME:가운데정렬하기 */
-.items_list_helper {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
 }
 
 .image_is_96x96_helper {
@@ -182,6 +177,7 @@ input[type='checkbox'] {
 .sum_price_helper {
   display: flex;
   flex-direction: row;
+  font-size: 40px;
 }
 
 .sum_price_number {
@@ -192,6 +188,10 @@ input[type='checkbox'] {
 .sum_price_unit {
   margin-top: 20px;
   font-size: 20px;
+}
+
+.total_price {
+  font-size: 25px;
 }
 
 .total_price_text,
@@ -211,7 +211,7 @@ input[type='checkbox'] {
 .total_price_helper,
 .shipping_fee_helper {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   margin-top: 10px;
 }
 
