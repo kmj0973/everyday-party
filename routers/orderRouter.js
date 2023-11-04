@@ -29,6 +29,8 @@ orderRouter.get('/', async (req, res, next) => {
 //주문생성
 orderRouter.post('/', async (req, res, next) => {
     console.log('주문 라우터에 들어왔습니다.');
+    const orderId = req.params.id;
+
     const { orderDate, totalPrice, receiverName, receiverPhone, receiverAddress,orderCustomer, productInfo, deliverStatus  } = req.body;
 
     //const data = req.body;
@@ -36,7 +38,13 @@ orderRouter.post('/', async (req, res, next) => {
     
     try {
         const newOrder = await Order.create({
-            orderDate, totalPrice, receiverName, receiverPhone, receiverAddress,orderCustomer, productInfo, deliverStatus
+            orderDate, 
+            totalPrice, 
+            receiverName, 
+            receiverPhone, 
+            receiverAddress,
+            orderCustomer : orderId, 
+            productInfo, deliverStatus
         });
         console.log("주문이 완료되었습니다.")
         res.json( {
