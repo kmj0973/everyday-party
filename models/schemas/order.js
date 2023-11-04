@@ -13,14 +13,18 @@ const ProductInfoSchema = new Schema({
 });
 
 const OrderSchema = new Schema({
-    method: {
-        type: String,
-        enum: ["Card", "Cash"],
-        required: true,
-    },
+    // method: {
+    //     type: String,
+    //     enum: ["Card", "Cash"],
+    //     required: true,
+    // },
     orderDate: {
         type: Date,
         required: true,
+    },
+    totalPrice: {
+        type: Number,
+        require: true
     },
     receiverName: {
         type: String,
@@ -33,11 +37,11 @@ const OrderSchema = new Schema({
         type: [String],
         required: true,
     },
-    orderCustomer: {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
-    },
+    // orderCustomer: {
+    //     type: Schema.Types.ObjectId,
+    //     ref: "User",
+    //     required: true,
+    // },
     productInfo: {
         type: [ProductInfoSchema],
         required: true,

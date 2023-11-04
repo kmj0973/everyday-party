@@ -44,7 +44,7 @@ const ProductSchema = new Schema({
         type: String,
     },
     option: {
-        type: OptionSchema,
+        type: [OptionSchema],
     },
     review: {
         type: [ReviewSchema],
