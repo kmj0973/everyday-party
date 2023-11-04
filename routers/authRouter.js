@@ -18,7 +18,7 @@ router.post("/login", async (req, res, next) => {
     const isUserIdExist = await User.findOne({ userId });
     if (!isUserIdExist) {
         return res.json({
-            status: 400,
+            status: 400, 
             errorMessage: "Invalid ID or wrong password",
         });
     }
