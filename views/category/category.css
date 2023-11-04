@@ -15,12 +15,12 @@ button {
     cursor: pointer;
 }
 
-.menu_detail_section {
-    width: 1200px;
+.category_section {
+    max-width: 1200px;
     margin: 0 auto;
 }
 
-.menu_category_title {
+.category_title {
     text-align: center;
     margin: 100px;
 }
@@ -39,7 +39,8 @@ button {
 }
 
 /* 카드 스타일 */
-#best_card_container {
+.best_card_container,
+.card_container {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     justify-items: center;
@@ -47,7 +48,8 @@ button {
     margin-bottom: 60px;
 }
 
-.menu_card {
+.category_best_card,
+.category_card {
     max-height: 560px;
     cursor: pointer;
 }

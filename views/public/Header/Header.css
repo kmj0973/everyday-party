@@ -22,7 +22,7 @@ a {
 .top_menu {
     display: flex;
     justify-content: space-between;
-    width: 1200px;
+    max-width: 1200px;
     margin: 0 auto;
 }
 
@@ -41,7 +41,7 @@ nav {
 
 .category_wrap {
     display: flex;
-    width: 1200px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 10px 0;
 }

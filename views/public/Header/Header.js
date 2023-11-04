@@ -3,7 +3,9 @@ export const Header = () => {
     headerElement.innerHTML = `
         <div class="top_menu_wrap">
             <div class="top_menu">
+                // 로고
                 <img class="logo" src="../public/image/logo.png" alt="로고">
+                // 유저 메뉴
                 <ul class="user_menu">
                     <li><a href="#">로그인</a></li>
                     <li><a href="#">회원가입</a></li>
@@ -30,13 +32,14 @@ export const Header = () => {
                         height="24">
                     </iconify-icon>
                 </a>
+                // 카테고리
                 <ul class="category">
-                    <li><a href="#">신상품</a></li>
-                    <li><a href="#">베스트</a></li>
-                    <li><a href="#">의류</a></li>
-                    <li><a href="#">소품</a></li>
-                    <li><a href="#">풍선</a></li>
-                    <li><a href="#">장식</a></li>
+                    <li id="new">신상품</li>
+                    <li id="best">베스트</li>
+                    <li id="clothes"><a href="#">의상</a></li>
+                    <li id="props"><a href="#">소품</a></li>
+                    <li id="balloons"><a href="#">풍선</a></li>
+                    <li id="decorations"><a href="#">장식</a></li>
                 </ul>
             </div>
         </nav>

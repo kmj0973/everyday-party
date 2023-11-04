@@ -1,4 +1,3 @@
-const authRouter = require("./authRouter");
 const productRouter = require("./productRouter");
 
 const { Router } = require("express");
