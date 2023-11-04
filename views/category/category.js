@@ -40,6 +40,16 @@ const categoryBestCardElement = document.querySelector(".best_card_container");
 const categoryContainerElement = document.querySelector(".card_container");
 const cardAmountElement = document.querySelector(".card_amount");
 
+// 페이지 로드시 저장된 해당 카테고리 데이터를 렌더링
+// 새로 고침해도 데이터가 사라지지 않는다.
+document.addEventListener("DOMContentLoaded", () => {
+    const selectedCategory = localStorage.getItem("selectedCategory");
+
+    if (selectedCategory) {
+        cardRender(selectedCategory);
+    }
+});
+
 // 카테고리 버튼을 클릭했을 때 실행되는 이벤트 함수 
 for (let i = 0; i < categoryList.length; i++) {
     categoryList[i].addEventListener("click", () => {
@@ -47,6 +57,9 @@ for (let i = 0; i < categoryList.length; i++) {
         // 현재는 id 값으로 가져오지만 api가 완성되면 
         // href 값을 가져와서 구현 예정
         const categoryId = categoryList[i].getAttribute("id");
+
+        // localStorage에 categoryId값 저장
+        localStorage.setItem("selectedCategory", categoryId);
 
         // localStorage에 categoryId값 저장
         localStorage.setItem("selectedCategory", categoryId);
