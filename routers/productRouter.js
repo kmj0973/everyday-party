@@ -1,12 +1,12 @@
-const { Router } = require('express');
-const { Product, Option } = require('../models');
+const { Router } = require("express");
+const { Product, Option } = require("../models");
 const ProductService = require("../services/productService");
 
 const itemRouter = Router();
 
-
 itemRouter.get('/', async (req, res, next) => {
     console.log("해당상품을 조회하였습니다.");
+
     const { products, category } = req.query;
     console.log(`id : ${products}` );
 
@@ -89,7 +89,7 @@ itemRouter.get('/', async (req, res, next) => {
             products: returnProducts,
         });
     }
-})
+});
 
 
 // itemRouter.get('/:id', async (req, res, next) => {
@@ -105,7 +105,7 @@ itemRouter.get('/', async (req, res, next) => {
 // })
 
 //상품 생성
-itemRouter.post('/', async (req, res, next) => {
+itemRouter.post("/", async (req, res, next) => {
     console.log("상품을 post합니다!");
     const { name, price, entryDate, discountRate, category, description, option, file } = req.body;
 
@@ -115,7 +115,7 @@ itemRouter.post('/', async (req, res, next) => {
     
     try {
         //이미 존재하는 상품인지 확인하고 겹치면 오류던짐
-        const isExist = await Product.findOne({name});
+        const isExist = await Product.findOne({ name });
         if (isExist) {
             throw new Error("이미 존재하는 상품입니다.");
         }
@@ -125,8 +125,7 @@ itemRouter.post('/', async (req, res, next) => {
 
         //상품을 올릴 때 이름과 가격이 없으면 오류 -> post를 위한 필수 조건임
         if (!name || !price) {
-            throw new Error('상품 정보가 부족합니다(상품 이름 또는 가격)!!');
-
+            throw new Error("상품 정보가 부족합니다(상품 이름 또는 가격)!!");
         }
 
         //const newOption = await ProductService.createOption(size, color);
@@ -148,19 +147,15 @@ itemRouter.post('/', async (req, res, next) => {
 
         console.log("상품이 생성되었습니다.");
 
-
-        //생성된 아이템 
-         res.json( {
+        //생성된 아이템
+        res.json({
             status: 201,
-            newProduct 
+            newProduct,
         });
-
     } catch (err) {
         next(err);
     }
-
-}
-)
+});
 
 //상품 아이템 삭제   ->질문하기
 itemRouter.delete('/:id', async(req, res, next) => {
@@ -177,6 +172,5 @@ itemRouter.delete('/:id', async(req, res, next) => {
         next(err);
     }
 })
-
 
 module.exports = itemRouter;

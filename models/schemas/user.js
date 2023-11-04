@@ -17,6 +17,7 @@ const UserSchema = new Schema({
     },
     email: {
         type: String,
+        unique: true,
     },
     name: {
         type: String,
@@ -27,6 +28,7 @@ const UserSchema = new Schema({
     },
     phone: {
         type: String,
+        unique: true,
     },
     birthday: {
         type: Date,
