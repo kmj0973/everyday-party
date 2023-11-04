@@ -4,7 +4,10 @@ getData(); // API로 데이터 불러오기
 
 async function getData() {
     const data = await fetch("/api/products");
-    const products = await data.json().then((result) => result.products);
+    const products = await data
+        .json()
+        .then((result) => result.products)
+        .catch((e) => console.log(e));
     console.log(products[0]);
     //try catch
     bestCardContainer.appendChild(createBestCard(products));
@@ -13,7 +16,7 @@ async function getData() {
 function createBestCard(products) {
     const cardContainer = document.createElement("article");
     cardContainer.setAttribute("id", "best_card_container");
-    for (let i = 0; i < products.length; i++) {
+    for (let i = 0; i < 8; i++) {
         cardContainer.innerHTML += `<div class="menu_card">
         <div class="card_img_wrap">
         <img class="card_img" src="./images/파티1.PNG" alt="테스트 이미지" />
