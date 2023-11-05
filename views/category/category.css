@@ -33,9 +33,50 @@ button {
     font-weight: 500;
 }
 
-.card_filter_wrap {
+/* 드롭다운 필터 */
+.select_wrap {
     display: flex;
     justify-content: space-between;
+}
+
+.select {
+    position: relative;
+    width: 112px;
+}
+
+.select .label {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    background: none;
+    border: 1px solid #181619;
+    border-radius: 2px;
+    padding: 4px 10px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.select .option_list {
+    position: absolute;
+    width: 100%;
+    border: 1px solid #181619;
+    border-radius: 2px;
+    margin-top: 6px;
+    font-size: 14px;
+    display: none;
+}
+
+.select.active .option_list {
+    display: block;
+}
+
+.select .option_list .option {
+    padding: 6px;
+    text-align: center;
+}
+
+.select .option_list .option:hover {
+    background-color: #ccc;
 }
 
 /* 카드 스타일 */

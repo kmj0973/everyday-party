@@ -27,15 +27,29 @@
         <h2 class="best_card_title">BEST ITEM</h2>
         <article class="best_card_container"></article>
 
-        <!-- 필터 -->
-        <div class="card_filter_wrap">
+        <!-- 드롭다운 필터 -->
+        <div class="select_wrap">
             <h2 class="card_amount">총 건</h2>
-            <select name="card" id="card_select">
-                <option value="best" selected>인기순</option>
-                <option value="high_price">높은 가격순</option>
-                <option value="row_price">낮은 가격순</option>
-                <option value="high_review">높은 리뷰순</option>
-            </select>
+            <div class="select">
+                <button class="label">
+                    <span>전체 보기</span>
+                    <iconify-icon 
+                        icon="ep:arrow-up-bold" 
+                        style="color: #181619;"
+                        width="12" 
+                        height="12"
+                        rotate="180deg"
+                    >
+                    </iconify-icon>
+                </button>
+                <ul class="option_list active">
+                    <li class="option">전체 보기</li>
+                    <li class="option">인기순</li>
+                    <li class="option">높은 가격순</li>
+                    <li class="option">낮은 가격순</li>
+                    <li class="option">높은 리뷰순</li>
+                </ul>
+            </div>
         </div>
         
         <!-- 상품 리스트 -->

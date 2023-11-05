@@ -71,8 +71,6 @@ const cardRender = async (categoryId) => {
         const response = await fetch(`http://localhost:5000/api/products?category=${categoryId}`);
         const data = await response.json();
 
-        cardFilter(data);
-
         data.products.map(products => {
             // 카테고리에 해당하는 베스트 상품을 렌더링
             if(categoryId === products.category) {
@@ -95,3 +93,26 @@ const cardRender = async (categoryId) => {
         console.log(error.message);
     }
 }
+
+const label = document.querySelector(".label");
+const options = document.querySelectorAll(".option");
+
+// 클릭한 옵션의 텍스트를 라벨에 넣어주기
+const handleSelect = (option) => {
+    label.firstElementChild.innerHTML = option.textContent;
+    label.parentNode.classList.remove('active');
+  }
+
+
+options.forEach(option => {
+	option.addEventListener("click", () => handleSelect(option))
+})
+
+// 라벨을 클릭했을 때 옵션 목록 열림/닫힘
+label.addEventListener('click', function(){
+    if(label.parentNode.classList.contains('active')) {
+      label.parentNode.classList.remove('active');
+    } else {
+      label.parentNode.classList.add('active');
+    }
+  });
