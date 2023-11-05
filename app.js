@@ -16,16 +16,25 @@ mongoose.connect(process.env.MONGODB_URL);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use(express.static(path.join(__dirname, "src/views")));
+app.use(express.static(path.join(__dirname, "views")));
 app.use(cookieParser());
 
 
 
 app.use("/api", router.router);
 
+app.use((req, res, next) => {
+    res.status(404);
+    res.send({
+        result: "fail",
+        error: `Page not found ${req.path}`,
+    });
+});
+
 app.use((err, req, res, next) => {
     res.status(err.status || 500);
-    res.json("error");
+    console.error(err);
+    res.json(err);
 });
 
 app.listen(process.env.PORT, () => {

@@ -1,0 +1,43 @@
+.header {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    background-color: #f9e103;
+}
+.header-container {
+    width: 1200px;
+    display: flex;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    justify-content: space-between;
+    align-items: center;
+}
+.navbar-logo {
+    margin: 10px;
+}
+.navbar-logo a {
+    text-decoration: none;
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+}
+.logo-image {
+    margin: 0 5px;
+}
+.logo-name {
+    margin-top: 5px;
+    color: black;
+    font-family: "Gluten", cursive;
+}
+.navbar-end {
+    display: flex;
+    margin: 10px;
+}
+#navbar {
+    display: flex;
+    list-style: none;
+}
+#navbar li:not(:last-child) {
+    cursor: pointer;
+    margin-right: 15px;
+}

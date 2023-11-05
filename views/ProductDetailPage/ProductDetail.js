@@ -61,13 +61,13 @@ for(var i=0;i<items.length;i++){
 const productName = document.querySelector('.product-name');
 const productPrice = document.querySelector('.product-price');
 const productDescription = document.querySelector('.product-description');
-
 const productId = "6543563c88123149c933da9e";
+//
 //api 호출하여 이름, 가격, 상품 설명을 보여준다. 
-fetch(`/api/products?products?id=${productId}`)
+fetch(`/api/products/?products?id=${productId}`)
     .then((response) => response.json())
     .then((data) => {
-        //console.log(data);
+        console.log(data);
         const product = data.products.find(({_id})=>_id===productId);
         //console.log(product.price);
         productName.innerHTML = product.name;

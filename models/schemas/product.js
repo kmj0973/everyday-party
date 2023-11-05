@@ -44,7 +44,7 @@ const ProductSchema = new Schema({
         type: String,
     },
     option: {
-        type: OptionSchema,
+        type: [OptionSchema],
     },
     review: {
         type: [ReviewSchema],
@@ -55,4 +55,4 @@ const ProductSchema = new Schema({
     },
 });
 
-module.exports = ProductSchema;
+module.exports = {OptionSchema, ProductSchema};
