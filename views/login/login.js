@@ -1,25 +1,41 @@
-const userIdInput = document.querySelector("#userId");
-const passwordInput = document.querySelector("#password");
+const inputUserId = document.querySelector("#userId");
+const inputPassword = document.querySelector("#password");
 const loginBtn = document.querySelector("#login-btn");
+const loginAlert = document.querySelector(".login-alert");
 
 async function onClickLoginButton(e) {
     e.preventDefault();
-    const userId = userIdInput.value;
-    const password = passwordInput.value;
 
-    const user = JSON.stringify({ userId, password }); //json형태로 변경
+    const userId = inputUserId.value; //아아디 값
+    const password = inputPassword.value; // 비밀번호 값
 
-    const data = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" }, //데이터 json 타입
-        body: user,
-    });
-    console.log(data);
-    console.log(user);
-    const checkLogin = await data
-        .json()
-        .then((result) => console.log(result))
-        .catch((e) => console.log(e));
+    try {
+        const data = await fetch("/api/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId, password }), // JSON 문자열로 변환
+        }).then((result) => result.json());
+
+        if (data.status === 400) {
+            // 아이디와 비밀번호 일치하지 않는 경우 Error전달
+            throw new Error("아이디 또는 비밀번호를 확인해주세요");
+        }
+
+        const userTokens = await data.token; // 토큰 생성
+        // 로컬 스토리지에 "access-token"키 값에 토큰 저장
+        localStorage.setItem("access-token", userTokens);
+
+        window.location.href = "/main/main.html"; // 로그인 성공 시 메인페이지로 이동
+    } catch (err) {
+        loginAlert.classList.add("show"); // 일치하지 않는다는 경고문 보여주기
+        console.log(err);
+    }
 }
-onClickLoginButton();
+
+inputUserId.addEventListener("focus", () => {
+    loginAlert.classList.remove("show"); // input 클릭시 경고문 사라짐
+});
+inputPassword.addEventListener("focus", () => {
+    loginAlert.classList.remove("show"); // input 클릭시 경고문 사라짐
+});
 loginBtn.addEventListener("click", onClickLoginButton);

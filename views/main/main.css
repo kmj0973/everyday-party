@@ -45,6 +45,10 @@
     display: flex;
     list-style: none;
 }
+#navbar li a {
+    text-decoration: none;
+    color: black;
+}
 #navbar li:not(:last-child) {
     cursor: pointer;
     margin-right: 15px;
