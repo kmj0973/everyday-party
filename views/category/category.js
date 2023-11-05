@@ -1,4 +1,4 @@
-import { Header } from "../public/header/header.js";
+import { Header } from "../../public/header/header.js";
 
 // import로 헤더 렌더링
 const headerRender = () => {
@@ -35,13 +35,12 @@ const cardTemplate = (categoryData) => {
         `;
 }
 
-const categoryList = document.querySelectorAll(".category li");
+const categoryList = document.querySelectorAll(".category li a");
 const categoryBestCardElement = document.querySelector(".best_card_container");
 const categoryContainerElement = document.querySelector(".card_container");
 const cardAmountElement = document.querySelector(".card_amount");
 
-// 페이지 로드시 저장된 해당 카테고리 데이터를 렌더링
-// 새로 고침해도 데이터가 사라지지 않는다.
+// 페이지 로드 시 저장된 카테고리 정보를 렌더링
 document.addEventListener("DOMContentLoaded", () => {
     const selectedCategory = localStorage.getItem("selectedCategory");
 
@@ -61,9 +60,6 @@ for (let i = 0; i < categoryList.length; i++) {
         // localStorage에 categoryId값 저장
         localStorage.setItem("selectedCategory", categoryId);
 
-        // localStorage에 categoryId값 저장
-        localStorage.setItem("selectedCategory", categoryId);
-
         cardRender(categoryId);
     });
 }
@@ -75,23 +71,27 @@ const cardRender = async (categoryId) => {
         const response = await fetch(`http://localhost:5000/api/products?category=${categoryId}`);
         const data = await response.json();
 
+        cardFilter(data);
+
         data.products.map(products => {
             // 카테고리에 해당하는 베스트 상품을 렌더링
             if(categoryId === products.category) {
                 categoryBestCardElement.innerHTML = 
-                    data.products.map(categoryData => cardTemplate(categoryData)).join("");
+                    data.products.map(categoryData => cardTemplate(categoryData))
+                        .join("");
             } 
 
             // 카테고리에 상품을 렌더링
             if(categoryId === products.category) {
                 cardAmountElement.innerHTML = `총 ${data.products.length}건`;
                 categoryContainerElement.innerHTML = 
-                    data.products.map(categoryData => cardTemplate(categoryData)).join("");
+                    data.products.map(categoryData => cardTemplate(categoryData))
+                        .join("");
 
             } 
         });
-    } catch (error) {
+    } 
+    catch (error) {
         console.log(error.message);
     }
 }
-
