@@ -64,6 +64,7 @@ for (let i = 0; i < categoryList.length; i++) {
     });
 }
 
+// 카테고리에 해당하는 상품 렌더링
 const cardRender = async (categoryId) => {
     try {
         // 쿼리 파라미터에 해당 카테고리 id를 보내면 
@@ -73,22 +74,22 @@ const cardRender = async (categoryId) => {
 
         data.products.map(products => {
             // 카테고리에 해당하는 베스트 상품을 렌더링
-            if(categoryId === products.category) {
-                categoryBestCardElement.innerHTML = 
+            if (categoryId === products.category) {
+                categoryBestCardElement.innerHTML =
                     data.products.map(categoryData => cardTemplate(categoryData))
                         .join("");
-            } 
+            }
 
             // 카테고리에 상품을 렌더링
-            if(categoryId === products.category) {
+            if (categoryId === products.category) {
                 cardAmountElement.innerHTML = `총 ${data.products.length}건`;
-                categoryContainerElement.innerHTML = 
+                categoryContainerElement.innerHTML =
                     data.products.map(categoryData => cardTemplate(categoryData))
                         .join("");
 
-            } 
+            }
         });
-    } 
+    }
     catch (error) {
         console.log(error.message);
     }
@@ -97,22 +98,25 @@ const cardRender = async (categoryId) => {
 const label = document.querySelector(".label");
 const options = document.querySelectorAll(".option");
 
-// 클릭한 옵션의 텍스트를 라벨에 넣어주기
-const handleSelect = (option) => {
-    label.firstElementChild.innerHTML = option.textContent;
-    label.parentNode.classList.remove('active');
-  }
-
-
-options.forEach(option => {
-	option.addEventListener("click", () => handleSelect(option))
-})
-
-// 라벨을 클릭했을 때 옵션 목록 열림/닫힘
-label.addEventListener('click', function(){
-    if(label.parentNode.classList.contains('active')) {
-      label.parentNode.classList.remove('active');
-    } else {
-      label.parentNode.classList.add('active');
+const dropDownFilter = () => {
+    // 클릭한 옵션의 텍스트를 라벨에 넣어주기
+    const handleSelect = (option) => {
+        label.firstElementChild.innerHTML = option.textContent;
+        label.parentNode.classList.remove('active');
     }
-  });
+
+    options.forEach(option => {
+        option.addEventListener("click", () => handleSelect(option))
+    })
+
+    // 라벨을 클릭했을 때 옵션 목록 열림/닫힘
+    label.addEventListener('click', function () {
+        if (label.parentNode.classList.contains('active')) {
+            label.parentNode.classList.remove('active');
+        } else {
+            label.parentNode.classList.add('active');
+        }
+    });
+}
+
+dropDownFilter();
