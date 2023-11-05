@@ -5,12 +5,13 @@ body {
   color: #181619;
 }
 
-/* item 디자인 */
+/* 장바구니 item 디자인 */
 .itemDiv {
   display: flex;
   justify-content: space-evenly;
   width: 95%;
   height: 180px;
+
   /* align-content: center; */
   align-items: center;
   border: solid #ddd 1px;
@@ -18,8 +19,20 @@ body {
   font-size: 25px;
 }
 
-/* .removeButton {
-} */
+.removeButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url('https://api.iconify.design/mdi/trashcan-outline.svg');
+  background-size: 30px 30px;
+  width: 30px;
+  height: 30px;
+}
+
+.removeButton:hover {
+  background-color: #f9e103;
+  cursor: pointer;
+}
 
 .cart_title {
   font-weight: bold;
