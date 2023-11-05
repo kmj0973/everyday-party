@@ -1,23 +1,47 @@
-export const setHeaderElement = () => {
+export const Header = () => {
     const headerElement = document.createElement("header");
     headerElement.innerHTML = `
-    <div class="header-container">
-        <div class="navbar-logo">
-            <a href="/"
-                ><img class="logo-image" src="./images/logo.png" width="30" height="30" /><span
-                    class="logo-name"
-                    >EVERYDAY<br />PARTY</span
-                >
-            </a>
+        <div class="top_menu_wrap">
+            <div class="top_menu">
+                <img class="logo" src="../public/image/logo.png" alt="로고">
+                <ul class="user_menu">
+                    <li><a href="#">로그인</a></li>
+                    <li><a href="#">회원가입</a></li>
+                    <li>
+                        <a href="#">
+                            <iconify-icon 
+                                icon="ion:bag" 
+                                style="color: #181619;"
+                                width="22" 
+                                height="22">
+                            </iconify-icon>
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <div class="navbar-end">
-            <ul id="navbar">
-                <li>로그인</li>
-                <li>회원가입</li>
-                <li>장바구니</li>
-            </ul>
-        </div>
-    </div>
-`;
+        <nav>
+            <div class="category_wrap">
+                <a class="all_category_icon" href="#">
+                    <iconify-icon 
+                        icon="iconoir:menu" 
+                        style="color: #181619;" 
+                        width="24" 
+                        height="24">
+                    </iconify-icon>
+                </a>
+                <ul class="category">
+                    <li><a href="#" id="new">신상품</a></li>
+                    <li><a href="#" id="best">베스트</a></li>
+                    <li><a href="#" id="clothes">의류</a></li>
+                    <li><a href="#" id="props">소품</a></li>
+                    <li><a href="#" id="balloons">풍선</a></li>
+                    <li><a href="#" id="decorations">장식</a></li>
+                </ul>
+            </div>
+        </nav>
+    `;
+
     document.body.prepend(headerElement);
-};
+}
+
