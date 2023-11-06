@@ -4,7 +4,7 @@ const orderService = require("../services/productService");
 
 const productRouter = Router();
 
-productRouter.get('/', async (req, res, next) => {
+productRouter.get("/", async (req, res, next) => {
     //console.log("해당상품을 조회하였습니다.");
 
     const { products, category } = req.query;
@@ -14,7 +14,7 @@ productRouter.get('/', async (req, res, next) => {
     //const NewPList = products.sort({entryDate : -1}).limit(10);
     //const ReviewList = products.sort({entryDate : -1}).limit(10);
 
-    if ((!category || typeof category !== 'string') && !products) {
+    if ((!category || typeof category !== "string") && !products) {
         const allProducts = await productService.getAllProducts();
         return res.status(200).json({
             //Bestproduct,
@@ -28,12 +28,11 @@ productRouter.get('/', async (req, res, next) => {
         try {
             const filteredProducts = await productService.getProductsByCategory(category);
             return res.json(filteredProducts);
-
         } catch (err) {
             const error = new Error(" ");
             error.status = 404;
             return next(error);
-        }   
+        }
     }
 
     if (products) {
@@ -84,7 +83,6 @@ productRouter.get('/', async (req, res, next) => {
     }
 });
 
-
 // productRouter.get('/:id', async (req, res, next) => {
 //     console.log("아이템 조회 라우터")
 //     const id = req.params.id;
@@ -101,15 +99,14 @@ productRouter.get('/', async (req, res, next) => {
 productRouter.post("/", async (req, res, next) => {
     //console.log("상품을 post합니다!");
     const { name, price, entryDate, discountRate, category, description, option, file } = req.body;
-    
+
     try {
         const existingProduct = await productService.checkProductExists(name);
-        
+
         if (existingProduct) {
             const error = new Error("이미 존재하는 상품입니다.");
-error.status = 409;
-throw error;
-
+            error.status = 409;
+            throw error;
         }
 
         //모든 조건을 거치고 상품 만들기
@@ -134,16 +131,16 @@ throw error;
 });
 
 //상품 아이템 삭제
-productRouter.delete('/:id', async(req, res, next) => {
+productRouter.delete("/:id", async (req, res, next) => {
     try {
         console.log("삭제하는 라우터입니다.");
         const id = req.params.id;
         await Product.deleteOne({ _id: id });
         //console.log("삭제 완료");
-        res.status(204).json({ message : '제품이 성공적으로 삭제되었습니다.' })
+        res.status(204).json({ message: "제품이 성공적으로 삭제되었습니다." });
     } catch (err) {
         next(err);
     }
-})
+});
 
 module.exports = productRouter;
