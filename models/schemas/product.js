@@ -11,7 +11,7 @@ const optionSchema = new Schema({
     },
 });
 
-const productSchema = new Schema({ 
+const productSchema = new Schema({
     name: {
         type: String,
         required: true,
@@ -20,9 +20,10 @@ const productSchema = new Schema({
         type: Number,
         required: true,
     },
-    entryDate: {
+    stockedAt: {
         type: Date,
         required: true,
+        default: Date.now(),
     },
     sales: {
         type: Number,
@@ -36,13 +37,14 @@ const productSchema = new Schema({
         max: 1,
     },
     category: {
-        type: Schema.Types.ObjectId, /* categorySchema를 ref*/
+        type: [Schema.Types.ObjectId] /* categorySchema를 ref*/,
+        ref: "Category",
     },
     description: {
         type: String,
     },
     option: {
-        type: [optionSchema],
+        type: optionSchema,
     },
     review: {
         type: [ReviewSchema],
@@ -53,4 +55,4 @@ const productSchema = new Schema({
     },
 });
 
-module.exports = {optionSchema, productSchema};
+module.exports = { optionSchema, productSchema };

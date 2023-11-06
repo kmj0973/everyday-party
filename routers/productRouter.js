@@ -1,6 +1,9 @@
 const { Router } = require("express");
-const { Product, Option, User } = require("../models");
-const { authenticateUser, isAdmin } = require("../middleware/isAdmin");
+const { Product, Option} = require("../models");
+//const { authenticateUser, isAdmin } = require("../middleware/isAdmin");
+
+const orderService = require("../services/orderService");
+
 const productService = require("../services/productService");
 
 const productRouter = Router();
@@ -60,6 +63,7 @@ productRouter.get("/", async (req, res, next) => {
         });
     }
 
+
     //물품만 입력
     if (products !== undefined && products !== null) {
         const arrOfProductId = products.split(",");
@@ -77,7 +81,6 @@ productRouter.get("/", async (req, res, next) => {
         products: allProducts,
     });
 });
-
 
 // productRouter.get('/:id', async (req, res, next) => {
 //     console.log("아이템 조회 라우터")
@@ -103,7 +106,6 @@ productRouter.post("/", async (req, res, next) => {
             const error = new Error("이미 존재하는 상품입니다.");
             error.status = 409;
             throw error;
-
         }
 
         //모든 조건을 거치고 상품 만들기
@@ -152,6 +154,7 @@ productRouter.patch('/:id', async (req, res, next) => {
         if (!updatedProduct) {
             return res.status(404).json({ message: '상품을 찾을 수 없습니다.' });
         }
+
     } catch (err) {
         next(err);
         return;
@@ -180,6 +183,6 @@ productRouter.delete('/:id', async (req, res, next) => {
         next(err);
         return;
     }
-})
+});
 
 module.exports = productRouter;
