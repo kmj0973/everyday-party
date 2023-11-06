@@ -1,3 +1,12 @@
+import { Header } from "../public/header/header.js";
+// import로 헤더 렌더링
+const headerRender = () => {
+    return Header();
+};
+
+headerRender();
+
+// 베스트 상품 데이터 받아오기
 const bestCardContainer = document.querySelector(".best-products-container");
 
 getData(); // API로 데이터 불러오기
@@ -8,7 +17,7 @@ async function getData() {
         .json()
         .then((result) => result.products)
         .catch((e) => console.log(e));
-    console.log(products[0]);
+    console.log(products);
     //try catch
     bestCardContainer.appendChild(createBestCard(products));
 }
@@ -16,7 +25,7 @@ async function getData() {
 function createBestCard(products) {
     const cardContainer = document.createElement("article");
     cardContainer.setAttribute("id", "best_card_container");
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 5; i++) {
         cardContainer.innerHTML += `<div class="menu_card">
         <div class="card_img_wrap">
         <img class="card_img" src="./images/파티1.PNG" alt="테스트 이미지" />
@@ -33,24 +42,6 @@ function createBestCard(products) {
     }
     return cardContainer;
 }
-
-// 메뉴바 드롭다운 이벤트
-const allCategoryBtn = document.querySelector("#all-category-btn");
-const allCategoryContainer = document.querySelector(".semi-container");
-
-function onClickAllCategory() {
-    // 모든 카테고리 드롭다운 이벤트
-    if (allCategoryContainer.classList.contains("show")) {
-        // show 클래스가 포함된 태그 확인
-        allCategoryContainer.style.height = "0px";
-        allCategoryContainer.classList.remove("show");
-    } else {
-        allCategoryContainer.style.height = "250px";
-        allCategoryContainer.classList.add("show");
-    }
-}
-
-allCategoryBtn.addEventListener("click", onClickAllCategory);
 
 // 배너 슬라이드 바 이벤트
 const swiper = new Swiper(".swiper", {

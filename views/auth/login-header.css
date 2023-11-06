@@ -7,11 +7,13 @@ a {
     text-decoration: none;
     color: #181619;
 }
-
 /* 탑메뉴 */
 .top_menu_wrap {
+    position: absolute;
     padding: 12px 0;
     background-color: #f9e103;
+    width: 100vw;
+    z-index: 1;
 }
 
 .logo {
@@ -32,33 +34,4 @@ a {
     gap: 10px;
     font-size: 14px;
     font-weight: 500;
-}
-
-/* 카테고리 */
-nav {
-    border-bottom: 1px solid #eee;
-}
-
-.category_wrap {
-    display: flex;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 10px 0;
-}
-
-.all_category_icon {
-    height: 24px;
-}
-
-.category {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    width: 100%;
-}
-
-.category > li {
-    width: 10%;
-    font-weight: 600;
-    text-align: center;
 }

@@ -1,3 +1,11 @@
+import { Header } from "./login-header.js";
+// import로 헤더 렌더링
+const headerRender = () => {
+    return Header();
+};
+
+headerRender();
+// 아이디 비밀번호 검증
 const inputUserId = document.querySelector("#userId");
 const inputPassword = document.querySelector("#password");
 const loginBtn = document.querySelector("#login-btn");
@@ -32,10 +40,10 @@ async function onClickLoginButton(e) {
     }
 }
 
-inputUserId.addEventListener("focus", () => {
-    loginAlert.classList.remove("show"); // input 클릭시 경고문 사라짐
-});
-inputPassword.addEventListener("focus", () => {
-    loginAlert.classList.remove("show"); // input 클릭시 경고문 사라짐
-});
+// inputUserId.addEventListener("focus", () => {
+//     loginAlert.classList.remove("show"); // input 클릭시 경고문 사라짐
+// });
+// inputPassword.addEventListener("focus", () => {
+//     loginAlert.classList.remove("show"); // input 클릭시 경고문 사라짐
+// });
 loginBtn.addEventListener("click", onClickLoginButton);
