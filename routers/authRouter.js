@@ -51,15 +51,17 @@ router.post("/logout", async (req, res, next) => {
     //로그아웃 성공
     try {
         // 토큰 검증
-        jwtUtil.verifyToken(token, (err, decoded) => {
+        try {
+            const decoded = await jwtUtil.verifyToken(token);
+        } catch (err) {
             if (err) {
                 return res.status(401).json({
                     message: "토큰이 유효하지 않습니다.",
                 });
             }
+        }
 
-            return res.json({ message: "로그아웃되었습니다." });
-        });
+        return res.json({ message: "로그아웃되었습니다." });
     } catch (err) {
         console.log(err);
         res.status(500).json({
