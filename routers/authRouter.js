@@ -1,8 +1,6 @@
 const { Router } = require("express");
 const router = Router();
 
-const { User } = require("../models/index");
-
 const passwordUtil = require("../utils/passwordUtil");
 const jwtUtil = require("../utils/jwtUtil");
 
@@ -54,7 +52,13 @@ router.post("/logout", async (req, res, next) => {
         try {
             const decoded = await jwtUtil.verifyToken(token);
         } catch (err) {
-            if (err) {
+            if (err.name === "TokenExpiredError") {
+                return res.status(401).json({
+                    message: "토큰이 만료되었습니다.",
+                });
+            }
+
+            if (err.name === "JsonWebTokenError") {
                 return res.status(401).json({
                     message: "토큰이 유효하지 않습니다.",
                 });
@@ -137,12 +141,12 @@ router.post("/sign-up", async (req, res, next) => {
         }
     }
 
-    const newUser = new User(validInfoOfUserInput);
-    newUser.password = await passwordUtil.hashPassword(newUser.password);
-
-    await newUser.save().then((data) => {
+    try {
+        await userService.createUser(validInfoOfUserInput);
         return res.sendStatus(200);
-    });
+    } catch (error) {
+        next(error);
+    }
 });
 
 module.exports = router;
