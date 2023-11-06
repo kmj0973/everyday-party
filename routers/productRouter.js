@@ -1,86 +1,81 @@
 const { Router } = require("express");
 const { Product, Option } = require("../models");
-const orderService = require("../services/productService");
+const orderService = require("../services/orderService");
+const productService = require("../services/productService");
 
 const productRouter = Router();
 
 productRouter.get("/", async (req, res, next) => {
-    //console.log("해당상품을 조회하였습니다.");
-
     const { products, category } = req.query;
-    //console.log(`id : ${products}` );
 
     //const BestPList = products.sort({sales : -1}).limit(10);
-    //const NewPList = products.sort({entryDate : -1}).limit(10);
-    //const ReviewList = products.sort({entryDate : -1}).limit(10);
+    //const NewPList = products.sort({stockedAt : -1}).limit(10);
+    //const ReviewList = products.sort({stockedAt : -1}).limit(10);
 
-    if ((!category || typeof category !== "string") && !products) {
-        const allProducts = await productService.getAllProducts();
-        return res.status(200).json({
-            //Bestproduct,
-            //Newproduct,
-            products: allProducts,
+    if (products !== undefined && products !== null) {
+        products.split(",").forEach((eachProduct) => {
+            if (!eachProduct instanceof String) {
+                const error = new Error("찾으려는 물품 값이 유효하지 않습니다.");
+                error.status = 400;
+                return next(error);
+            }
         });
     }
 
-    //카테고리가 존재하는 경우 카테고리를 기준으로 물품 데이터를 받아옴
-    if (category) {
-        try {
-            const filteredProducts = await productService.getProductsByCategory(category);
-            return res.json(filteredProducts);
-        } catch (err) {
-            const error = new Error(" ");
-            error.status = 404;
+    if (category !== undefined && category !== null) {
+        if (!category instanceof String) {
+            const error = new Error("찾으려는 카테고리 값이 유효하지 않습니다.");
+            error.status = 400;
             return next(error);
         }
     }
 
-    if (products) {
+    //둘 다 입력
+    if (category !== undefined && category !== null && products !== undefined && products !== null) {
         const arrOfProductId = products.split(",");
-        const arrOfProductData = []; //Products 컬렉션 내 존재하는 물품 데이터
-        const arrOfNotExistProductId = []; //Products 컬렉션 내 존재하지 않는 요청 물품 데이터의 아이디
-        let eachProduct = 0;
+        const productsInId = await productService.getProductsById(arrOfProductId);
 
-        for (eachProduct = 0; eachProduct < arrOfProductId.length; eachProduct++) {
-            try {
-                arrOfProductData.push(await productService.getProductById(arrOfProductId.at(eachProduct)));
-            } catch (error) {
-                arrOfNotExistProductId.push(arrOfProductId.at(eachProduct));
-            }
-        }
-
-        if (returnProducts.length > 0) {
-            //카테고리로 이미 반환받은 데이터가 있다면
-            //필터로 카테고리 내에 존재하는 물품을 반환
-            returnProducts = arrOfProductData.filter((product) => {
-                return product.category === category;
+        const filteredProductByCategory = productsInId.filter((eachProduct) => {
+            return eachProduct.category.some((eachCategory) => {
+                return eachCategory.categoryName === category;
             });
-        } else {
-            returnProducts = arrOfProductData;
-        }
+        });
 
-        if (arrOfNotExistProductId.length > 0) {
-            //존재하지 않는 물품의 아이디가 하나 이상일 때
-
-            //404는 에러이기 때문에 결과물을 담는건 x
-            //있는 product들만 담아서 응답으로 보내주도록 수정
-            return res.status(404).json({
-                products: returnProducts,
-                notExistProduct: arrOfNotExistProductId,
-            });
+        if (filteredProductByCategory.length === 0) {
+            const error = new Error("찾으려는 물품이 존재하지 않습니다.");
+            error.status = 404;
+            return next(error);
         } else {
             return res.status(200).json({
-                products: returnProducts,
+                products: filteredProductByCategory,
             });
         }
-    } else {
-        const allProducts = await productService.getAllProducts();
-        return res.json(200).json({
-            //Bestproduct,
-            //Newproduct,
-            products: allProducts,
+    }
+
+    //카테고리만 입력
+    if (category !== undefined && category !== null) {
+        const productsInCategory = await productService.getProductsByCategory(category);
+        return res.status(200).json({
+            products: productsInCategory,
         });
     }
+
+    //물품만 입력
+    if (products !== undefined && products !== null) {
+        const arrOfProductId = products.split(",");
+        const productsInId = await productService.getProductsById(arrOfProductId);
+        return res.status(200).json({
+            products: productsInId,
+        });
+    }
+
+    //카테고리, 물품 아이디 미 입력 시
+    const allProducts = await productService.getAllProducts();
+    return res.status(200).json({
+        //Best product,
+        //New product,
+        products: allProducts,
+    });
 });
 
 // productRouter.get('/:id', async (req, res, next) => {
@@ -133,7 +128,7 @@ productRouter.post("/", async (req, res, next) => {
 //상품 아이템 삭제
 productRouter.delete("/:id", async (req, res, next) => {
     try {
-        console.log("삭제하는 라우터입니다.");
+        // console.log("삭제하는 라우터입니다.");
         const id = req.params.id;
         await Product.deleteOne({ _id: id });
         //console.log("삭제 완료");

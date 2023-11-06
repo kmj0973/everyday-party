@@ -23,12 +23,12 @@ const orderSchema = new Schema({
     orderedAt: {
         type: Date,
         required: true,
-    }, 
+    },
     totalPrice: {
         type: Number,
-        required: true
+        required: true,
     },
-    orderBy: {
+    orderedBy: {
         type: String,
         required: true,
         //default: "Anonymous",
@@ -36,10 +36,10 @@ const orderSchema = new Schema({
     phoneNumber: {
         type: String,
     },
-    addresses: {
+    address: {
         type: [String],
         required: true,
-    },
+    }, //['주소', '상세주소']의 형태로 저장
     // orderCustomer: {
     //     type: Schema.Types.ObjectId,
     //     ref: "User",
@@ -52,8 +52,8 @@ const orderSchema = new Schema({
     deliveryStatus: {
         type: String,
         required: true,
-        enum : deliveryStatusEnum
+        enum: deliveryStatusEnum,
     },
 });
 
-module.exports = {orderSchema};
+module.exports = { orderSchema };
