@@ -1,3 +1,12 @@
+// import로 헤더 렌더링
+// import { Header } from '../../public/header/header.js';
+
+// const headerRender = () => {
+//   return Header();
+// };
+
+// headerRender();
+
 // 로컬스토리지
 /**
  로컬스토리지에 빈 cartItems 배열 만들어놓기. 혜원님key값:cart와 동일해야 하는지?-> 동일해야함.
@@ -35,7 +44,7 @@ function addToCart(id, name, price, quantity) {
     // 담아온 상품이 장바구니에 이미 존재한다면,
     cartItems[productInCartIndex].quantity += quantity; // 해당제품 수량만 증가
   } else {
-    cartItems.push({ id, name, price, quantity }); // 새 상품을 장바구니에 추가
+    cartItems.push({ id, name, price, quantity }); // 장바구니에 없는 상품이면 상품을 장바구니에 추가
   }
 
   updateCart();
@@ -139,14 +148,10 @@ function updateCart() {
     totalDiv.setAttribute('class', 'totalDiv');
     itemsList.appendChild(totalDiv);
 
-    // //총 상품금액
-    // const totalPrice = document.querySelector('.total_price');
-    // totalPrice.textContent = `총 상품금액: ${calculateTotalPrice()} 원`;
-
     // // 배송비 FIXME: 상품금액이 0원이어도 3000으로 표기됨
-    // const shippingFee = totalPrice === 0 ? 0 : 3000;
-    // const shippingFeeNumber = document.querySelector('.shipping_fee_number');
-    // shippingFeeNumber.textContent = `: ${shippingFee} 원`;
+    const shippingFee = totalPrice === 0 ? 0 : 3000;
+    const shippingFeeNumber = document.querySelector('.shipping_fee_number');
+    shippingFeeNumber.textContent = `: ${shippingFee} 원`;
 
     // 총 결제금액
     const sumPriceHelper = document.querySelector('.sum_price_helper');
@@ -170,16 +175,17 @@ const total = calculateTotalPrice();
 
 //총 결제금액 계산 함수
 function sumPrice() {
-  return calculateTotalPrice() + 3000;
+  return calculateTotalPrice();
 }
 
 //3. 상품 구매를 나타내는 부분
 //전체상품 구매 함수
 
 function allOrder() {
-  if (cartItems.length >= 1);
-  {
+  if (cartItems.length >= 1) {
     alert('주문완료!');
+  } else if (cartItems.length < 1) {
+    alert('상품을 담아주세요!');
   }
 }
 
@@ -231,6 +237,8 @@ function selectedOrder() {
 
   if (isChecked) {
     alert('주문 완료!');
+  } else {
+    alert('선택된 상품이 없습니다!');
   }
 }
 
