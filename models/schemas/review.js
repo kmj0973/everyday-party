@@ -2,7 +2,7 @@ const { Schema } = require("mongoose");
 const fileSchema = require("./types/file");
 const article = require("./types/article");
 
-const ReviewSchema = new Schema({
+const reviewSchema = new Schema({
     product: {
         type: Schema.Types.ObjectId,
         ref: "Product",
@@ -14,4 +14,4 @@ const ReviewSchema = new Schema({
     article,
 });
 
-module.exports = ReviewSchema;
+module.exports = reviewSchema;

@@ -9,9 +9,9 @@ dotenv.config();
  * @param user {User} 토큰 발행을 원하는 User 객체
  * @return {String} JWT 토큰 값
  */
-function setUserToken(user) {
+function createUserToken(user) {
     const { userId } = user;
-    const token = jwt.sign({ userId }, process.env.SECRET_KEY, { expiresIn: "5m" });
+    const token = jwt.sign({ userId }, process.env.SECRET_KEY, { expiresIn: "25m" });
     return token;
 }
 
@@ -21,11 +21,11 @@ function setUserToken(user) {
  * @param token {String} 검증하고자하는 토큰 값
  * @return {Jwt} decode된 토큰 값
  */
-function verifyToken(token, callback) {
-    jwt.verify(token, process.env.SECRET_KEY, callback);
+function verifyToken(token) {
+    return jwt.verify(token, process.env.SECRET_KEY);
 }
 
 module.exports = {
-    setUserToken,
+    createUserToken,
     verifyToken,
 };

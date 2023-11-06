@@ -1,15 +1,10 @@
 const { Schema } = require("mongoose");
 
-const CategorySchema = new Schema({
-    cateNum: {
-        type: Number,
-        required: true,
-        unique: true,
-    },
-    cateName: {
+const categorySchema = new Schema({
+    categoryName: {
         type: String,
         required: true,
     },
 });
 
-module.exports = CategorySchema;
+module.exports = categorySchema;

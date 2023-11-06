@@ -6,9 +6,10 @@ class UserService {
      *
      * @param id {String} 유저의 아이디(userId)
      * @return {User} 유저 객체
+     *
      */
     async getUserById(userId) {
-        const user = await User.findOne({ userId });
+        const user = await User.findOne({ userId }).lean();
         return user;
     }
 
@@ -19,10 +20,7 @@ class UserService {
      * @return {User} 유저 객체
      */
     async getUserByEmail(email) {
-        if (!email) {
-            return undefined;
-        }
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ email }).lean();
         return user;
     }
 
@@ -33,10 +31,7 @@ class UserService {
      * @return {User} 유저 객체
      */
     async getUserByPhone(phone) {
-        if (!phone) {
-            return undefined;
-        }
-        const user = await User.findOne({ phone });
+        const user = await User.findOne({ phone }).lean();
         return user;
     }
 }
