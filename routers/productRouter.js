@@ -175,9 +175,6 @@ productRouter.patch("/:id", async (req, res, next) => {
     }
 });
 
-//상품 삭제 -> admin만 가능하게끔
-const mongoose = require("mongoose");
-
 productRouter.delete("/:id", async (req, res, next) => {
     try {
         const id = req.params.id;
