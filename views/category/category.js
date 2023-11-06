@@ -88,11 +88,11 @@ const cardRender = async (categoryId) => {
         const response = await fetch(`http://localhost:5000/api/products?category=${categoryId}`);
         const data = await response.json();
 
-        console.log(data);
+        console.log(data)
 
         data.products.map(products => {
             // 카테고리에 해당하는 베스트 상품을 렌더링
-            if (categoryId === products.category) {
+            if (categoryId === products) {
                 categoryBestCardElement.innerHTML =
                     data.products.map(categoryData => cardTemplate(categoryData))
                         .join("");
