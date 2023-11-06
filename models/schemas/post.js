@@ -1,20 +1,20 @@
 const { Schema } = require("mongoose");
 const fileSchema = require("./types/file");
-const CommentSchema = require("./comment");
+const commentSchema = require("./comment");
 const article = require("./types/article");
 
-const PostSchema = new Schema({
+const postSchema = new Schema({
     title: {
         type: String,
         required: true,
     },
     article,
     comments: {
-        type: [CommentSchema],
+        type: [commentSchema],
         required: true,
         default: [],
     },
-    file: {
+    files: {
         type: [fileSchema],
         default: [],
     },
@@ -24,4 +24,4 @@ const PostSchema = new Schema({
     },
 });
 
-module.exports = PostSchema;
+module.exports = postSchema;

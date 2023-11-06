@@ -32,7 +32,7 @@ router.post("/login", async (req, res, next) => {
         });
     }
 
-    const token = jwtUtil.setUserToken(isUserIdExist);
+    const token = jwtUtil.createUserToken(isUserIdExist);
 
     return res.json({
         token,

@@ -9,9 +9,9 @@ dotenv.config();
  * @param user {User} 토큰 발행을 원하는 User 객체
  * @return {String} JWT 토큰 값
  */
-function setUserToken(user) {
+function createUserToken(user) {
     const { userId } = user;
-    const token = jwt.sign({ userId }, process.env.SECRET_KEY, { expiresIn: "5m" });
+    const token = jwt.sign({ userId }, process.env.SECRET_KEY, { expiresIn: "25m" });
     return token;
 }
 
@@ -26,6 +26,6 @@ function verifyToken(token, callback) {
 }
 
 module.exports = {
-    setUserToken,
+    createUserToken,
     verifyToken,
 };
