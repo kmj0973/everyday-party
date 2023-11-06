@@ -7,7 +7,7 @@ const router = Router();
 
 router.use("/auth", authRouter);
 router.use("/products", productRouter);
-router.use("/order", orderRouter);
+router.use("/orders", orderRouter);
 
 module.exports = {
     router,
