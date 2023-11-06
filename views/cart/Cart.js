@@ -1,11 +1,11 @@
 // import로 헤더 렌더링
-// import { Header } from '../../public/header/header.js';
+import { Header } from '../public/header/header.js';
 
-// const headerRender = () => {
-//   return Header();
-// };
+const headerRender = () => {
+  return Header();
+};
 
-// headerRender();
+headerRender();
 
 // 로컬스토리지
 /**
