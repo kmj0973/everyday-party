@@ -1,27 +1,32 @@
 const { Schema } = require("mongoose");
 const fileSchema = require("./types/file");
-const CommentSchema = require("./comment");
+const commentSchema = require("./comment");
 const article = require("./types/article");
 
-const PostSchema = new Schema({
-    title: {
-        type: String,
-        required: true,
+const postSchema = new Schema(
+    {
+        title: {
+            type: String,
+            required: true,
+        },
+        article,
+        comments: {
+            type: [commentSchema],
+            required: true,
+            default: [],
+        },
+        files: {
+            type: [fileSchema],
+            default: [],
+        },
+        hits: {
+            type: Number,
+            default: 0,
+        },
     },
-    article,
-    comments: {
-        type: [CommentSchema],
-        required: true,
-        default: [],
-    },
-    file: {
-        type: [fileSchema],
-        default: [],
-    },
-    hits: {
-        type: Number,
-        default: 0,
-    },
-});
+    {
+        timestamps: true,
+    }
+);
 
-module.exports = PostSchema;
+module.exports = postSchema;
