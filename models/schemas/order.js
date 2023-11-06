@@ -1,6 +1,6 @@
 const { Schema } = require("mongoose");
 
-const ProductInfoSchema = new Schema({
+const productInfoSchema = new Schema({
     product: {
         type: Schema.Types.ObjectId,
         ref: "Product",
@@ -12,40 +12,48 @@ const ProductInfoSchema = new Schema({
     },
 });
 
-const OrderSchema = new Schema({
-    method: {
-        type: String,
-        enum: ["Card", "Cash"],
-        required: true,
-    },
-    orderDate: {
+const deliveryStatusEnum = ["주문완료", "배송준비", "배송중", "배송완료", "주문취소"];
+
+const orderSchema = new Schema({
+    // method: {
+    //     type: String,
+    //     enum: ["Card", "Cash"],
+    //     required: true,
+    // },
+    orderedAt: {
         type: Date,
         required: true,
     },
-    receiverName: {
-        type: String,
+    totalPrice: {
+        type: Number,
         required: true,
     },
-    receiverPhone: {
+    orderedBy: {
+        type: String,
+        required: true,
+        //default: "Anonymous",
+    },
+    phoneNumber: {
         type: String,
     },
-    receiverAddress: {
+    address: {
         type: [String],
         required: true,
-    },
-    orderCustomer: {
-        type: Schema.Types.ObjectId,
-        ref: "User",
+    }, //['주소', '상세주소']의 형태로 저장
+    // orderCustomer: {
+    //     type: Schema.Types.ObjectId,
+    //     ref: "User",
+    //     required: true,
+    // },
+    products: {
+        type: [productInfoSchema],
         required: true,
     },
-    productInfo: {
-        type: [ProductInfoSchema],
-        required: true,
-    },
-    deliverStatus: {
+    deliveryStatus: {
         type: String,
         required: true,
+        enum: deliveryStatusEnum,
     },
 });
 
-module.exports = OrderSchema;
+module.exports = { orderSchema };

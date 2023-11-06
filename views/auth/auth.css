@@ -50,6 +50,7 @@ label {
 /* 버튼 css */
 .id-check-btn,
 .email-check-btn,
+.phone-check-btn,
 .post-btn {
     border-radius: 15px;
     border: none;

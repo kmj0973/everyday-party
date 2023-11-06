@@ -1,17 +1,29 @@
 const mongoose = require("mongoose");
 
-const CategorySchema = require("./schemas/category");
-const CommentSchema = require("./schemas/comment");
-const OrderSchema = require("./schemas/order");
-const PostSchema = require("./schemas/post");
-const ProductSchema = require("./schemas/product");
-const ReviewSchema = require("./schemas/review");
-const UserSchema = require("./schemas/user");
+const categorySchema = require("./schemas/category");
+const commentSchema = require("./schemas/comment");
+const orderSchema = require("./schemas/order");
+const postSchema = require("./schemas/post");
+const { optionSchema, productSchema } = require("./schemas/product");
+const reviewSchema = require("./schemas/review");
+const userSchema = require("./schemas/user");
 
-exports.Category = mongoose.model("Category", CategorySchema);
-exports.Comment = mongoose.model("Comment", CommentSchema);
-exports.Order = mongoose.model("Order", OrderSchema);
-exports.Post = mongoose.model("Post", PostSchema);
-exports.Product = mongoose.model("Product", ProductSchema); //수정
-exports.Review = mongoose.model("Review", ReviewSchema);
-exports.User = mongoose.model("User", UserSchema);
+const Category = mongoose.model("Category", categorySchema);
+const Comment = mongoose.model("Comment", commentSchema);
+const Order = mongoose.model("Order", orderSchema);
+const Post = mongoose.model("Post", postSchema);
+const Product = mongoose.model("Product", productSchema); //수정
+const Option = mongoose.model("Option", optionSchema);
+const Review = mongoose.model("Review", reviewSchema);
+const User = mongoose.model("User", userSchema);
+
+module.exports = {
+    Category,
+    Comment,
+    Order,
+    Post,
+    Product,
+    Option,
+    Review,
+    User,
+};

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>everyday-party 장바구니</title>
+        <!-- 아이콘 -->
+        <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+        <!-- 커스텀CSS -->
+        <link rel="stylesheet" href="/cart/Cart.css" />
+    </head>
+    <body>
+        <div id="header"></div>
+        <div id="category"></div>
+        <div class="cart_container">
+            <h1 class="cart_title">장바구니</h1>
+
+            <!-- 장바구니에 담긴 상품들 -->
+            <div class="order_container">
+                <div class="order_semi_container">
+                    <div class="items_container">
+                        <div class="delete_container">
+                            <div class="delete_container_helper">
+                                <button class="delete_all_button">전체삭제</button>
+                                <button class="delete_checked_button">선택삭제</button>
+                            </div>
+                        </div>
+                        <div class="items_list" id="items_list"></div>
+                    </div>
+                    <!-- 결제 요약 정보 -->
+                    <div class="purchase_container">
+                        <div class="purchase_helper">
+                            <div class="sum_price_text">결제금액</div>
+                            <div class="sum_price_helper">
+                                <div class="sum_price_number">9000</div>
+                                <div class="sum_price_unit">원</div>
+                            </div>
+                            <div class="price_shipping_helper">
+                                <div class="total_price">
+                                    <div class="total_price_helper">
+                                        <span class="total_price_text">총 상품금액</span>
+                                        <span class="total_price_number"></span>
+                                    </div>
+                                </div>
+                                <div class="shipping_fee">
+                                    <div class="shipping_fee_helper">
+                                        <span class="shipping_fee_text">배송비</span>
+                                        <span class="shipping_fee_number">: 3000 원</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 상품 결제 -->
+                        <div class="pay_container">
+                            <div class="pay_helper">
+                                <button class="all_order_button">전체 상품 구매</button>
+                                <button class="selected_order_button">선택 상품 구매</button>
+                            </div>
+                            <div class="keep_shopping_button_helper">
+                                <button class="keep_shopping_button">쇼핑 계속 하기</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="/cart/Cart.js"></script>
+    </body>
+</html>
