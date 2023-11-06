@@ -40,8 +40,6 @@ class OrderService {
     return {orderStatus, message: "주문이 취소되었습니다."};
     }
 
-
-
 }
 
 module.exports = new OrderService();

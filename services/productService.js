@@ -28,6 +28,7 @@ class ProductService {
         }
     }
 
+
     /**
      * 카테고리(category)에 따른 물품 하나 이상을 반환
      *
@@ -123,7 +124,7 @@ class ProductService {
         //await productService.getProductsByCategory(category);
 
         ////body에 담겨져서오는 client의 input값들을 검증해주는 코드가 있으면 좋을 것 같습니다.
-        const {size, color} = productData.option;
+        //const {size, color} = productData.option;
 
         const newProduct = await Product.create({
             name: productData.name, 
@@ -133,14 +134,16 @@ class ProductService {
             entryDate: productData.entryDate,
             description: productData.description, 
             option: {
-                size , 
-                color
+                size: Option.size, 
+                color: Option.color
             },
             file: productData.file
         });
 
         return newProduct;
     }
+
+    
 }
 
 module.exports = new ProductService();
