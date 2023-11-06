@@ -28,7 +28,7 @@ function createBestCard(products) {
     for (let i = 0; i < 5; i++) {
         cardContainer.innerHTML += `<div class="menu_card">
         <div class="card_img_wrap">
-        <img class="card_img" src="./images/파티1.PNG" alt="테스트 이미지" />
+        <img class="card_img" src="${products[i].file.path}" alt="테스트 이미지" />
         </div>
     <div class="card_contents">
         <h3 class="card_title">${products[i].name}</h3>

@@ -25,7 +25,7 @@ class ProductService {
         if (product === null || product === undefined) {
             const error = new Error("찾으려는 물품이 존재하지 않습니다.");
             error.status = 404;
-            next(error);
+            throw error;
         } else {
             return product;
         }
@@ -49,7 +49,7 @@ class ProductService {
         if (products.length === 0) {
             const error = new Error("찾으려는 물품이 존재하지 않습니다.");
             error.status = 404;
-            return error;
+            throw error;
         } else {
             return products;
         }
