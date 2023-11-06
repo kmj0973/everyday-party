@@ -13,7 +13,7 @@ const userSchema = new Schema({
     grade: {
         type: String,
         required: true,
-        default: "user",
+        default: "users",
     },
     email: {
         type: String,
