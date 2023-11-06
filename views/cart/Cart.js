@@ -21,6 +21,7 @@ localStorage.setItem(
     { id: 2, name: '의상1', price: 2000, quantity: 1 },
     { id: 3, name: '의상2', price: 2000, quantity: 1 },
     { id: 4, name: '의상3', price: 1000, quantity: 1 },
+    { id: 5, name: '의상4', price: 1000, quantity: 1 },
   ])
 );
 
@@ -84,13 +85,21 @@ function updateCart() {
 
     // 상품명
     const itemName = document.createElement('p');
+    itemName.setAttribute('class', 'itemName');
     itemName.textContent = item.name;
     itemDiv.appendChild(itemName);
 
     // 상품가격
     const itemPrice = document.createElement('p');
+    itemPrice.setAttribute('class', 'itemPrice');
     itemPrice.textContent = item.price + '원';
     itemDiv.appendChild(itemPrice);
+
+    //상품명+상품가격
+    const itemNamePrice = document.createElement('div');
+    itemNamePrice.setAttribute('id', 'itemNamePrice');
+    itemNamePrice.append(itemName, itemPrice);
+    itemDiv.appendChild(itemNamePrice);
 
     // 수량 감소 버튼
     const minusButton = document.createElement('button');
@@ -99,7 +108,7 @@ function updateCart() {
     minusButton.onclick = function () {
       if (item.quantity > 1) {
         item.quantity--;
-        itemQuantity.textContent = item.quantity + '개';
+        itemQuantity.textContent = item.quantity;
         //총 상품금액을 뿌려주는 함수 호출
         calculateTotalPrice();
         renderTotal();
@@ -110,7 +119,8 @@ function updateCart() {
 
     //상품수량
     const itemQuantity = document.createElement('p');
-    itemQuantity.textContent = item.quantity + '개';
+    itemQuantity.setAttribute('class', 'itemQuantity');
+    itemQuantity.textContent = item.quantity;
     itemDiv.appendChild(itemQuantity);
 
     // 수량 증가 버튼
@@ -119,11 +129,17 @@ function updateCart() {
     plusButton.textContent = '+';
     plusButton.onclick = function () {
       item.quantity++;
-      itemQuantity.textContent = item.quantity + '개';
+      itemQuantity.textContent = item.quantity;
       calculateTotalPrice();
       renderTotal();
     };
     itemDiv.appendChild(plusButton);
+
+    //수량조절버튼
+    const quantityButtons = document.createElement('div');
+    quantityButtons.setAttribute('class', 'quantityButtons');
+    quantityButtons.append(minusButton, itemQuantity, plusButton);
+    itemDiv.appendChild(quantityButtons);
 
     // 휴지통 생성
     const removeButton = document.createElement('button');
@@ -149,9 +165,10 @@ function updateCart() {
     itemsList.appendChild(totalDiv);
 
     // // 배송비 FIXME: 상품금액이 0원이어도 3000으로 표기됨
-    const shippingFee = totalPrice === 0 ? 0 : 3000;
-    const shippingFeeNumber = document.querySelector('.shipping_fee_number');
-    shippingFeeNumber.textContent = `: ${shippingFee} 원`;
+
+    // const shippingFee = totalPrice === 0 ? 0 : 3000;
+    // const shippingFeeNumber = document.querySelector('.shipping_fee_number');
+    // shippingFeeNumber.textContent = `: ${shippingFee} 원`;
 
     // 총 결제금액
     const sumPriceHelper = document.querySelector('.sum_price_helper');
@@ -195,7 +212,7 @@ allOrderButton.addEventListener('click', allOrder);
 
 //전체상품 삭제 함수
 function removeAllItems() {
-  cartItems.length = 0; // 장바구니비우기
+  cartItems.length = 0; //장바구니비우기
   updateCart();
 }
 

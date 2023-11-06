@@ -14,33 +14,45 @@
     <script type="module" src="/views/admin/admin.js"></script>
   </head>
   <body>
-    <div class="admin_container">
-      <h1 id="admin_title">관리자 페이지</h1>
-
-      <nav class="nav">
-        <div class="menu_container">
-          <ul class="products_menu">
-            <h2>상품정보 관리</h2>
+    <div id="admin_title">관리자 페이지</div>
+    <div id="admin_container">
+      <!-- 관리자 권한 사이드바 -->
+      <div id="side_bar">
+        <div id="menu_container">
+          <div id="products_menu">
+            <div id="products_admin">상품정보 관리</div>
             <li><a href="#">상품 수정 </a></li>
             <li><a href="#">상품 추가 </a></li>
             <li><a href="#">상품 삭제 </a></li>
-          </ul>
+          </div>
 
-          <ul class="category_menu">
-            <h2>카테고리 관리</h2>
+          <div id="category_menu">
+            <div id="category_admin">카테고리 관리</div>
             <li><a href="#">카테고리 수정 </a></li>
             <li><a href="#">카테고리 추가 </a></li>
             <li><a href="#">카테고리 삭제 </a></li>
-          </ul>
+          </div>
 
-          <ul class="orderinfo_menu">
-            <h2>주문정보 관리</h2>
+          <div id="orderinfo_menu">
+            <div id="orderinfo_admin">주문정보 관리</div>
             <li><a href="#">주문정보 수정</a></li>
             <li><a href="#">주문정보 조회</a></li>
             <li><a href="#">주문정보 삭제</a></li>
-          </ul>
+          </div>
         </div>
-      </nav>
+      </div>
+      <!-- 관리 메인 페이지 -->
+      <div id="main_container">
+        <div>왼쪽의 사이드 메뉴 클릭 시 해당 관리 항목이 표시되는 부분</div>
+      </div>
     </div>
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-logo">
+        <a href="/"
+          ><img class="logo-image" src="../public/image/logo.png"
+        /></a>
+      </div>
+    </footer>
   </body>
 </html>
