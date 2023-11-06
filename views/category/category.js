@@ -11,33 +11,49 @@ headerRender();
 // innerHTML로 넣어줄 템플릿
 const cardTemplate = (categoryData) => {
 
-    // 숫자 천 단위로(,)
-    const priceComma = categoryData.price
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    if (categoryData !== null) {
+        // 숫자 천 단위로(,)
+        const priceComma = categoryData.price
+            .toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
-    return `
-        <div class="category_card">
-            <div class="card_img_wrap">
-                <img class="card_img" src="../../public/image/test.png" 
-                    alt="크리스마스 카드 이미지"
-                >
-            </div>
-            <div class="card_contents">
-                <h3 class="card_title">${categoryData.name}</h3>
-                <div class="purchase_info_wrap">
-                    <span class="card_price">${priceComma}원</span>
-                    <button class="card_cart_button">장바구니 버튼</button>
+        return `
+            <div class="category_card">
+                <div class="card_img_wrap">
+                    <img class="card_img" src="../../public/image/test.png" 
+                        alt="크리스마스 카드 이미지"
+                    >
                 </div>
-                <p class="card_review">${categoryData.review}+</p>
-            </div>
-        </div>    
+                <div class="card_contents">
+                    <h3 class="card_title">${categoryData.name}</h3>
+                    <div class="purchase_info_wrap">
+                        <span class="card_price">${priceComma}원</span>
+                        <button class="card_cart_button">장바구니 버튼</button>
+                    </div>
+                    <p class="card_review">${categoryData.review}+</p>
+                </div>
+            </div>    
         `;
+    } else {
+        return `
+            <div class="not_found_card">
+                <iconify-icon 
+                    icon="iconamoon:cloud-no-light" 
+                    style="color: #ccc;"
+                    width="46"
+                >
+                </iconify-icon>
+                <p>상품이 존재하지 않습니다.</p>
+            </div>    
+        `;
+    }
 }
 
 const categoryList = document.querySelectorAll(".category li a");
 const categoryBestCardElement = document.querySelector(".best_card_container");
-const categoryContainerElement = document.querySelector(".card_container");
+const categoryCardElement = document.querySelector(".card_container");
+const categoryBestErrorElement = document.querySelector(".best_error_container");
+const categoryErrorElement = document.querySelector(".card_error_container");
 const cardAmountElement = document.querySelector(".card_amount");
 
 // 페이지 로드 시 저장된 카테고리 정보를 렌더링
@@ -72,6 +88,8 @@ const cardRender = async (categoryId) => {
         const response = await fetch(`http://localhost:5000/api/products?category=${categoryId}`);
         const data = await response.json();
 
+        console.log(data);
+
         data.products.map(products => {
             // 카테고리에 해당하는 베스트 상품을 렌더링
             if (categoryId === products.category) {
@@ -83,15 +101,20 @@ const cardRender = async (categoryId) => {
             // 카테고리에 상품을 렌더링
             if (categoryId === products.category) {
                 cardAmountElement.innerHTML = `총 ${data.products.length}건`;
-                categoryContainerElement.innerHTML =
-                    data.products.map(categoryData => cardTemplate(categoryData))
+                categoryCardElement.innerHTML =
+                    data.products.map(categoryData => {
+                        cardTemplate(categoryData)
+                    })
                         .join("");
-
             }
         });
     }
     catch (error) {
         console.log(error.message);
+        if(error.message = "404") {
+            categoryBestErrorElement.innerHTML = cardTemplate(null);
+            categoryErrorElement.innerHTML = cardTemplate(null);
+        }
     }
 }
 

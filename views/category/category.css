@@ -154,3 +154,23 @@ button {
     margin-right: 5px;
     background: url('https://api.iconify.design/teenyicons/chat-outline.svg?color=%23888&width=12') no-repeat center center / contain;
 }
+
+/* 에러 페이지 */
+.best_error_container,
+.card_error_container {
+    margin-bottom: 60px;
+}
+
+
+.not_found_card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 30px;
+}
+
+.not_found_card p {
+    color: #ccc;
+}
