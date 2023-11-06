@@ -163,7 +163,7 @@ class ProductService {
             price: productData.price,
             discountRate: productData.discountRate,
             category: productData.category,
-            entryDate: productData.entryDate,
+            stockedAt: productData.stockedAt,
             description: productData.description,
             option: {
                 size: Option.size, 

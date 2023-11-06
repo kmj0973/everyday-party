@@ -97,7 +97,7 @@ productRouter.get("/", async (req, res, next) => {
 //상품 생성
 productRouter.post("/", async (req, res, next) => {
     //console.log("상품을 post합니다!");
-    const { name, price, entryDate, discountRate, category, description, option, file } = req.body;
+    const { name, price, stockedAt, discountRate, category, description, option, file } = req.body;
 
     try {
         const existingProduct = await productService.checkProductExists(name);
@@ -114,7 +114,7 @@ productRouter.post("/", async (req, res, next) => {
             price,
             discountRate,
             category,
-            entryDate,
+            stockedAt,
             description,
             option,
             file,
@@ -129,16 +129,17 @@ productRouter.post("/", async (req, res, next) => {
     }
 });
 
+
 //상품 수정 -> admin만 가능하게끔
 productRouter.patch('/:id', async (req, res, next) => {
     try {
         console.log("수정하는 라우터입니다.");
-        const productId = req.params;
+        const {id} = req.params;
 
-        const { name, price, sales, discountRate, category, description, option } = req.body;
+        const { name, price, sales, discountRate, category, description, option, file } = req.body;
 
         const updatedProduct = await Product.findByIdAndUpdate(
-            productId,
+            id,
             {
                 name,
                 price,
@@ -147,6 +148,7 @@ productRouter.patch('/:id', async (req, res, next) => {
                 category,
                 description,
                 option,
+                file,
             },
             { new: true } //몽구스에서 지원하는 옵션 -> 업데이트 된 문서를 반환
         );
@@ -155,6 +157,7 @@ productRouter.patch('/:id', async (req, res, next) => {
             return res.status(404).json({ message: '상품을 찾을 수 없습니다.' });
         }
 
+        res.status(200).json(updatedProduct);
     } catch (err) {
         next(err);
         return;
@@ -162,18 +165,23 @@ productRouter.patch('/:id', async (req, res, next) => {
 })
 
 //상품 삭제 -> admin만 가능하게끔
+const mongoose = require("mongoose");
+
 productRouter.delete('/:id', async (req, res, next) => {
     try {
-        const id = req.params;
+        const id = req.params.id;
+        const objectId = new mongoose.Types.ObjectId(id);
         //const id = req.body.id;
         if (id === undefined) {
             res.status(404).json({ message: '해당 상품의 아이디가 필요합니다.' });
         }
         else {
-            const deleteProduct = await Product.deleteOne({ _id: id });
+            const deleteProduct = await Product.deleteOne({ _id: objectId  });
 
             if (deleteProduct.deletedCount > 0) {
-                res.status(204).json({ message: '제품이 성공적으로 삭제되었습니다.' });
+                res.status(204).json({
+                     message: '제품이 성공적으로 삭제되었습니다.',
+                    data : deleteProduct });
             } else {
                 res.status(404).json({ message: '해당 ID의 상품을 찾을 수 없습니다.' });
             }
