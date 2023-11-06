@@ -71,6 +71,7 @@ const cardRender = async (categoryId) => {
         // 해당 카테고리의 데이터를 반환해주는 api
         const response = await fetch(`http://localhost:5000/api/products?category=${categoryId}`);
         const data = await response.json();
+        console.log(data);
 
         data.products.map(products => {
             // 카테고리에 해당하는 베스트 상품을 렌더링
@@ -86,7 +87,6 @@ const cardRender = async (categoryId) => {
                 categoryContainerElement.innerHTML =
                     data.products.map(categoryData => cardTemplate(categoryData))
                         .join("");
-
             }
         });
     }
