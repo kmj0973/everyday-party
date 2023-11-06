@@ -56,13 +56,21 @@ orderRouter.patch("/:id", async (req, res, next) => {
     const { id } = req.params;
     //console.log(orderId);
 
-    const { deliveryStatus } = req.body;
+//주문 취소 -> 배송상태만 업데이트
+orderRouter.patch('/:id', async (req, res, next) => {
+    const {id} = req.params;
+    console.log(id);
+    
+    const  changedStatus  = req.body;
+
+    //console.log(req.body);
 
     try {
         //service코드 넣기
-        const orderCancellation = await OrderService.cancelOrder(id, deliveryStatus);
+        const orderCancellation = await OrderService.cancelOrder(
+            id, changedStatus);
 
-        res.status(200).json({ deliveryStatus: orderCancellation });
+        res.status(200).json({ orderCancellation });
     } catch (err) {
         next(err);
     }
