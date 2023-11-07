@@ -30,8 +30,9 @@ app.use((req, res, next) => {
 
 app.use((err, req, res, next) => {
     console.error(err);
-    res.status(err.status || 500);
-    res.json(err);
+    return res.status(err.status || 500).json({
+        message: err.message,
+    });
 });
 
 app.listen(process.env.PORT, () => {
