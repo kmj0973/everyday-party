@@ -87,6 +87,7 @@ button {
     grid-template-columns: repeat(4, 1fr);
     justify-items: center;
     gap: 20px;
+    white-space: wrap;
     margin-bottom: 60px;
 }
 

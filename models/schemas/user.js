@@ -1,5 +1,7 @@
 const { Schema } = require("mongoose");
 
+const userGradeEnum = ["user", "admin"];
+
 const userSchema = new Schema({
     userId: {
         type: String,
@@ -13,11 +15,11 @@ const userSchema = new Schema({
     grade: {
         type: String,
         required: true,
-        default: "users",
+        enum: userGradeEnum,
+        default: "user",
     },
     email: {
         type: String,
-        unique: true,
     },
     name: {
         type: String,
@@ -27,7 +29,6 @@ const userSchema = new Schema({
     },
     phone: {
         type: String,
-        unique: true,
     },
     birthday: {
         type: Date,

@@ -15,7 +15,7 @@ a {
 }   
 
 .logo {
-    width: 12%;
+    width: 52%;
     cursor: pointer;
 }
 
@@ -61,4 +61,13 @@ nav {
     width: 10%;
     font-weight: 600;
     text-align: center;
+}
+
+.category > li a {
+    display: block;
+    transition: all .4s;
+}
+
+.category > li a:hover {
+    color: #F9E103;
 }
