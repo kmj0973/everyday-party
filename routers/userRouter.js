@@ -22,7 +22,7 @@ userRouter.put("/me", authenticateUserToken, authenticateUserData, async (req, r
     const decoded = req.user;
     const user = await userService.getUserById(decoded.userId);
 
-    if (user !== undefined || user !== null) {
+    if (user === undefined || user === null) {
         const error = new Error("존재하지 않는 아이디입니다.");
         error.status = 409;
         return next(error);
