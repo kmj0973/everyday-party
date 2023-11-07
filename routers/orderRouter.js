@@ -1,9 +1,11 @@
 const { Router } = require("express");
-const { Order } = require("../models");
+const { Order, ProductInfo } = require("../models");
 
 const OrderService = require("../services/orderService");
 
 const orderRouter = Router();
+
+const mongoose = require("mongoose");
 
 //주무내역 + 특정 주문 내역
 orderRouter.get("/", async (req, res, next) => {
@@ -20,37 +22,54 @@ orderRouter.get("/", async (req, res, next) => {
 });
 
 //주문생성
-
-orderRouter.post('/', async (req, res, next) => {
+orderRouter.post("/", async (req, res, next) => {
     const { orderedAt, totalPrice, orderedBy, phoneNumber, address, products, deliveryStatus } = req.body;
     try {
-        const newOrder = OrderService.createOrder({
+        const productInfos = [];
+        console.log(products);
+
+        for (const productInfo of products) {
+            const productInfoModel = new ProductInfo({
+                product: productInfo.product,
+                count: productInfo.count,
+            });
+
+            // productInfoModel을 저장
+            const savedProductInfo = await productInfoModel.save();
+            productInfos.push(savedProductInfo._id); // 저장된 ObjectId를 배열에 추가
+        }
+
+        const newOrder = await OrderService.createOrder({
             orderedAt,
             totalPrice,
             orderedBy,
             phoneNumber,
             address,
-            products,
-            deliveryStatus
-        })
+            products: productInfos,
+            deliveryStatus,
+        });
 
-
-        //console.log("주문이 완료되었습니다.")
         res.status(201).json({
             message: "주문이 완료되었습니다.",
             newOrder,
         });
 
-        if (newOrder) {
-            res.status(201).json({
-                message: "주문이 완료되었습니다.",
-                newOrder,
-            });
-        } else {
-            res.status(500).json({
-                message: "주문을 생성하는 중에 문제가 발생했습니다.",
-            });
-        }
+        //console.log("주문이 완료되었습니다.")
+        // res.status(201).json({
+        //     message: "주문이 완료되었습니다.",
+        //     newOrder,
+        // });
+
+        // if (newOrder) {
+        //     res.status(201).json({
+        //         message: "주문이 완료되었습니다.",
+        //         newOrder,
+        //     });
+        // } else {
+        //     res.status(500).json({
+        //         message: "주문을 생성하는 중에 문제가 발생했습니다.",
+        //     });
+        //}
     } catch (err) {
         next(err);
         return;
@@ -76,15 +95,12 @@ orderRouter.patch("/:id", async (req, res, next) => {
     }
 });
 
-
-
-
 //주문 삭제 -> 회원탈퇴 후 삭제할 때 사용
-orderRouter.delete('/:id', async (req, res, next) => {
+orderRouter.delete("/:id", async (req, res, next) => {
     try {
         const id = req.params.id;
         if (id === undefined) {
-            res.status(404).json({ message: '해당 상품의 아이디가 필요합니다.' });
+            res.status(404).json({ message: "해당 상품의 아이디가 필요합니다." });
             return;
         }
 
@@ -99,6 +115,5 @@ orderRouter.delete('/:id', async (req, res, next) => {
         next(err);
     }
 });
-
 
 module.exports = orderRouter;

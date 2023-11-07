@@ -47,7 +47,7 @@ router.get("/check", async (req, res, next) => {
     const { userId, email, phone } = req.query;
 
     if (userId !== undefined && userId !== null) {
-        if (!userId instanceof String) {
+        if (typeof userId !== "string") {
             const error = new Error("아이디 값이 유효하지 않습니다.");
             error.status = 400;
             return next(error);
@@ -59,12 +59,12 @@ router.get("/check", async (req, res, next) => {
             error.status = 409;
             return next(error);
         } else {
-            return res.sendStatus(200);
+            return res.sendStatus(200).json({});
         }
     }
 
     if (email !== undefined && email !== null) {
-        if (!email instanceof String) {
+        if (typeof email !== "string") {
             const error = new Error("이메일 값이 유효하지 않습니다.");
             error.status = 400;
             return next(error);
@@ -77,12 +77,12 @@ router.get("/check", async (req, res, next) => {
             error.status = 409;
             return next(error);
         } else {
-            return res.sendStatus(200);
+            return res.sendStatus(200).json({});
         }
     }
 
     if (phone !== undefined && phone !== null) {
-        if (!phone instanceof String) {
+        if (typeof phone !== "string") {
             const error = new Error("전화번호 값이 유효하지 않습니다.");
             error.status = 400;
             return next(error);
@@ -95,7 +95,7 @@ router.get("/check", async (req, res, next) => {
             error.status = 409;
             return next(error);
         } else {
-            return res.sendStatus(200);
+            return res.sendStatus(200).json({});
         }
     }
 });
@@ -110,7 +110,7 @@ router.post("/sign-up", authenticateUserData, async (req, res, next) => {
 
     try {
         await userService.createUser(validInfoOfUserInput);
-        return res.sendStatus(200);
+        return res.sendStatus(200).json({});
     } catch (error) {
         next(error);
     }

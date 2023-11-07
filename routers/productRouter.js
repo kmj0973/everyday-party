@@ -1,12 +1,7 @@
 const { Router } = require("express");
-const { Product, Option } = require("../models");
 //const { authenticateUser, isAdmin } = require("../middleware/isAdmin");
 
-const orderService = require("../services/orderService");
-
 const productService = require("../services/productService");
-
-const mongoose = require("mongoose");
 
 const productRouter = Router();
 
@@ -19,7 +14,8 @@ productRouter.get("/", async (req, res, next) => {
 
     if (products !== undefined && products !== null) {
         products.split(",").forEach((eachProduct) => {
-            if (!eachProduct instanceof String) {
+            console.log(typeof eachProduct);
+            if (typeof eachProduct !== "string") {
                 const error = new Error("찾으려는 물품 값이 유효하지 않습니다.");
                 error.status = 400;
                 return next(error);
@@ -28,7 +24,7 @@ productRouter.get("/", async (req, res, next) => {
     }
 
     if (category !== undefined && category !== null) {
-        if (!category instanceof String) {
+        if (typeof category !== "string") {
             const error = new Error("찾으려는 카테고리 값이 유효하지 않습니다.");
             error.status = 400;
             return next(error);
@@ -56,7 +52,7 @@ productRouter.get("/", async (req, res, next) => {
                 });
             }
         } catch (error) {
-            next(error);
+            return next(error);
         }
     }
 
@@ -68,7 +64,7 @@ productRouter.get("/", async (req, res, next) => {
                 products: productsInCategory,
             });
         } catch (error) {
-            next(error);
+            return next(error);
         }
     }
 
@@ -81,7 +77,7 @@ productRouter.get("/", async (req, res, next) => {
                 products: productsInId,
             });
         } catch (error) {
-            next(error);
+            return next(error);
         }
     }
 
@@ -145,23 +141,20 @@ productRouter.post("/", async (req, res, next) => {
 productRouter.patch("/:id", async (req, res, next) => {
     try {
         //console.log("수정하는 라우터입니다.");
-        const {id} = req.params;
+        const { id } = req.params;
 
         const { name, price, sales, discountRate, category, description, option, file } = req.body;
 
-        const updatedProduct = await productService.updateProduct(
-            id,
-            {
-                name,
-                price,
-                sales,
-                discountRate,
-                category,
-                description,
-                option,
-                file,
-            }
-        );
+        const updatedProduct = await productService.updateProduct(id, {
+            name,
+            price,
+            sales,
+            discountRate,
+            category,
+            description,
+            option,
+            file,
+        });
 
         if (!updatedProduct) {
             return res.status(404).json({ message: "상품을 찾을 수 없습니다." });
@@ -175,11 +168,11 @@ productRouter.patch("/:id", async (req, res, next) => {
 });
 
 //상품 삭제 -> admin만 가능하게끔
-productRouter.delete('/:id', async (req, res, next) => {
+productRouter.delete("/:id", async (req, res, next) => {
     try {
         const id = req.params.id;
         if (id === undefined) {
-            res.status(404).json({ message: '해당 상품의 아이디가 필요합니다.' });
+            res.status(404).json({ message: "해당 상품의 아이디가 필요합니다." });
         }
 
         const deleted = await productService.deleteProduct(id);
