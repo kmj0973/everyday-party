@@ -130,4 +130,4 @@ dist
 .pnp.*
 
 # 테스트용 데이터를 생성하기 위한 폴더
-dummy
+data/dummy

@@ -13,7 +13,9 @@ mongoose.connect(process.env.MONGODB_URL);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+app.use("/images", express.static(path.join(__dirname, "images")));
 app.use(express.static(path.join(__dirname, "views")));
+
 app.use(cookieParser());
 
 app.use("/api", router.router);
