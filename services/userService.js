@@ -64,7 +64,6 @@ class UserService {
         const newUser = new User(data);
         console.log(newUser);
         await newUser.save().catch((error) => {
-            console.log(error);
             const newError = new Error("회원가입 중 오류가 발생했습니다.");
             newError.status = 500;
             throw newError;
