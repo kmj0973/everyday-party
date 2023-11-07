@@ -11,9 +11,9 @@ const userSchema = require("./schemas/user");
 const Category = mongoose.model("Category", categorySchema);
 const Comment = mongoose.model("Comment", commentSchema);
 const Order = mongoose.model("Order", orderSchema);
+const ProductInfo = mongoose.model("ProductInfo", productInfoSchema);
 const Post = mongoose.model("Post", postSchema);
-const Product = mongoose.model("Product", productSchema); 
-const ProductInfo = mongoose.model("ProductInfo", productInfoSchema); 
+const Product = mongoose.model("Product", productSchema);  
 const Option = mongoose.model("Option", optionSchema);
 const Review = mongoose.model("Review", reviewSchema);
 const User = mongoose.model("User", userSchema);
@@ -22,6 +22,7 @@ module.exports = {
     Category,
     Comment,
     Order,
+    ProductInfo,
     Post,
     Product,
     Option,
