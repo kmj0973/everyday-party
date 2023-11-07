@@ -22,7 +22,9 @@ async function onClickLoginButton(e) {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ userId, password }), // JSON 문자열로 변환
-        }).then((result) => result.json());
+        })
+            .then((result) => result.json())
+            .catch((err) => alert("로그인 실패"));
 
         if (data.status === 400) {
             // 아이디와 비밀번호 일치하지 않는 경우 Error전달
