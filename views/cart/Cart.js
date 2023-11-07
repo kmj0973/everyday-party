@@ -17,11 +17,10 @@ headerRender();
 localStorage.setItem(
   'cart',
   JSON.stringify([
-    { id: 1, name: '풍선', price: 2000, quantity: 1 },
-    { id: 2, name: '의상1', price: 2000, quantity: 1 },
-    { id: 3, name: '의상2', price: 2000, quantity: 1 },
-    { id: 4, name: '의상3', price: 1000, quantity: 1 },
-    { id: 5, name: '의상4', price: 1000, quantity: 1 },
+    // { _id: '6543563c88123149c933da9e', quantity: 1 },
+    { id: '65491fef6b0762c9aa44acfa', quantity: 1 },
+    // { _id: 2, quantity: 1 },
+    { id: 1, name: '풍선', price: 1000, quantity: 1 },
   ])
 );
 
@@ -31,10 +30,64 @@ const cartData = localStorage.getItem('cart');
 //   // { id: 2, name: '의상', price: 2000, quantity: 2 },
 // ];
 
-// JSON 문자열을 객체, 배열로 변환
+// JSON 문자열을 객체, 배열로 변환 (로컬스토리지)
 const cartItems = JSON.parse(cartData);
 
-//-----------------------------------------------------------------------
+//---------------api test----------------------------------------
+// fetch는 for문 안에서 해야함 그런데 느리니까 (3data x n개) -> 병렬로 나열 할 수 있는 Promise.all 사용해서 장바구니 상품에 표현될 데이터 콜 요청.
+
+fetch('/api/products') // api에서 products데이터(id,상품명, 수량, 옵션) 가져오기< 백단에서 아직 개별id가 작성이 안 됨. /api/products/?products=${productId} 변경예정.
+  .then((response) => response.json())
+  .then((data) => {
+    console.log(data); //데이터 불러온 것 확인완료
+    const product = data.products.find(
+      ({ _id }) => _id === '654a60f195cd6f5052eaad13'
+    );
+    console.log(product);
+  });
+
+// promise.all 사용 test
+// 상품id 가져오기.
+const promiseId = fetch('/api/products')
+  .then((response) => response.json())
+  .then((data) => {
+    const productId = data.products[0]._id;
+    console.log(productId); // [0]의 _id
+  });
+// 상품명 가져오기
+const promiseName = fetch('/api/products')
+  .then((response) => response.json())
+  .then((data) => {
+    const productName = data.products[0].name;
+    console.log(productName); // [0]의 name
+  });
+// 상품단가 가져오기
+const promisePrice = fetch('/api/products')
+  .then((response) => response.json())
+  .then((data) => {
+    const productPrice = data.products[0].price;
+    console.log(productPrice); // [0]의 price
+  });
+//상품옵션 가져오기 < 컬러 사이즈 둘다..?
+const promiseOption = fetch('/api/products')
+  .then((response) => response.json())
+  .then((data) => {
+    const productOption = data.products[0].option;
+    console.log(productOption); // [0]의 option
+  });
+//상품수량 가져오기
+const promiseQuantity = fetch('/api/products')
+  .then((response) => response.json())
+  .then((data) => {
+    const productQuantity = data.products[0].quantity;
+    console.log(productQuantity); // [0]의 quantity
+  });
+
+Promise.all([promiseId, promiseName, promisePrice, promiseQuantity]).then(
+  console.log
+);
+
+//----------------api test----------------------------------------
 
 // 1. 장바구니에 담겨온 상품이 표현되는 부분
 // id값을 기준으로 상품이 담겨오는 함수
@@ -158,7 +211,7 @@ function updateCart() {
 
   function renderTotal() {
     const totalPrice = document.querySelector('.total_price');
-    totalPrice.textContent = `총 상품금액: ${calculateTotalPrice()} 원`;
+    totalPrice.textContent = `총 상품금액: ${calculateTotalPrice().toLocaleString()} 원`;
     // 총 상품금액
     const totalDiv = document.createElement('div');
     totalDiv.setAttribute('class', 'totalDiv');
@@ -172,7 +225,7 @@ function updateCart() {
 
     // 총 결제금액
     const sumPriceHelper = document.querySelector('.sum_price_helper');
-    sumPriceHelper.textContent = `${sumPrice()} 원`;
+    sumPriceHelper.textContent = `${sumPrice().toLocaleString()} 원`;
   }
   renderTotal();
 }
@@ -184,7 +237,7 @@ function calculateTotalPrice() {
     price += item.price * item.quantity;
   });
   console.log('총 상품금액 계산이후:', cartItems);
-  return price;
+  return price.toLocaleString(); // 3자리 마다 , 삽입
 }
 
 //  총상품가격
