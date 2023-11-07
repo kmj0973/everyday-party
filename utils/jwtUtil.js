@@ -10,8 +10,8 @@ dotenv.config();
  * @return {String} JWT 토큰 값
  */
 function createUserToken(user) {
-    const { userId } = user;
-    const token = jwt.sign({ userId }, process.env.SECRET_KEY, { expiresIn: "25m" });
+    const { userId, grade } = user;
+    const token = jwt.sign({ userId, grade }, process.env.SECRET_KEY, { expiresIn: "25m" });
     return token;
 }
 
