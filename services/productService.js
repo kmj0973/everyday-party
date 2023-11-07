@@ -151,13 +151,6 @@ class ProductService {
             throw error;
         }
 
-        //해당 카테고리가 없는 경우
-        //await productService.getProductsByCategory(category);
-
-        ////body에 담겨져서오는 client의 input값들을 검증해주는 코드가 있으면 좋을 것 같습니다.
-
-        //const { size, color } = productData.option;
-
         const newProduct = await Product.create({
             name: productData.name,
             price: productData.price,
@@ -166,7 +159,7 @@ class ProductService {
             stockedAt: productData.stockedAt,
             description: productData.description,
             option: {
-                size: Option.size, 
+                size: Option.size,
                 color: Option.color
             },
             file: productData.file,
@@ -175,7 +168,46 @@ class ProductService {
         return newProduct;
     }
 
-    
+    async updateProduct(id, data) {
+        try {
+            const updatedProduct = await Product.findByIdAndUpdate(
+                id,
+                data,
+                { new: true }
+            );
+
+
+
+            return updatedProduct;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async deleteProduct(id) {
+        try {
+            const objectId = new mongoose.Types.ObjectId(id);
+
+            const deleteProduct = await Product.deleteOne({ _id: objectId });
+
+            if (deleteProduct.deletedCount > 0) {
+                return {
+                    success: true,
+                    message: '제품이 성공적으로 삭제되었습니다.',
+                    data: deleteProduct,
+                };
+            } else {
+                return {
+                    success: false,
+                    message: '해당 ID의 상품을 찾을 수 없습니다.',
+                };
+            }
+        } catch (err) {
+            throw err;
+        }
+    }
+
+
 }
 
 module.exports = new ProductService();
