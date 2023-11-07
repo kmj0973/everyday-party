@@ -46,6 +46,7 @@ button {
 
 .select .label {
     display: flex;
+    align-items: center;
     justify-content: space-between;
     width: 100%;
     background: none;
@@ -93,6 +94,7 @@ button {
 .category_card {
     max-height: 560px;
     cursor: pointer;
+    position: relative;
 }
 
 .card_img_wrap {
@@ -104,6 +106,7 @@ button {
     width: 285px;
     height: 320px;
     transition: all .6s;
+    z-index: 10;
 }
 
 .card_img:hover {

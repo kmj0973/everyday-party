@@ -31,12 +31,12 @@ export const Header = () => {
                     </iconify-icon>
                 </a>
                 <ul class="category">
-                    <li><a href="#" id="new">신상품</a></li>
-                    <li><a href="#" id="best">베스트</a></li>
-                    <li><a href="#" id="clothes">의류</a></li>
-                    <li><a href="#" id="props">소품</a></li>
-                    <li><a href="#" id="balloons">풍선</a></li>
-                    <li><a href="#" id="decorations">장식</a></li>
+                    <li><a href="new" id="new">신상품</a></li>
+                    <li><a href="best" id="best">베스트</a></li>
+                    <li><a href="clothes" id="clothes">의류</a></li>
+                    <li><a href="props" id="props">소품</a></li>
+                    <li><a href="balloons" id="balloons">풍선</a></li>
+                    <li><a href="decorations" id="decorations">장식</a></li>
                 </ul>
             </div>
         </nav>
