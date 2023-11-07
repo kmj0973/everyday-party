@@ -96,9 +96,7 @@ const option = document.querySelector('.option-select');
 const buyBtn = document.querySelector('.buy');
 let selectedOption = '';
 let selectedQuantity = '';
-//로컬스토리지에 빈 cart 배열 하나 만들어놓기 
-//!이부분 수정 
-localStorage.setItem('cart',JSON.stringify([]));
+
 
 //카트 추가하는 함수
 function addCartItem(selectedOption,selectedQuantity){
@@ -107,8 +105,22 @@ function addCartItem(selectedOption,selectedQuantity){
     //카트 배열 가져오기 -> string 형태의 prevCart를 배열로 변환 
     //! 예외처리 필요 (카트 키가 없을수도 있음) -> cart 키 있는지, cart를 pars했을때 배열형태인지 검사 
     const previousCart = JSON.parse(localStorage.getItem('cart'));
-    previousCart.push(productInfo);
-    localStorage.setItem('cart',JSON.stringify(previousCart));
+    console.log('isArray?',Array.isArray(previousCart),previousCart);
+    if(previousCart===null){
+        localStorage.setItem('cart',JSON.stringify([productInfo]));
+    }else{
+        //배열인지 확인
+        const isArray = Array.isArray(previousCart);
+        if(isArray){
+            previousCart.push(productInfo);
+            localStorage.setItem('cart',JSON.stringify(previousCart));
+
+        }else{
+            console.log('배열이 존재하지 않거나 데이터가 배열 형태가 아님')
+        }
+        
+    }
+    
 
 }
 

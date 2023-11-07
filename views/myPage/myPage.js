@@ -36,19 +36,26 @@ fetch('/api/users/me', {
    * 하나 더 하면 좋은 것 
    */
 
-//3. 해당 사용자의 구매 목록 가져오기 
-const ProductInfoBox = document.querySelector('.product-list-container');
+  getOrderList();
 
-fetch('/api/orders')
-  .then((res)=>res.json())
-  .then((data)=>{
-    console.log(data);
-    //orderlist가 빈 배열일 경우 => optional chaining : 물음표 
-    const orderInfo = data.orderlist?.filter(({orderedBy})=>orderedBy===userName);
-    console.log(orderInfo);
-    ProductInfoBox.appendChild(createProductInfo(orderInfo));
-  })
-  .catch((error)=> alert('주문목록을 불러올 수 없습니다.')) //catch에 콘솔찍는건 의미없음 (사용자)
+//3. 해당 사용자의 구매 목록 가져오기 
+async function getOrderList(){
+    const ProductInfoBox = document.querySelector('.product-list-container');
+    const data = await fetch('/api/orders');
+    const orderList = await data.json().then((res)=>res.orderlist);
+
+    //주문 목록에서 구매자를 기준으로 필터링, 빈 배열일경우를 대비하여 OPTIONAL CHAINING 사용
+    try{
+        const userOrders = orderList?.filter(({orderedBy})=>orderedBy===userName);
+        ProductInfoBox.appendChild(createProductInfo(userOrders));
+
+    }catch{
+        
+        alert('주문 목록을 불러올 수 없습니다.')
+    }
+    console.log(orderList);
+
+}
 
 function createProductInfo(orderInfo){
     const productInfoContainer = document.createElement('div');
