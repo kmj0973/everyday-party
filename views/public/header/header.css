@@ -4,6 +4,7 @@ li {
 }
 
 a {
+    width: 12%;
     text-decoration: none;
     color: #181619;
 }
@@ -15,7 +16,7 @@ a {
 }
 
 .logo {
-    width: 12%;
+    width: 100%;
     cursor: pointer;
 }
 

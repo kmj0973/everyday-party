@@ -4,7 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="./auth.css" />
-        <link rel="stylesheet" href="./login-header.css" />
+        <link rel="stylesheet" href="../public/header/login-header.css" />
         <!--로고 이름 폰트-->
         <style>
             @import url("https://fonts.googleapis.com/css2?family=Gluten:wght@400;500;600&family=Noto+Sans+KR&display=swap");
@@ -30,7 +30,12 @@
                         </div>
                         <div class="container">
                             <label for="password">비밀번호</label>
-                            <input type="password" id="password" class="password-input" placeholder="비밀번호" />
+                            <input
+                                type="password"
+                                id="password"
+                                class="password-input"
+                                placeholder="비밀번호(8자 이상)"
+                            />
                             <input type="password" class="password-check-input" placeholder="비밀번호 확인" />
                         </div>
                         <div class="container">
@@ -47,15 +52,21 @@
                         <div class="container">
                             <label for="phone">전화번호</label>
                             <div>
-                                <select class="tel1" style="width: 60px">
+                                <select class="tel1" style="width: 60px; border-radius: 10px">
                                     <option value="010">010</option>
                                     <option value="011">011</option>
                                     <option value="017">017</option>
                                 </select>
                                 -
-                                <input type="text" class="tel2" size="5" style="padding: 0" id="phone" />
+                                <input
+                                    type="text"
+                                    class="tel2"
+                                    size="4"
+                                    style="padding: 0; padding-left: 5px"
+                                    id="phone"
+                                />
                                 -
-                                <input type="text" class="tel3" size="5" style="padding: 0" />
+                                <input type="text" class="tel3" size="4" style="padding: 0; padding-left: 5px" />
                                 <button class="phone-check-btn">중복 확인</button>
                             </div>
                         </div>

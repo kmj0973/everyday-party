@@ -6,17 +6,27 @@ const headerRender = () => {
 
 headerRender();
 
+//순차 함수 실행
+Processing();
+
+async function Processing() {
+    await getBestProductData(); //베스트 상품
+    await getReviewData(); //리뷰
+    await reviewSlideEvent(); //리뷰 슬라이드
+}
+
 // 베스트 상품 데이터 받아오기
 const bestCardContainer = document.querySelector(".best-products-container");
-
-getBestProductData(); // API로 데이터 불러오기
 
 async function getBestProductData() {
     try {
         const data = await fetch("/api/products");
         const products = await data.json().then((result) => result.products);
 
-        bestCardContainer.appendChild(createBestCard(products));
+        const newProductsArr = products;
+        newProductsArr.sort((a, b) => b.sales - a.sales); //판매량 많은 순
+
+        bestCardContainer.appendChild(createBestCard(newProductsArr));
     } catch (err) {
         console.log(err);
     }
@@ -26,6 +36,7 @@ function createBestCard(products) {
     const cardContainer = document.createElement("article");
     cardContainer.setAttribute("id", "best_card_container");
     for (let i = 0; i < 8; i++) {
+        console.log(products[i]);
         cardContainer.innerHTML += `<div class="menu_card">
         <div class="card_img_wrap">
         <img class="card_img" src="${products[i].file.path}" alt="테스트 이미지" />
@@ -44,18 +55,38 @@ function createBestCard(products) {
 }
 
 // 리뷰 최신순으로 데이터 받아오기
-const a = 3;
-getReviewData();
+const reviewCardContainer = document.querySelector(".reviews-container");
+
 async function getReviewData() {
     try {
         const data = await fetch(`/api/reviews`);
-        const reviews = await data.json();
-        console.log(data);
-        console.log(reviews);
+        const reviews = await data.json().then((result) => result.reviews);
+
+        reviewCardContainer.appendChild(await createReviewCard(reviews));
     } catch (err) {
         console.log(err);
     }
 }
+function createReviewCard(reviews) {
+    const cardContainer = document.createElement("ul");
+    cardContainer.setAttribute("class", "reviews-list");
+    for (let i = 0; i < 8; i++) {
+        cardContainer.innerHTML += `<li>
+        <img src="${reviews[i].product.file.path}" />
+        <div class="review-details">
+            <span>${
+                reviews[i].product.name.length > 20
+                    ? reviews[i].product.name.substr(0, 18) + "..."
+                    : reviews[i].product.name
+            }</span>
+            <p>${reviews[i].article.content}</p>
+            <div>${reviews[i].article.author.name} | ${reviews[i].createdAt.substr(0, 10)}</div>
+        </div>
+    </li>`;
+    }
+    return cardContainer;
+}
+
 // 배너 슬라이드 바 이벤트
 const swiper = new Swiper(".swiper", {
     //swiper 라이브러리 사용
@@ -84,10 +115,10 @@ const swiper = new Swiper(".swiper", {
 });
 
 // 리뷰 슬라이드 바 이벤트
-const slideList = document.querySelector(".reviews-list");
-const slides = document.querySelectorAll(".reviews-list li");
+async function reviewSlideEvent() {
+    const slideList = document.querySelector(".reviews-list");
+    const slides = document.querySelectorAll(".reviews-list li");
 
-function reviewSlideEvent() {
     let currentIdx = 0; //현재 인덱스
     let slideCount = slides.length; //슬라이드 개수
     let slideWidth = 250;
@@ -145,5 +176,3 @@ function reviewSlideEvent() {
         moveSlide(currentIdx + 1);
     }, 3000);
 }
-
-reviewSlideEvent();

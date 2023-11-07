@@ -1,4 +1,4 @@
-import { Header } from "./login-header.js";
+import { Header } from "../public/header/login-header.js";
 // import로 헤더 렌더링
 const headerRender = () => {
     return Header();
