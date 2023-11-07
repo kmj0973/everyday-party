@@ -207,6 +207,52 @@ class ProductService {
         }
     }
 
+    async pagination(pageData){
+        const offset = pageData.offset;
+        
+        const orderBy = pageData.orderBy;
+        const orderDirection = pageData.orderDirection;
+        const limit = pageData.limit;
+        const total = pageData.total;
+        const totalPage = Math.ceil(total / limit);
+
+        if (orderBy && !allowedFieldMap[orderBy]) {
+            throw new Error('지원하지 않는 필드입니다.');
+          }
+      
+          const sortConfig = (orderBy !== undefined && orderBy !== null) ? { [orderBy]: orderDirection || -1 } : { _id: 1 };
+      
+          if (offset !== undefined && offset !== null && limit !== undefined && limit !== null) {
+            //console.log("여기들어옴");
+            const result = await Product.find({}).sort(sortConfig).skip(offset).limit(limit).lean();
+            //console.log(result);
+            return {offset, orderBy, orderDirection, result, totalPage};
+          }
+          //console.log("놉 여기임");
+          return await Product.find({}).sort(sortConfig).lean();
+    }
+
+    // async pagination(pageData) {
+    //     const page = pageData.page;
+    //     const perPage = pageData.perPage;
+    //     const [total, products] = await Promise.all([
+    //       Product.countDocuments({}),
+    //       Product.find({})
+    //           .sort({ createdAt: -1 })
+    //           .skip(perPage * (page - 1))
+    //           .limit(perPage)
+    //   ]);
+    //     // const total = await Product.countDocuments({});
+    //     // const products = await Product.find({})
+    //     //   .sort({ createdAt: -1 })
+    //     //   .skip(perPage * (page - 1))
+    //     //   .limit(perPage);
+    //     const totalPage = Math.ceil(total / perPage);
+    
+    //     return {page, perPage, products, totalPage};
+    //   }
+
+
 
 }
 
