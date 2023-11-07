@@ -10,7 +10,6 @@ orderRouter.get("/", async (req, res, next) => {
     //console.log('주문 조회 라우터에 들어왔습니다.');
     try {
         const orderlist = await Order.find({});
-        //주문 내역이 없으면 알아서 빈배열을 줌
 
         res.status(200).json({ orderlist });
     } catch (err) {
@@ -21,30 +20,37 @@ orderRouter.get("/", async (req, res, next) => {
 });
 
 //주문생성
-orderRouter.post("/", async (req, res, next) => {
-    //console.log('주문 라우터에 들어왔습니다.');
 
-    const { orderedAt, totalPrice, orderBy, phoneNumber, addresses, products, deliveryStatus } = req.body;
-
-    //const data = req.body;
-    //console.log(data);
-
+orderRouter.post('/', async (req, res, next) => {
+    const { orderedAt, totalPrice, orderedBy, phoneNumber, address, products, deliveryStatus } = req.body;
     try {
         const newOrder = OrderService.createOrder({
             orderedAt,
             totalPrice,
-            orderBy,
+            orderedBy,
             phoneNumber,
-            addresses,
+            address,
             products,
-            deliveryStatus,
-        });
+            deliveryStatus
+        })
+
 
         //console.log("주문이 완료되었습니다.")
         res.status(201).json({
             message: "주문이 완료되었습니다.",
             newOrder,
         });
+
+        if (newOrder) {
+            res.status(201).json({
+                message: "주문이 완료되었습니다.",
+                newOrder,
+            });
+        } else {
+            res.status(500).json({
+                message: "주문을 생성하는 중에 문제가 발생했습니다.",
+            });
+        }
     } catch (err) {
         next(err);
         return;
@@ -54,32 +60,45 @@ orderRouter.post("/", async (req, res, next) => {
 //주문 취소 -> 배송상태만 업데이트
 orderRouter.patch("/:id", async (req, res, next) => {
     const { id } = req.params;
-    //console.log(orderId);
 
     const { deliveryStatus } = req.body;
 
+    const { totalPrice, changedStatus } = req.body;
+    console.log(totalPrice, changedStatus);
     try {
-        //service코드 넣기
-        const orderCancellation = await OrderService.cancelOrder(id, deliveryStatus);
+        const cancelledOrder = await OrderService.cancelOrder(id, totalPrice, changedStatus);
 
-        res.status(200).json({ deliveryStatus: orderCancellation });
+        res.status(200).json({
+            cancelledOrder,
+        });
     } catch (err) {
         next(err);
     }
 });
 
-//주문 삭제 -> admin만 할 수 있는
-// orderRouter.delete('/:id', async (req, res, next) => {
-//     //console.log("주문 내역 삭제에 들어왔습니다.");
-//     try {
-//         const id = req.params;
-//         //service코드 넣기
-//         await Order.deleteOne(id);
-//         res.status(204).json({ result : 'success'});
-//     } catch (err) {
-//         next(err);
-//     }
 
-// })
+
+
+//주문 삭제 -> 회원탈퇴 후 삭제할 때 사용
+orderRouter.delete('/:id', async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        if (id === undefined) {
+            res.status(404).json({ message: '해당 상품의 아이디가 필요합니다.' });
+            return;
+        }
+
+        const result = await OrderService.deleteOrder(id);
+
+        if (result.success) {
+            res.status(204).json({ message: result.message });
+        } else {
+            res.status(404).json({ message: result.message });
+        }
+    } catch (err) {
+        next(err);
+    }
+});
+
 
 module.exports = orderRouter;

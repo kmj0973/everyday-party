@@ -144,12 +144,12 @@ productRouter.post("/", async (req, res, next) => {
 //상품 수정 -> admin만 가능하게끔
 productRouter.patch("/:id", async (req, res, next) => {
     try {
-        console.log("수정하는 라우터입니다.");
-        const { id } = req.params;
+        //console.log("수정하는 라우터입니다.");
+        const {id} = req.params;
 
         const { name, price, sales, discountRate, category, description, option, file } = req.body;
 
-        const updatedProduct = await Product.findByIdAndUpdate(
+        const updatedProduct = await productService.updateProduct(
             id,
             {
                 name,
@@ -160,8 +160,7 @@ productRouter.patch("/:id", async (req, res, next) => {
                 description,
                 option,
                 file,
-            },
-            { new: true } //몽구스에서 지원하는 옵션 -> 업데이트 된 문서를 반환
+            }
         );
 
         if (!updatedProduct) {
@@ -175,24 +174,23 @@ productRouter.patch("/:id", async (req, res, next) => {
     }
 });
 
-productRouter.delete("/:id", async (req, res, next) => {
+//상품 삭제 -> admin만 가능하게끔
+productRouter.delete('/:id', async (req, res, next) => {
     try {
         const id = req.params.id;
-        const objectId = new mongoose.Types.ObjectId(id);
-        //const id = req.body.id;
         if (id === undefined) {
-            res.status(404).json({ message: "해당 상품의 아이디가 필요합니다." });
-        } else {
-            const deleteProduct = await Product.deleteOne({ _id: objectId });
+            res.status(404).json({ message: '해당 상품의 아이디가 필요합니다.' });
+        }
 
-            if (deleteProduct.deletedCount > 0) {
-                res.status(204).json({
-                    message: "제품이 성공적으로 삭제되었습니다.",
-                    data: deleteProduct,
-                });
-            } else {
-                res.status(404).json({ message: "해당 ID의 상품을 찾을 수 없습니다." });
-            }
+        const deleted = await productService.deleteProduct(id);
+
+        if (deleted.success) {
+            res.status(204).json({
+                message: deleted.message,
+                data: deleted.data,
+            });
+        } else {
+            res.status(404).json({ message: deleted.message });
         }
     } catch (err) {
         next(err);
