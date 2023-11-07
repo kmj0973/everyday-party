@@ -1,3 +1,12 @@
+// import로 헤더 렌더링
+import { Header } from '../public/header/header.js';
+
+const headerRender = () => {
+  return Header();
+};
+
+headerRender();
+
 // 로컬스토리지
 /**
  로컬스토리지에 빈 cartItems 배열 만들어놓기. 혜원님key값:cart와 동일해야 하는지?-> 동일해야함.
@@ -12,6 +21,7 @@ localStorage.setItem(
     { id: 2, name: '의상1', price: 2000, quantity: 1 },
     { id: 3, name: '의상2', price: 2000, quantity: 1 },
     { id: 4, name: '의상3', price: 1000, quantity: 1 },
+    { id: 5, name: '의상4', price: 1000, quantity: 1 },
   ])
 );
 
@@ -35,7 +45,7 @@ function addToCart(id, name, price, quantity) {
     // 담아온 상품이 장바구니에 이미 존재한다면,
     cartItems[productInCartIndex].quantity += quantity; // 해당제품 수량만 증가
   } else {
-    cartItems.push({ id, name, price, quantity }); // 새 상품을 장바구니에 추가
+    cartItems.push({ id, name, price, quantity }); // 장바구니에 없는 상품이면 상품을 장바구니에 추가
   }
 
   updateCart();
@@ -75,13 +85,21 @@ function updateCart() {
 
     // 상품명
     const itemName = document.createElement('p');
+    itemName.setAttribute('class', 'itemName');
     itemName.textContent = item.name;
     itemDiv.appendChild(itemName);
 
     // 상품가격
     const itemPrice = document.createElement('p');
+    itemPrice.setAttribute('class', 'itemPrice');
     itemPrice.textContent = item.price + '원';
     itemDiv.appendChild(itemPrice);
+
+    //상품명+상품가격
+    const itemNamePrice = document.createElement('div');
+    itemNamePrice.setAttribute('id', 'itemNamePrice');
+    itemNamePrice.append(itemName, itemPrice);
+    itemDiv.appendChild(itemNamePrice);
 
     // 수량 감소 버튼
     const minusButton = document.createElement('button');
@@ -90,7 +108,7 @@ function updateCart() {
     minusButton.onclick = function () {
       if (item.quantity > 1) {
         item.quantity--;
-        itemQuantity.textContent = item.quantity + '개';
+        itemQuantity.textContent = item.quantity;
         //총 상품금액을 뿌려주는 함수 호출
         calculateTotalPrice();
         renderTotal();
@@ -101,7 +119,8 @@ function updateCart() {
 
     //상품수량
     const itemQuantity = document.createElement('p');
-    itemQuantity.textContent = item.quantity + '개';
+    itemQuantity.setAttribute('class', 'itemQuantity');
+    itemQuantity.textContent = item.quantity;
     itemDiv.appendChild(itemQuantity);
 
     // 수량 증가 버튼
@@ -110,11 +129,17 @@ function updateCart() {
     plusButton.textContent = '+';
     plusButton.onclick = function () {
       item.quantity++;
-      itemQuantity.textContent = item.quantity + '개';
+      itemQuantity.textContent = item.quantity;
       calculateTotalPrice();
       renderTotal();
     };
     itemDiv.appendChild(plusButton);
+
+    //수량조절버튼
+    const quantityButtons = document.createElement('div');
+    quantityButtons.setAttribute('class', 'quantityButtons');
+    quantityButtons.append(minusButton, itemQuantity, plusButton);
+    itemDiv.appendChild(quantityButtons);
 
     // 휴지통 생성
     const removeButton = document.createElement('button');
@@ -139,11 +164,8 @@ function updateCart() {
     totalDiv.setAttribute('class', 'totalDiv');
     itemsList.appendChild(totalDiv);
 
-    // //총 상품금액
-    // const totalPrice = document.querySelector('.total_price');
-    // totalPrice.textContent = `총 상품금액: ${calculateTotalPrice()} 원`;
-
     // // 배송비 FIXME: 상품금액이 0원이어도 3000으로 표기됨
+
     // const shippingFee = totalPrice === 0 ? 0 : 3000;
     // const shippingFeeNumber = document.querySelector('.shipping_fee_number');
     // shippingFeeNumber.textContent = `: ${shippingFee} 원`;
@@ -170,16 +192,17 @@ const total = calculateTotalPrice();
 
 //총 결제금액 계산 함수
 function sumPrice() {
-  return calculateTotalPrice() + 3000;
+  return calculateTotalPrice();
 }
 
 //3. 상품 구매를 나타내는 부분
 //전체상품 구매 함수
 
 function allOrder() {
-  if (cartItems.length >= 1);
-  {
+  if (cartItems.length >= 1) {
     alert('주문완료!');
+  } else if (cartItems.length < 1) {
+    alert('상품을 담아주세요!');
   }
 }
 
@@ -189,7 +212,7 @@ allOrderButton.addEventListener('click', allOrder);
 
 //전체상품 삭제 함수
 function removeAllItems() {
-  cartItems.length = 0; // 장바구니비우기
+  cartItems.length = 0; //장바구니비우기
   updateCart();
 }
 
@@ -231,6 +254,8 @@ function selectedOrder() {
 
   if (isChecked) {
     alert('주문 완료!');
+  } else {
+    alert('선택된 상품이 없습니다!');
   }
 }
 
