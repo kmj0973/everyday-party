@@ -67,7 +67,7 @@ async function onAuthorize(e) {
 //아이디 검증 이벤트
 async function onUserIdCheck(e) {
     e.preventDefault();
-
+    console.log(birthday.value);
     const userId = userIdInput.value;
 
     try {

@@ -43,6 +43,9 @@ body {
 input {
     padding: 5px;
     margin-bottom: 5px;
+    border-radius: 10px;
+    border: 1px solid #c7c7c9;
+    outline: none;
 }
 label {
     margin-bottom: 2px;
@@ -52,7 +55,7 @@ label {
 .email-check-btn,
 .phone-check-btn,
 .post-btn {
-    border-radius: 15px;
+    border-radius: 10px;
     border: none;
     padding: 7px;
     color: white;

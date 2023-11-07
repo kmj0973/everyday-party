@@ -9,17 +9,17 @@ headerRender();
 // 베스트 상품 데이터 받아오기
 const bestCardContainer = document.querySelector(".best-products-container");
 
-getData(); // API로 데이터 불러오기
+getBestProductData(); // API로 데이터 불러오기
 
-async function getData() {
-    const data = await fetch("/api/products");
-    const products = await data
-        .json()
-        .then((result) => result.products)
-        .catch((e) => console.log(e));
-    console.log(products);
-    //try catch
-    bestCardContainer.appendChild(createBestCard(products));
+async function getBestProductData() {
+    try {
+        const data = await fetch("/api/products");
+        const products = await data.json().then((result) => result.products);
+
+        bestCardContainer.appendChild(createBestCard(products));
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 function createBestCard(products) {
@@ -43,6 +43,19 @@ function createBestCard(products) {
     return cardContainer;
 }
 
+// 리뷰 최신순으로 데이터 받아오기
+const a = 3;
+getReviewData();
+async function getReviewData() {
+    try {
+        const data = await fetch(`/api/reviews`);
+        const reviews = await data.json();
+        console.log(data);
+        console.log(reviews);
+    } catch (err) {
+        console.log(err);
+    }
+}
 // 배너 슬라이드 바 이벤트
 const swiper = new Swiper(".swiper", {
     //swiper 라이브러리 사용
