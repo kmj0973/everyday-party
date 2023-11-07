@@ -1,6 +1,6 @@
 function processDataWithPatch(data) {
     for (let [key, value] of Object.entries(data)) {
-        if (!value) {
+        if (value === undefined || value === null) {
             Reflect.deleteProperty(data, key);
         }
     }
