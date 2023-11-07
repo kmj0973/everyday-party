@@ -1,3 +1,12 @@
+
+import { Header } from '../public/header/header.js';
+// import로 헤더 렌더링
+const headerRender = () => {
+    return Header();
+}
+
+headerRender();
+
 //1. 개수선택 카운트 업,다운 구현하기 
 //+,- 버튼과 number input을 가져와서 onclick했을때 num value값 바꿔주기
 const plusBtn = document.querySelector('#up');
@@ -18,17 +27,17 @@ minusBtn.onclick=function(){
 }
 
 //2. 탭버튼 구현하기 
-var links = document.querySelectorAll('.tab-list li a');
-var items = document.querySelectorAll('.tab-list li');
+const links = document.querySelectorAll('.tab-list li a');
+const items = document.querySelectorAll('.tab-list li');
 
 //a 태그 기능 막기 
-for (var i = 0; i < links.length; i++) {
+for (let i = 0; i < links.length; i++) {
     links[i].onclick = function(e) {
         e.preventDefault();
     }
 }
 //클릭한 item 은 active 클래스 추가, 아닌것은 active 클래스 제거 
-for(var i=0;i<items.length;i++){
+for(let i=0;i<items.length;i++){
     items[i].onclick=function(){
         //items의 a 태그의 href 속성을 불러와서 어떤 탭을 선택했는지 확인
         //tab-content-container 안에 있는 .tab, .tab-list li 을 모두 불러온 후, active class를 제거
@@ -61,21 +70,22 @@ for(var i=0;i<items.length;i++){
 const productName = document.querySelector('.product-name');
 const productPrice = document.querySelector('.product-price');
 const productDescription = document.querySelector('.product-description');
-const productId = "6543563c88123149c933da9e";
-//
+const productId = "65491fef6b0762c9aa44acfa";
+///api/products/?products?id="6543563c88123149c933da9e"
 //api 호출하여 이름, 가격, 상품 설명을 보여준다. 
-fetch(`/api/products/?products?id=${productId}`)
+fetch(`/api/products/?products=${productId}`)
     .then((response) => response.json())
     .then((data) => {
         console.log(data);
         const product = data.products.find(({_id})=>_id===productId);
-        //console.log(product.price);
+        console.log(data);
         productName.innerHTML = product.name;
         productPrice.innerHTML = product.price;
         productDescription.innerHTML = product.description;
 
     })
-    .catch((error) => console.error(error));
+    .catch((error) => {alert('상품 상세 정보를 불러오지 못했습니다.')
+console.log(error)});
 
 
 //4. 장바구니,구매하기 버튼 클릭했을 때 로컬스토리지에 개수,옵션값 저장
@@ -87,6 +97,7 @@ const buyBtn = document.querySelector('.buy');
 let selectedOption = '';
 let selectedQuantity = '';
 //로컬스토리지에 빈 cart 배열 하나 만들어놓기 
+//!이부분 수정 
 localStorage.setItem('cart',JSON.stringify([]));
 
 //카트 추가하는 함수
@@ -94,6 +105,7 @@ function addCartItem(selectedOption,selectedQuantity){
     //원래방식대로라면 prooductInfo에는 id, option, quantity만 넣는방식 추천 
     const productInfo = {id:productId,name:productName.innerHTML,price:productPrice.innerHTML,quantity:selectedQuantity,option:selectedOption};
     //카트 배열 가져오기 -> string 형태의 prevCart를 배열로 변환 
+    //! 예외처리 필요 (카트 키가 없을수도 있음) -> cart 키 있는지, cart를 pars했을때 배열형태인지 검사 
     const previousCart = JSON.parse(localStorage.getItem('cart'));
     previousCart.push(productInfo);
     localStorage.setItem('cart',JSON.stringify(previousCart));
