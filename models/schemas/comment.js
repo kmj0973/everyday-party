@@ -1,6 +1,7 @@
 const { Schema } = require("mongoose");
 const article = require("./types/article");
 
-const CommentSchema = new Schema(article);
+const commentSchema = new Schema(article);
+commentSchema.set("timestamps", { createdAt: true, updatedAt: false });
 
-module.exports = CommentSchema;
+module.exports = commentSchema;
