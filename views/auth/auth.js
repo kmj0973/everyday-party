@@ -47,8 +47,8 @@ async function onAuthorize(e) {
         objectData.grade = "uesr";
         objectData.password = passwordInput.value;
         objectData.name = nameInput.value;
-        objectData.address += ` ${detailAddress.value}`;
-        objectData.birthday = birthday.value;
+        objectData.address = [detailAddress.value];
+        // objectData.birthday = birthday.valueAsNumber;
         console.log(objectData);
 
         //db로 객체 정보 저장
@@ -57,8 +57,8 @@ async function onAuthorize(e) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(objectData), // JSON 문자열로 변환
         });
-
-        window.location.href = "/login/login.html";
+        console.log(JSON.stringify(objectData));
+        //window.location.href = "/login/login.html";
     } catch (err) {
         alert(err.message);
     }
@@ -76,6 +76,7 @@ async function onUserIdCheck(e) {
         }
 
         const data = await fetch(`/api/auth/check?userId=${userId}`);
+        console.log(data);
         const status = data.status;
 
         if (status === 409) {
@@ -110,6 +111,7 @@ async function onEmailCheck(e) {
         }
 
         const data = await fetch(`/api/auth/check?email=${email}`);
+        console.log(data);
         const status = data.status;
 
         if (status === 409) {
@@ -190,7 +192,7 @@ function checkPost() {
             document.getElementById("postcode").value = data.zonecode;
             document.getElementById("address").value = addr;
 
-            objectData.address = `${data.zonecode} ${addr}`;
+            objectData.address = [`${data.zonecode} ${addr}`];
             document.getElementById("detailAddress").focus();
             console.log(data.zonecode, addr);
         },
