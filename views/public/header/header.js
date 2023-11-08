@@ -7,8 +7,8 @@ export const Header = () => {
                     <img class="logo" src="../public/image/logo.png" alt="로고">
                 </a>
                 <ul class="user_menu">
-                    <li><a href="#">로그인</a></li>
-                    <li><a href="#">회원가입</a></li>
+                    <li><a href="/login/login.html">로그인</a></li>
+                    <li><a href="/auth/auth.html">회원가입</a></li>
                     <li>
                         <a href="#">
                             <iconify-icon 
@@ -45,5 +45,4 @@ export const Header = () => {
     `;
 
     document.body.prepend(headerElement);
-}
-
+};
