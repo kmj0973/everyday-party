@@ -19,21 +19,24 @@ class ProductService {
      * .lean()을 쓴 이유: 무거운 객체인 mongoose document가 아니라 일반 객체 리터럴이 리턴되어서 데이터를 가져오는 속도가 빨라짐
      */
     async getAllProducts(pageData) {
-        const limit = pageData.perPage ?? 3;
-        const page = pageData.page ?? 1;
+        const limit =
+            pageData.perPage !== undefined && pageData.perPage !== null
+                ? Number(pageData.perPage)
+                : 3;
+        const page =
+            pageData.page !== undefined && pageData.page !== null
+                ? Number(pageData.page)
+                : 1;
         const offset = limit * (page - 1);
         const orderBy = pageData.orderBy ?? "_id";
         const orderDirection = pageData.orderDirection ?? -1;
         const total = await Product.countDocuments();
         const totalPage = Math.ceil(total / limit);
 
-        if (offset > total) {
-            const error = new Error("해당 페이지가 존재하지 않습니다.");
-            error.status = 404;
-            throw error;
-        }
-
-        const sortConfig = orderBy !== undefined && orderBy !== null ? { [orderBy]: orderDirection ?? -1 } : { _id: 1 };
+        const sortConfig =
+            orderBy !== undefined && orderBy !== null
+                ? { [orderBy]: orderDirection ?? -1 }
+                : { _id: 1 };
 
         if (orderBy && !allowedFieldMap[orderBy]) {
             const error = new Error("지원하지 않는 필드입니다.");
@@ -41,12 +44,28 @@ class ProductService {
             throw error;
         }
 
-        if (pageData.perPage !== undefined && pageData.perPage !== null && pageData.page !== undefined && pageData.page !== null) {
-            const products = await Product.find({}).populate("category").sort(sortConfig).lean();
-            return { products };
-        } else {
-            const products = await Product.find({}).populate("category").sort(sortConfig).skip(offset).limit(limit).lean();
+        if (
+            (pageData.perPage !== undefined && pageData.perPage !== null) ||
+            (pageData.page !== undefined && pageData.page !== null)
+        ) {
+            const products = await Product.find({})
+                .populate("category")
+                .sort(sortConfig)
+                .skip(offset)
+                .limit(limit)
+                .lean();
+            if (products.length === 0) {
+                const error = new Error("해당 페이지가 존재하지 않습니다.");
+                error.status = 404;
+                throw error;
+            }
             return { products, totalPage };
+        } else {
+            const products = await Product.find({})
+                .populate("category")
+                .sort(sortConfig)
+                .lean();
+            return { products };
         }
     }
 
@@ -89,7 +108,10 @@ class ProductService {
             throw error;
         }
 
-        const sortConfig = orderBy !== undefined && orderBy !== null ? { [orderBy]: orderDirection ?? -1 } : { _id: 1 };
+        const sortConfig =
+            orderBy !== undefined && orderBy !== null
+                ? { [orderBy]: orderDirection ?? -1 }
+                : { _id: 1 };
 
         if (orderBy && !allowedFieldMap[orderBy]) {
             const error = new Error("지원하지 않는 필드입니다.");
@@ -101,7 +123,24 @@ class ProductService {
             return new mongoose.Types.ObjectId(eachId);
         });
 
-        if (pageData.perPage !== undefined && pageData.perPage !== null && pageData.page !== undefined && pageData.page !== null) {
+        if (
+            (pageData.perPage !== undefined && pageData.perPage !== null) ||
+            (pageData.page !== undefined && pageData.page !== null)
+        ) {
+            const products = await Product.find({ _id: { $in: arrOfId } })
+                .populate("category")
+                .sort(sortConfig)
+                .skip(offset)
+                .limit(limit)
+                .lean();
+            if (products.length === 0) {
+                const error = new Error("해당 페이지가 존재하지 않습니다.");
+                error.status = 404;
+                throw error;
+            } else {
+                return { products, totalPage };
+            }
+        } else {
             const products = await Product.find({ _id: { $in: arrOfId } })
                 .populate("category")
                 .sort(sortConfig)
@@ -112,20 +151,6 @@ class ProductService {
                 throw error;
             } else {
                 return { products };
-            }
-        } else {
-            const products = await Product.find({ _id: { $in: arrOfId } })
-                .populate("category")
-                .sort(sortConfig)
-                .skip(offset)
-                .limit(limit)
-                .lean();
-            if (products.length === 0) {
-                const error = new Error("찾으려는 물품이 존재하지 않습니다.");
-                error.status = 404;
-                throw error;
-            } else {
-                return { products, totalPage };
             }
         }
     }
@@ -152,7 +177,10 @@ class ProductService {
             throw error;
         }
 
-        const sortConfig = orderBy !== undefined && orderBy !== null ? { [orderBy]: orderDirection ?? -1 } : { _id: 1 };
+        const sortConfig =
+            orderBy !== undefined && orderBy !== null
+                ? { [orderBy]: orderDirection ?? -1 }
+                : { _id: 1 };
 
         if (orderBy && !allowedFieldMap[orderBy]) {
             const error = new Error("지원하지 않는 필드입니다.");
@@ -160,33 +188,49 @@ class ProductService {
             throw error;
         }
 
-        if (pageData.perPage !== undefined && pageData.perPage !== null && pageData.page !== undefined && pageData.page !== null) {
-            const matchCategoryData = await Category.findOne({ categoryName: category }).lean();
+        if (
+            (pageData.perPage !== undefined && pageData.perPage !== null) ||
+            (pageData.page !== undefined && pageData.page !== null)
+        ) {
+            const matchCategoryData = await Category.findOne({
+                categoryName: category,
+            }).lean();
             if (matchCategoryData === undefined || matchCategoryData === null) {
                 const error = new Error("해당 카테고리는 존재하지 않습니다.");
                 error.status = 404;
                 return error;
             } else {
-                const products = await Product.find({ category: { $in: [].concat(matchCategoryData._id) } })
-                    .populate("category")
-                    .sort(sortConfig)
-                    .lean();
-                return { products };
-            }
-        } else {
-            const matchCategoryData = await Category.findOne({ categoryName: category }).lean();
-            if (matchCategoryData === undefined || matchCategoryData === null) {
-                const error = new Error("해당 카테고리는 존재하지 않습니다.");
-                error.status = 404;
-                return error;
-            } else {
-                const products = await Product.find({ category: { $in: [].concat(matchCategoryData._id) } })
+                const products = await Product.find({
+                    category: { $in: [].concat(matchCategoryData._id) },
+                })
                     .populate("category")
                     .sort(sortConfig)
                     .skip(offset)
                     .limit(limit)
                     .lean();
+                if (products.length === 0) {
+                    const error = new Error("해당 페이지가 존재하지 않습니다.");
+                    error.status = 404;
+                    throw error;
+                }
                 return { products, totalPage };
+            }
+        } else {
+            const matchCategoryData = await Category.findOne({
+                categoryName: category,
+            }).lean();
+            if (matchCategoryData === undefined || matchCategoryData === null) {
+                const error = new Error("해당 카테고리는 존재하지 않습니다.");
+                error.status = 404;
+                return error;
+            } else {
+                const products = await Product.find({
+                    category: { $in: [].concat(matchCategoryData._id) },
+                })
+                    .populate("category")
+                    .sort(sortConfig)
+                    .lean();
+                return { products };
             }
         }
     }
@@ -264,7 +308,9 @@ class ProductService {
 
     async createProduct(productData) {
         if (!productData.name || !productData.price) {
-            const error = new Error("상품 정보가 부족합니다(상품 이름 또는 가격)!!");
+            const error = new Error(
+                "상품 정보가 부족합니다(상품 이름 또는 가격)!!",
+            );
             error.status = 400;
             throw error;
         }
@@ -288,7 +334,9 @@ class ProductService {
 
     async updateProduct(id, data) {
         try {
-            const updatedProduct = await Product.findByIdAndUpdate(id, data, { new: true });
+            const updatedProduct = await Product.findByIdAndUpdate(id, data, {
+                new: true,
+            });
 
             return updatedProduct;
         } catch (err) {
@@ -334,11 +382,23 @@ class ProductService {
             throw error;
         }
 
-        const sortConfig = orderBy !== undefined && orderBy !== null ? { [orderBy]: orderDirection ?? -1 } : { _id: 1 };
+        const sortConfig =
+            orderBy !== undefined && orderBy !== null
+                ? { [orderBy]: orderDirection ?? -1 }
+                : { _id: 1 };
 
-        if (offset !== undefined && offset !== null && limit !== undefined && limit !== null) {
+        if (
+            offset !== undefined &&
+            offset !== null &&
+            limit !== undefined &&
+            limit !== null
+        ) {
             //console.log("여기들어옴");
-            const result = await Product.find({}).sort(sortConfig).skip(offset).limit(limit).lean();
+            const result = await Product.find({})
+                .sort(sortConfig)
+                .skip(offset)
+                .limit(limit)
+                .lean();
             return { offset, orderBy, orderDirection, result, totalPage };
         }
         //console.log("놉 여기임");

@@ -20,7 +20,13 @@ const productInfoSchema = new Schema({
     },
 });
 
-const deliveryStatusEnum = ["주문완료", "배송준비", "배송중", "배송완료", "주문취소"];
+const deliveryStatusEnum = [
+    "주문완료",
+    "배송준비",
+    "배송중",
+    "배송완료",
+    "주문취소",
+];
 
 const orderSchema = new Schema({
     // method: {
@@ -64,4 +70,4 @@ const orderSchema = new Schema({
     },
 });
 
-module.exports = {orderSchema, productInfoSchema};
+module.exports = { orderSchema, productInfoSchema };

@@ -5,7 +5,8 @@ const productService = require("../services/productService");
 const productRouter = Router();
 
 productRouter.get("/", async (req, res, next) => {
-    const { products, category, page, perPage, orderBy, orderDirection } = req.query;
+    const { products, category, page, perPage, orderBy, orderDirection } =
+        req.query;
 
     if (page !== undefined && page !== null) {
         if (isNaN(Number(page))) {
@@ -14,7 +15,7 @@ productRouter.get("/", async (req, res, next) => {
             return next(error);
         }
 
-        if (Number(page) < 0) {
+        if (Number(page) <= 0) {
             const error = new Error("페이지 값이 유효하지 않습니다.");
             error.status = 400;
             return next(error);
@@ -28,7 +29,7 @@ productRouter.get("/", async (req, res, next) => {
             return next(error);
         }
 
-        if (Number(perPage) < 0) {
+        if (Number(perPage) <= 0) {
             const error = new Error("페이지 값이 유효하지 않습니다.");
             error.status = 400;
             return next(error);
@@ -64,26 +65,36 @@ productRouter.get("/", async (req, res, next) => {
     if (products !== undefined && products !== null) {
         products.split(",").forEach((eachProduct) => {
             if (typeof eachProduct !== "string") {
-                const error = new Error("찾으려는 물품 값이 유효하지 않습니다.");
+                const error = new Error(
+                    "찾으려는 물품 값이 유효하지 않습니다.",
+                );
                 error.status = 400;
-                next(error);
+                return next(error);
             }
         });
     }
 
     if (category !== undefined && category !== null) {
         if (typeof category !== "string") {
-            const error = new Error("찾으려는 카테고리 값이 유효하지 않습니다.");
+            const error = new Error(
+                "찾으려는 카테고리 값이 유효하지 않습니다.",
+            );
             error.status = 400;
-            next(error);
+            return next(error);
         }
     }
 
     //둘 다 입력
-    if (category !== undefined && category !== null && products !== undefined && products !== null) {
+    if (
+        category !== undefined &&
+        category !== null &&
+        products !== undefined &&
+        products !== null
+    ) {
         const arrOfProductId = products.split(",");
         try {
-            const { products, totalPage } = await productService.getProductsById(arrOfProductId, pageData);
+            const { products, totalPage } =
+                await productService.getProductsById(arrOfProductId, pageData);
             const filteredProductByCategory = products.filter((eachProduct) => {
                 return eachProduct.category.some((eachCategory) => {
                     return eachCategory.categoryName === category;
@@ -101,20 +112,21 @@ productRouter.get("/", async (req, res, next) => {
                 });
             }
         } catch (error) {
-            next(error);
+            return next(error);
         }
     }
 
     //카테고리만 입력
     if (category !== undefined && category !== null) {
         try {
-            const { products, totalPage } = await productService.getProductsByCategory(category, pageData);
+            const { products, totalPage } =
+                await productService.getProductsByCategory(category, pageData);
             return res.status(200).json({
                 products,
                 totalPage,
             });
         } catch (error) {
-            next(error);
+            return next(error);
         }
     }
 
@@ -122,25 +134,27 @@ productRouter.get("/", async (req, res, next) => {
     if (products !== undefined && products !== null) {
         const arrOfProductId = products.split(",");
         try {
-            const { products, totalPage } = await productService.getProductsById(arrOfProductId, pageData);
+            const { products, totalPage } =
+                await productService.getProductsById(arrOfProductId, pageData);
             return res.status(200).json({
                 products,
                 totalPage,
             });
         } catch (error) {
-            next(error);
+            return next(error);
         }
     }
 
     //카테고리, 물품 아이디 미 입력 시
     try {
-        const { products, totalPage } = await productService.getAllProducts(pageData);
+        const { products, totalPage } =
+            await productService.getAllProducts(pageData);
         return res.status(200).json({
             products,
             totalPage,
         });
     } catch (error) {
-        next(error);
+        return next(error);
     }
 });
 
@@ -159,7 +173,16 @@ productRouter.get("/", async (req, res, next) => {
 //상품 생성
 productRouter.post("/", async (req, res, next) => {
     //console.log("상품을 post합니다!");
-    const { name, price, stockedAt, discountRate, category, description, option, file } = req.body;
+    const {
+        name,
+        price,
+        stockedAt,
+        discountRate,
+        category,
+        description,
+        option,
+        file,
+    } = req.body;
 
     try {
         const existingProduct = await productService.checkProductExists(name);
@@ -197,7 +220,16 @@ productRouter.patch("/:id", async (req, res, next) => {
         //console.log("수정하는 라우터입니다.");
         const { id } = req.params;
 
-        const { name, price, sales, discountRate, category, description, option, file } = req.body;
+        const {
+            name,
+            price,
+            sales,
+            discountRate,
+            category,
+            description,
+            option,
+            file,
+        } = req.body;
 
         const updatedProduct = await productService.updateProduct(id, {
             name,
@@ -211,7 +243,9 @@ productRouter.patch("/:id", async (req, res, next) => {
         });
 
         if (!updatedProduct) {
-            return res.status(404).json({ message: "상품을 찾을 수 없습니다." });
+            return res
+                .status(404)
+                .json({ message: "상품을 찾을 수 없습니다." });
         }
 
         res.status(200).json(updatedProduct);
@@ -226,7 +260,9 @@ productRouter.delete("/:id", async (req, res, next) => {
     try {
         const id = req.params.id;
         if (id === undefined) {
-            res.status(404).json({ message: "해당 상품의 아이디가 필요합니다." });
+            res.status(404).json({
+                message: "해당 상품의 아이디가 필요합니다.",
+            });
         }
 
         const deleted = await productService.deleteProduct(id);
@@ -246,4 +282,3 @@ productRouter.delete("/:id", async (req, res, next) => {
 });
 
 module.exports = productRouter;
-
