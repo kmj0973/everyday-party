@@ -1,35 +1,72 @@
 const { Router } = require("express");
 //const { authenticateUser, isAdmin } = require("../middleware/isAdmin");
-const { Product, Option } = require("../models");
 const productService = require("../services/productService");
 
 const productRouter = Router();
 
 productRouter.get("/", async (req, res, next) => {
-    const { products, category } = req.query;
+    const { products, category, page, perPage, orderBy, orderDirection } = req.query;
 
-    //const BestPList = products.sort({sales : -1}).limit(10);
-    //const NewPList = products.sort({stockedAt : -1}).limit(10);
-    //const ReviewList = products.sort({stockedAt : -1}).limit(10);
+    if (page !== undefined && page !== null) {
+        if (isNaN(Number(page))) {
+            const error = new Error("페이지 값이 유효하지 않습니다.");
+            error.status = 400;
+            return next(error);
+        }
 
-    const page = Number(req.query.page || 1); 
-    const perPage = Number(req.query.perPage || 3);
-    const total = await Product.countDocuments({});
-    const offset = perPage * (page - 1); //건너뛸 항목의 수 계산
-    const orderBy = (req.query.orderBy); //어떤 기준으로 정렬할지
-    const orderDirection = (req.query.orderDirection || -1); //오름차순 또는 내림차순
+        if (Number(page) < 0) {
+            const error = new Error("페이지 값이 유효하지 않습니다.");
+            error.status = 400;
+            return next(error);
+        }
+    }
 
-    const paginatedProducts = productService.pagination({ offset, total, limit : perPage, orderBy, orderDirection });
+    if (perPage !== undefined && perPage !== null) {
+        if (isNaN(Number(perPage))) {
+            const error = new Error("페이지 값이 유효하지 않습니다.");
+            error.status = 400;
+            return next(error);
+        }
 
-    
+        if (Number(perPage) < 0) {
+            const error = new Error("페이지 값이 유효하지 않습니다.");
+            error.status = 400;
+            return next(error);
+        }
+    }
+
+    if (orderBy !== undefined && orderBy !== null) {
+        if (typeof orderBy !== "string") {
+            const error = new Error("정렬 기준 값이 유효하지 않습니다.");
+            error.status = 400;
+            return next(error);
+        }
+    }
+
+    if (orderDirection !== undefined && orderDirection !== null) {
+        if (isNaN(Number(orderDirection))) {
+            const error = new Error("정렬 순서 값이 유효하지 않습니다.");
+            error.status = 400;
+            return next(error);
+        }
+
+        if (Number(orderDirection) !== -1 && Number(orderDirection) !== 1) {
+            const error = new Error("정렬 순서 값이 유효하지 않습니다.");
+            error.status = 400;
+            return next(error);
+        }
+    }
+
+    const pageData = { page, perPage, orderBy, orderDirection };
+
+    const paginatedProducts = await productService.pagination(pageData);
 
     if (products !== undefined && products !== null) {
         products.split(",").forEach((eachProduct) => {
-            console.log(typeof eachProduct);
             if (typeof eachProduct !== "string") {
                 const error = new Error("찾으려는 물품 값이 유효하지 않습니다.");
                 error.status = 400;
-                return next(error);
+                next(error);
             }
         });
     }
@@ -38,7 +75,7 @@ productRouter.get("/", async (req, res, next) => {
         if (typeof category !== "string") {
             const error = new Error("찾으려는 카테고리 값이 유효하지 않습니다.");
             error.status = 400;
-            return next(error);
+            next(error);
         }
     }
 
@@ -46,8 +83,8 @@ productRouter.get("/", async (req, res, next) => {
     if (category !== undefined && category !== null && products !== undefined && products !== null) {
         const arrOfProductId = products.split(",");
         try {
-            const productsInId = await productService.getProductsById(arrOfProductId);
-            const filteredProductByCategory = productsInId.filter((eachProduct) => {
+            const { products, totalPage } = await productService.getProductsById(arrOfProductId, pageData);
+            const filteredProductByCategory = products.filter((eachProduct) => {
                 return eachProduct.category.some((eachCategory) => {
                     return eachCategory.categoryName === category;
                 });
@@ -56,27 +93,28 @@ productRouter.get("/", async (req, res, next) => {
             if (filteredProductByCategory.length === 0) {
                 const error = new Error("찾으려는 물품이 존재하지 않습니다.");
                 error.status = 404;
-                return next(error);
+                next(error);
             } else {
                 return res.status(200).json({
-                    products: filteredProductByCategory,paginatedProducts
+                    products,
+                    totalPage,
                 });
             }
         } catch (error) {
-            return next(error);
+            next(error);
         }
     }
 
     //카테고리만 입력
     if (category !== undefined && category !== null) {
         try {
-            const productsInCategory = await productService.getProductsByCategory(category);
+            const { products, totalPage } = await productService.getProductsByCategory(category, pageData);
             return res.status(200).json({
-                products: productsInCategory,
-                paginatedProducts : paginatedProducts
+                products,
+                totalPage,
             });
         } catch (error) {
-            return next(error);
+            next(error);
         }
     }
 
@@ -84,24 +122,26 @@ productRouter.get("/", async (req, res, next) => {
     if (products !== undefined && products !== null) {
         const arrOfProductId = products.split(",");
         try {
-            const productsInId = await productService.getProductsById(arrOfProductId);
+            const { products, totalPage } = await productService.getProductsById(arrOfProductId, pageData);
             return res.status(200).json({
-                products: productsInId,
-                paginatedProducts : paginatedProducts
+                products,
+                totalPage,
             });
         } catch (error) {
-            return next(error);
+            next(error);
         }
     }
 
     //카테고리, 물품 아이디 미 입력 시
-    const allProducts = await productService.getAllProducts();
-    return res.status(200).json({
-        //Best product,
-        //New product,
-        products: allProducts,
-        paginatedProducts
-    });
+    try {
+        const { products, totalPage } = await productService.getAllProducts(pageData);
+        return res.status(200).json({
+            products,
+            totalPage,
+        });
+    } catch (error) {
+        next(error);
+    }
 });
 
 // productRouter.get('/:id', async (req, res, next) => {

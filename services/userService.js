@@ -62,8 +62,6 @@ class UserService {
      */
     async createUser(data) {
         const newUser = new User(data);
-        console.log(newUser);
-
         await newUser.save().catch((error) => {
             console.log(error);
             const newError = new Error("회원가입 중 오류가 발생했습니다.");
@@ -82,13 +80,11 @@ class UserService {
      *
      */
     async updateUser(originalUserId, data) {
-        const updatedUser = await User.findOneAndUpdate({ userId: originalUserId }, data, { new: true }).catch(
-            (error) => {
-                const newError = new Error("유저 정보를 업데이트 하던 중 서버 내에 문제가 발생했습니다.");
-                newError.status = 500;
-                throw newError;
-            }
-        );
+        const updatedUser = await User.findOneAndUpdate({ userId: originalUserId }, data, { new: true }).catch((error) => {
+            const newError = new Error("유저 정보를 업데이트 하던 중 서버 내에 문제가 발생했습니다.");
+            newError.status = 500;
+            throw newError;
+        });
 
         return updatedUser;
     }
