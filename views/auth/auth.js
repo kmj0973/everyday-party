@@ -17,8 +17,7 @@ const tel1 = document.querySelector(".tel1");
 const tel2 = document.querySelector(".tel2");
 const tel3 = document.querySelector(".tel3");
 //주소
-const postCode = document.getElementById("postcode");
-const address = document.getElementById("address");
+
 const detailAddress = document.getElementById("detailAddress");
 
 const birthday = document.getElementById("birth"); //생일
@@ -27,6 +26,8 @@ const idCheckBtn = document.querySelector(".id-check-btn");
 const emailCheckBtn = document.querySelector(".email-check-btn");
 const phoneCheckBtn = document.querySelector(".phone-check-btn");
 const authBtn = document.querySelector(".auth-btn");
+
+let addressArr = [];
 
 const objectData = new Object(); //회원가입 정보 보내줄 객체
 
@@ -43,11 +44,12 @@ async function onAuthorize(e) {
         if (passwordInput.value !== passwordCheckInput.value) {
             throw new Error("비밀번호를 확인해주세요");
         }
+        addressArr.push(detailAddress.value);
         //객체 정보 저장
-        objectData.grade = "uesr";
+        objectData.grade = "user";
         objectData.password = passwordInput.value;
         objectData.name = nameInput.value;
-        objectData.address = [detailAddress.value];
+        objectData.address = addressArr;
         // objectData.birthday = birthday.valueAsNumber;
         console.log(objectData);
 
@@ -192,7 +194,8 @@ function checkPost() {
             document.getElementById("postcode").value = data.zonecode;
             document.getElementById("address").value = addr;
 
-            objectData.address = [`${data.zonecode} ${addr}`];
+            addressArr.push(data.zonecode);
+            addressArr.push(addr);
             document.getElementById("detailAddress").focus();
             console.log(data.zonecode, addr);
         },
