@@ -56,8 +56,6 @@ for(let i=0;i<items.length;i++){
 //3. 데이터 가져오기
 //3-1. 쿼리스트링 속의 id값 받아오기 
 /**
- * ! 백엔드 API 개발 완료되었을 때 이부분 수정 
- * ! 상품 목록 페이지 개발자 분과 id 전달 방식 논의
  * const nowUrl = location.href;
  * const productId = nowUrl.split('?id=');
  * 키값이 하나가 아닐 수도 있음 => 그럴땐 어떻게 ?? 
@@ -107,7 +105,7 @@ function addCartItem(selectedOption,selectedQuantity){
     //카트 배열 가져오기 -> string 형태의 prevCart를 배열로 변환 
     //! 예외처리 필요 (카트 키가 없을수도 있음) -> cart 키 있는지, cart를 pars했을때 배열형태인지 검사 
     const previousCart = JSON.parse(localStorage.getItem('cart'));
-    console.log('isArray?',Array.isArray(previousCart),previousCart);
+    //console.log('isArray?',Array.isArray(previousCart),previousCart);
     if(previousCart===null){
         localStorage.setItem('cart',JSON.stringify([productInfo]));
     }else{
