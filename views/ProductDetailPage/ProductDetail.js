@@ -70,15 +70,17 @@ for(let i=0;i<items.length;i++){
 const productName = document.querySelector('.product-name');
 const productPrice = document.querySelector('.product-price');
 const productDescription = document.querySelector('.product-description');
-const productId = "65491fef6b0762c9aa44acfa";
-///api/products/?products?id="6543563c88123149c933da9e"
+const productId = "654a60f195cd6f5052eaad13";
+
 //api 호출하여 이름, 가격, 상품 설명을 보여준다. 
-fetch(`/api/products/?products=${productId}`)
+
+fetch(`/api/products?products=${productId}`)
     .then((response) => response.json())
     .then((data) => {
-        console.log(data);
-        const product = data.products.find(({_id})=>_id===productId);
-        console.log(data);
+        console.log('아이디값으로 받아온 데이터' , data);
+        //const product = data.products.find(({_id})=>_id===productId);
+        const product = data.products[0];
+        //console.log(data.products[0]);
         productName.innerHTML = product.name;
         productPrice.innerHTML = product.price;
         productDescription.innerHTML = product.description;

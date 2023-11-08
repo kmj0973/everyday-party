@@ -50,29 +50,79 @@
                     <a href="#order-tracking">주문/배송 조회</a>
                 </li>
                 <li>
-                    <a href="update-profile">내 정보 수정</a>
+                    <a href="#update-profile">내 정보 수정</a>
                 </li>
             </ul>
-            <div class="product-list-container">
-                <div class="product-list-title">주문상품 목록</div>
-                
-                <div class="product-info-container">
-                    <div class="total-num">총 3건</div>
-                    <div class="order-date">주문일자 2023 01 02</div>
-                    <div class="product-info">
-                        <img class='product-img' src='../public/image/favicon.png'alt="이미지" >
-                        <div class="product-name">상품명</div>
-                        <div class="product-price">가격</div>
-                        <div class="btn-container">
-                            <div>배송완료</div>
-                            <div>리뷰쓰기</div>
+            <!-- 주분배송 조회 탭 -->
+            <div class="tab-content-container">
+                <div id="order-tracking" class="tab active">
+                    <div class="product-list-container">
+                        <div class="product-list-title">주문상품 목록</div>
+                        
+                        <div class="product-info-container">
+                            <div class="total-num">총 3건</div>
+                            <div class="order-date">주문일자 2023 01 02</div>
+                            <div class="product-info">
+                                <img class='product-img' src='../public/image/favicon.png'alt="이미지" >
+                                <div class="product-name">상품명</div>
+                                <div class="product-price">가격</div>
+                                <div class="btn-container">
+                                    <div>배송완료</div>
+                                    <div>리뷰쓰기</div>
+                                </div>
+                            </div>
+                            <div class="show-all">
+                                <div>총 49500원 주문 전체보기</div>
+                            </div>
                         </div>
                     </div>
-                    <div class="show-all">
-                        <div>총 49500원 주문 전체보기</div>
+                </div>
+                <!-- 내 정보 수정 탭 -->
+                <div id="update-profile" class="tab">
+                    <div class="user-info-container">
+                        <div class="user-info-title">내 정보 수정</div>
+                        <div class="line"> </div>
+                        <div class="user-info-container">
+                            <div class="info-box">
+                                <div class="info-title">아이디</div>
+                                <div class="vertical-line"></div>
+                                <div class="info-content">castlegold22</div>
+                            </div>
+                            <div class="thin-line"></div>
+                            <div class="info-box">
+                                <div class="info-title">이름</div>
+                                <div class="vertical-line"></div>
+                                <div class="info-content">윤혜원</div>
+                            </div>
+                            <div class="thin-line"></div>
+                            <div class="info-box">
+                                <div class="info-title">휴대폰 번호</div>
+                                <div class="vertical-line"></div>
+                                <div class="info-content">010-9815-2327</div>
+                            </div>
+                            <div class="thin-line"></div>
+                            <div class="info-box">
+                                <div class="info-title">비밀번호</div>
+                                <div class="vertical-line"></div>
+                                <div class="info-content">비밀번호를 바꾸려면 정보수정 버튼을 클릭하세요</div>
+                            </div>
+                            <div class="thin-line"></div>
+                            <div class="info-box">
+                                <div class="info-title">배송지</div>
+                                <div class="vertical-line"></div>
+                                <div class="info-content">경기도 수원시 월드컵로 204</div>
+                            </div>
+                            <div class="line"></div>
+
+                        </div>
                     </div>
+                    <div class="modify-btn-container">
+                        <button class="modify-btn">정보 수정하기</button>
+                    </div>
+
                 </div>
             </div>
+
         </div>
     </div>
 </div>
