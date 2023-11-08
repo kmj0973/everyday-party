@@ -64,4 +64,4 @@ const orderSchema = new Schema({
     },
 });
 
-module.exports = { orderSchema, productInfoSchema };
+module.exports = {orderSchema, productInfoSchema};
