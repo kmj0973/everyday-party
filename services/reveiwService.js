@@ -17,7 +17,9 @@ class ReviewService {
             .populate("article.author")
             .lean()
             .catch((error) => {
-                const newError = new Error("리뷰를 불러오던 중 서버 내 문제가 발생했습니다.");
+                const newError = new Error(
+                    "리뷰를 불러오던 중 서버 내 문제가 발생했습니다.",
+                );
                 newError.status = 500;
                 throw newError;
             });
@@ -36,12 +38,16 @@ class ReviewService {
             return new mongoose.Types.ObjectId(eachId);
         });
 
-        const reviewByProduct = await Review.find({ product: { $in: arrOfProductsIdObject } })
+        const reviewByProduct = await Review.find({
+            product: { $in: arrOfProductsIdObject },
+        })
             .populate("product")
             .populate("article.author")
             .lean()
             .catch((error) => {
-                const newError = new Error("리뷰를 불러오던 중 서버 내 문제가 발생했습니다.");
+                const newError = new Error(
+                    "리뷰를 불러오던 중 서버 내 문제가 발생했습니다.",
+                );
                 newError.status = 500;
                 throw newError;
             });
@@ -56,17 +62,23 @@ class ReviewService {
      * @return {[Review]} 리뷰 객체의 배열
      */
     async getReviewsByUserId(arrOfUserId) {
-        const userByUserId = await User.find({ userId: { $in: arrOfUserId } }).lean();
+        const userByUserId = await User.find({
+            userId: { $in: arrOfUserId },
+        }).lean();
         const arrOfUserIdsObject = userByUserId.map((eachUser) => {
             return new mongoose.Types.ObjectId(eachUser._id);
         });
 
-        const reviewByUser = await Review.find({ "article.author": { $in: arrOfUserIdsObject } })
+        const reviewByUser = await Review.find({
+            "article.author": { $in: arrOfUserIdsObject },
+        })
             .populate("product")
             .populate("article.author")
             .lean()
             .catch((error) => {
-                const newError = new Error("리뷰를 불러오던 중 서버 내 문제가 발생했습니다.");
+                const newError = new Error(
+                    "리뷰를 불러오던 중 서버 내 문제가 발생했습니다.",
+                );
                 newError.status = 500;
                 throw newError;
             });
