@@ -36,7 +36,6 @@ function createBestCard(products) {
     const cardContainer = document.createElement("article");
     cardContainer.setAttribute("id", "best_card_container");
     for (let i = 0; i < 8; i++) {
-        console.log(products[i]);
         cardContainer.innerHTML += `<div class="menu_card">
         <div class="card_img_wrap">
         <img class="card_img" src="${products[i].file.path}" alt="테스트 이미지" />
