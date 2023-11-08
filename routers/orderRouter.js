@@ -1,30 +1,46 @@
 const { Router } = require("express");
-const { Order } = require("../models");
+const { Order, ProductInfo } = require("../models");
+const { Product, Option } = require("../models");
+
 
 const OrderService = require("../services/orderService");
 
 const orderRouter = Router();
 
+const mongoose = require("mongoose");
+
 //주무내역 + 특정 주문 내역
 orderRouter.get("/", async (req, res, next) => {
-    //console.log('주문 조회 라우터에 들어왔습니다.');
     try {
-        const orderlist = await Order.find({});
+        const { id } = req.query;
 
-        res.status(200).json({ orderlist });
+        if (id === undefined) {
+            // 모든 주문 조회
+            const orderlist = await Order.find({});
+            res.status(200).json({ orderlist });
+        } else {
+            console.log('부분 조회를 진입하였습니다.')
+
+            // 특정 아이디로 주문 조회
+            const oneOrder = await Order.findOne({ _id: id }); // 아이디를 기준으로 조회
+            if (oneOrder) {
+                console.log('부분 조회를 성공하였습니다.')
+                res.status(200).json({ order: oneOrder, paginatedProducts });
+            } else {
+                res.status(404).json({ message: '해당 주문을 찾을 수 없습니다.' });
+            }
+        }
     } catch (err) {
-        const error = new Error("주문 내역을 불러오지 못하였습니다.");
-        error.status = 500;
-        return next(error);
+        next(err);
     }
 });
 
-//주문생성
-
+//주문 생성
 orderRouter.post('/', async (req, res, next) => {
     const { orderedAt, totalPrice, orderedBy, phoneNumber, address, products, deliveryStatus } = req.body;
     try {
-        const newOrder = OrderService.createOrder({
+
+        const newOrder = await OrderService.createOrder({
             orderedAt,
             totalPrice,
             orderedBy,
@@ -32,13 +48,6 @@ orderRouter.post('/', async (req, res, next) => {
             address,
             products,
             deliveryStatus
-        })
-
-
-        //console.log("주문이 완료되었습니다.")
-        res.status(201).json({
-            message: "주문이 완료되었습니다.",
-            newOrder,
         });
 
         if (newOrder) {
@@ -61,9 +70,7 @@ orderRouter.post('/', async (req, res, next) => {
 orderRouter.patch("/:id", async (req, res, next) => {
     const { id } = req.params;
 
-    const { deliveryStatus } = req.body;
-
-    const { totalPrice, changedStatus } = req.body;
+    const { changedStatus } = req.body;
     console.log(totalPrice, changedStatus);
     try {
         const cancelledOrder = await OrderService.cancelOrder(id, totalPrice, changedStatus);
@@ -76,15 +83,12 @@ orderRouter.patch("/:id", async (req, res, next) => {
     }
 });
 
-
-
-
 //주문 삭제 -> 회원탈퇴 후 삭제할 때 사용
-orderRouter.delete('/:id', async (req, res, next) => {
+orderRouter.delete("/:id", async (req, res, next) => {
     try {
         const id = req.params.id;
         if (id === undefined) {
-            res.status(404).json({ message: '해당 상품의 아이디가 필요합니다.' });
+            res.status(404).json({ message: "해당 상품의 아이디가 필요합니다." });
             return;
         }
 
@@ -99,6 +103,5 @@ orderRouter.delete('/:id', async (req, res, next) => {
         next(err);
     }
 });
-
 
 module.exports = orderRouter;

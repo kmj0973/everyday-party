@@ -6,6 +6,14 @@ const productInfoSchema = new Schema({
         ref: "Product",
         required: true,
     },
+    option: {
+        size: {
+            type: String,
+        },
+        color: {
+            type: String,
+        },
+    },
     count: {
         type: Number,
         required: true,
@@ -56,4 +64,4 @@ const orderSchema = new Schema({
     },
 });
 
-module.exports = orderSchema;
+module.exports = {orderSchema, productInfoSchema};

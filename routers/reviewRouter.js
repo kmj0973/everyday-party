@@ -6,13 +6,13 @@ const reviewService = require("../services/reviewService");
 reviewRouter.get("/", async (req, res, next) => {
     const { curDataNum } = req.query;
 
-    if (!curDataNum instanceof Number) {
+    if (curDataNum !== undefined && curDataNum !== null && typeof curDataNum !== "number") {
         const error = new Error("쿼리 값이 유효하지 않습니다.");
         error.status = 400;
         next(error);
     }
 
-    const curReview = await reviewService.getCurrentReview(curDataNum);
+    const curReview = await reviewService.getCurrentReview(curDataNum ?? 8);
     return res.status(200).json({ reviews: curReview });
 });
 
@@ -22,7 +22,7 @@ reviewRouter.get("/products", async (req, res, next) => {
 
     if (products !== undefined && products !== null) {
         arrOfProductsIdString.forEach((eachId) => {
-            if (!eachId instanceof String) {
+            if (typeof eachId !== "string") {
                 const error = new Error("물품 아이디 값이 유효하지 않습니다.");
                 error.status = 400;
                 next(error);
@@ -43,8 +43,8 @@ reviewRouter.get("/users", async (req, res, next) => {
 
     if (users !== undefined && users !== null) {
         arrOfUserIdsString.forEach((eachId) => {
-            if (!eachId instanceof String) {
-                const error = new Error("물품 아이디 값이 유효하지 않습니다.");
+            if (typeof eachId !== "string") {
+                const error = new Error("유저 아이디 값이 유효하지 않습니다.");
                 error.status = 400;
                 next(error);
             }
