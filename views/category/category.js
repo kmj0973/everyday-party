@@ -69,7 +69,7 @@ const cardRender = async (categoryId) => {
     try {
         // 쿼리 파라미터에 해당 카테고리 id를 보내면 
         // 해당 카테고리의 데이터를 반환해주는 api
-        const response = await fetch(`http://localhost:5000/api/products?category=${categoryId}`);
+        const response = await fetch(`/api/products?category=${categoryId}`);
         const data = await response.json();
         console.log(data);
 

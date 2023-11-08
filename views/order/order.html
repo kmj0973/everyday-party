@@ -17,16 +17,27 @@
 <body>
     <section class="order_section">
         <h1 class="order_title">주문이 완료되었습니다!</h1>
-        <p class="order_date">2023-11-06 19:53:00</p>
         <img class="delivery_icon" src="../public/image/delivery.png" alt="택배 배송 이미지">
         <div class="order_details">
+            <div class="order_time_wrap details">
+                <span>주문 시간</span>
+                <span class="order-time">2023-11-06 19:53:00</span>
+            </div>
             <div class="order_number_wrap details">
                 <span>주문 번호</span>
                 <span class="order-number">1231231213131313123</span>
             </div>
+            <div class="order_id_wrap details">
+                <span>주문 아이디</span>
+                <span class="order_id">sdsfdd</span>
+            </div>
             <div class="order_items_wrap details">
                 <span>주문 상품</span>
-                <span class="order-item">크리스마스 트리 중형 사이즈 150cm 외 3종</span>
+                <span class="order_item">크리스마스 트리 중형 사이즈 150cm 외 3종</span>
+            </div>
+            <div class="order_status_wrap details">
+                <span>주문 상태</span>
+                <span class="order_status">주문 완료</span>
             </div>
             <ul class="order_amount_price_wrap details">
                 <li>
@@ -44,8 +55,8 @@
             </ul>
         </div>
         <div class="page_movement_button">
-            <button class="main_button">메인 페이지로 이동</button>
-            <button class="mypage_button">마이 페이지로 이동</button>
+            <button class="main_button"><a href="#">메인 페이지로 이동</a></button>
+            <button class="mypage_button"><a href="#">마이 페이지로 이동</a></button>
         </div>
     </section>
 </body>

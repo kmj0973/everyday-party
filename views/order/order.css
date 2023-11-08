@@ -24,10 +24,6 @@ body{
     margin: 80px 0 10px 0;
 }
 
-.order_date {
-    color: #888;
-}
-
 .delivery_icon {
     width: 70%;
     padding: 60px 0;
@@ -47,14 +43,20 @@ body{
 
 .order_number_wrap,
 .order_items_wrap,
+.order_status_wrap,
+.order_id_wrap,
+.order_time_wrap,
 .order_amount_price_wrap li {
     display: flex;
     justify-content: space-between;
     font-size: 14px;
 }
 
+.order_time_wrap span:first-child,
 .order_number_wrap span:first-child,
 .order_items_wrap span:first-child,
+.order_status_wrap span:first-child,
+.order_id_wrap span:first-child,
 .order_amount_price_wrap li span:first-child {
     color: #878787;
 }
@@ -64,7 +66,10 @@ body{
     font-size: 13px;
 } 
 
+.order_number_wrap,
 .order_items_wrap,
+.order_status_wrap,
+.order_id_wrap,
 .order_amount_price_wrap {
     padding-top: 10px;
 }
@@ -90,9 +95,13 @@ body{
     cursor: pointer;
 }
 
+
+.page_movement_button .main_button a {
+    color: #fff;
+}
+
 .page_movement_button .mypage_button {
     margin-left: 10px;
     background-color: #F9E103;
-    color: #181619;
     font-weight: 600;
 }
