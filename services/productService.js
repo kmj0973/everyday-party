@@ -2,16 +2,52 @@ const mongoose = require("mongoose");
 
 const { Product, Option, Category } = require("../models/index");
 
+const allowedFieldMap = {
+    _id: true,
+    name: true,
+    price: true,
+    stockedAt: true,
+    sales: true,
+};
+
 class ProductService {
     /**
      * 컬렉션 내 모든 물품 데이터 반환
      *
+     * @param {Object} pageData { page(페이지), perPage(페이지 당 데이터 수), orderBy(정렬 기준), orderDirection(정렬 순서) }
      * @return {[Product]} 하나 이상의 모델 객체가 들어간 배열 또는 빈 배열
      * .lean()을 쓴 이유: 무거운 객체인 mongoose document가 아니라 일반 객체 리터럴이 리턴되어서 데이터를 가져오는 속도가 빨라짐
      */
-    async getAllProducts() {
-        const products = await Product.find({}).populate("category").lean();
-        return products;
+    async getAllProducts(pageData) {
+        const limit = pageData.perPage ?? 3;
+        const page = pageData.page ?? 1;
+        const offset = limit * (page - 1);
+        const orderBy = pageData.orderBy ?? "_id";
+        const orderDirection = pageData.orderDirection ?? -1;
+        const total = await Product.countDocuments();
+        const totalPage = Math.ceil(total / limit);
+
+        if (offset > total) {
+            const error = new Error("해당 페이지가 존재하지 않습니다.");
+            error.status = 404;
+            throw error;
+        }
+
+        const sortConfig = orderBy !== undefined && orderBy !== null ? { [orderBy]: orderDirection ?? -1 } : { _id: 1 };
+
+        if (orderBy && !allowedFieldMap[orderBy]) {
+            const error = new Error("지원하지 않는 필드입니다.");
+            error.status = 404;
+            throw error;
+        }
+
+        if (pageData.perPage !== undefined && pageData.perPage !== null && pageData.page !== undefined && pageData.page !== null) {
+            const products = await Product.find({}).populate("category").sort(sortConfig).lean();
+            return { products };
+        } else {
+            const products = await Product.find({}).populate("category").sort(sortConfig).skip(offset).limit(limit).lean();
+            return { products, totalPage };
+        }
     }
 
     /**
@@ -31,27 +67,66 @@ class ProductService {
         }
     }
 
-
     /**
      * 아이디(_id) 배열에 따른 물품 하나를 반환
      *
      * @param arrOfId {[String]} 물품의 아이디(_id) 배열
+     * @param {Object} pageData { page(페이지), perPage(페이지 당 데이터 수), orderBy(정렬 기준), orderDirection(정렬 순서) }
      * @return {[Product]} 물품 모델 객체의 배열
      */
-    async getProductsById(arrOfId) {
+    async getProductsById(arrOfId, pageData) {
+        const limit = pageData.perPage ?? 3;
+        const page = pageData.page ?? 1;
+        const offset = limit * (page - 1);
+        const orderBy = pageData.orderBy ?? "_id";
+        const orderDirection = pageData.orderDirection ?? -1;
+        const total = await Product.countDocuments();
+        const totalPage = Math.ceil(total / limit);
+
+        if (offset > total) {
+            const error = new Error("해당 페이지가 존재하지 않습니다.");
+            error.status = 404;
+            throw error;
+        }
+
+        const sortConfig = orderBy !== undefined && orderBy !== null ? { [orderBy]: orderDirection ?? -1 } : { _id: 1 };
+
+        if (orderBy && !allowedFieldMap[orderBy]) {
+            const error = new Error("지원하지 않는 필드입니다.");
+            error.status = 404;
+            throw error;
+        }
+
         arrOfId = arrOfId.map((eachId) => {
             return new mongoose.Types.ObjectId(eachId);
         });
 
-        const products = await Product.find({ _id: { $in: arrOfId } })
-            .populate("category")
-            .lean();
-        if (products.length === 0) {
-            const error = new Error("찾으려는 물품이 존재하지 않습니다.");
-            error.status = 404;
-            throw error;
+        if (pageData.perPage !== undefined && pageData.perPage !== null && pageData.page !== undefined && pageData.page !== null) {
+            const products = await Product.find({ _id: { $in: arrOfId } })
+                .populate("category")
+                .sort(sortConfig)
+                .lean();
+            if (products.length === 0) {
+                const error = new Error("찾으려는 물품이 존재하지 않습니다.");
+                error.status = 404;
+                throw error;
+            } else {
+                return { products };
+            }
         } else {
-            return products;
+            const products = await Product.find({ _id: { $in: arrOfId } })
+                .populate("category")
+                .sort(sortConfig)
+                .skip(offset)
+                .limit(limit)
+                .lean();
+            if (products.length === 0) {
+                const error = new Error("찾으려는 물품이 존재하지 않습니다.");
+                error.status = 404;
+                throw error;
+            } else {
+                return { products, totalPage };
+            }
         }
     }
 
@@ -59,17 +134,60 @@ class ProductService {
      * 카테고리(category)에 따른 물품 하나 이상을 반환
      *
      * @param category {String} 카테고리 값
+     * @param {Object} pageData { page(페이지), perPage(페이지 당 데이터 수), orderBy(정렬 기준), orderDirection(정렬 순서) }
      * @return {[Product]} 하나 이상의 모델 객체가 들어간 배열
      */
-    async getProductsByCategory(category) {
-        const matchCategoryData = await Category.findOne({ categoryName: category }).lean();
-        if (matchCategoryData === undefined || matchCategoryData === null) {
-            const error = new Error("해당 카테고리는 존재하지 않습니다.");
+    async getProductsByCategory(category, pageData) {
+        const limit = pageData.perPage ?? 3;
+        const page = pageData.page ?? 1;
+        const offset = limit * (page - 1);
+        const orderBy = pageData.orderBy ?? "_id";
+        const orderDirection = pageData.orderDirection ?? -1;
+        const total = await Product.countDocuments();
+        const totalPage = Math.ceil(total / limit);
+
+        if (offset > total) {
+            const error = new Error("해당 페이지가 존재하지 않습니다.");
             error.status = 404;
-            return error;
+            throw error;
+        }
+
+        const sortConfig = orderBy !== undefined && orderBy !== null ? { [orderBy]: orderDirection ?? -1 } : { _id: 1 };
+
+        if (orderBy && !allowedFieldMap[orderBy]) {
+            const error = new Error("지원하지 않는 필드입니다.");
+            error.status = 404;
+            throw error;
+        }
+
+        if (pageData.perPage !== undefined && pageData.perPage !== null && pageData.page !== undefined && pageData.page !== null) {
+            const matchCategoryData = await Category.findOne({ categoryName: category }).lean();
+            if (matchCategoryData === undefined || matchCategoryData === null) {
+                const error = new Error("해당 카테고리는 존재하지 않습니다.");
+                error.status = 404;
+                return error;
+            } else {
+                const products = await Product.find({ category: { $in: [].concat(matchCategoryData._id) } })
+                    .populate("category")
+                    .sort(sortConfig)
+                    .lean();
+                return { products };
+            }
         } else {
-            const products = await Product.find({ category: { $in: [].concat(matchCategoryData._id) } }).populate("category");
-            return products;
+            const matchCategoryData = await Category.findOne({ categoryName: category }).lean();
+            if (matchCategoryData === undefined || matchCategoryData === null) {
+                const error = new Error("해당 카테고리는 존재하지 않습니다.");
+                error.status = 404;
+                return error;
+            } else {
+                const products = await Product.find({ category: { $in: [].concat(matchCategoryData._id) } })
+                    .populate("category")
+                    .sort(sortConfig)
+                    .skip(offset)
+                    .limit(limit)
+                    .lean();
+                return { products, totalPage };
+            }
         }
     }
 
@@ -160,7 +278,7 @@ class ProductService {
             description: productData.description,
             option: {
                 size: Option.size,
-                color: Option.color
+                color: Option.color,
             },
             file: productData.file,
         });
@@ -170,13 +288,7 @@ class ProductService {
 
     async updateProduct(id, data) {
         try {
-            const updatedProduct = await Product.findByIdAndUpdate(
-                id,
-                data,
-                { new: true }
-            );
-
-
+            const updatedProduct = await Product.findByIdAndUpdate(id, data, { new: true });
 
             return updatedProduct;
         } catch (err) {
@@ -193,13 +305,13 @@ class ProductService {
             if (deleteProduct.deletedCount > 0) {
                 return {
                     success: true,
-                    message: '제품이 성공적으로 삭제되었습니다.',
+                    message: "제품이 성공적으로 삭제되었습니다.",
                     data: deleteProduct,
                 };
             } else {
                 return {
                     success: false,
-                    message: '해당 ID의 상품을 찾을 수 없습니다.',
+                    message: "해당 ID의 상품을 찾을 수 없습니다.",
                 };
             }
         } catch (err) {
@@ -207,29 +319,30 @@ class ProductService {
         }
     }
 
-    async pagination(pageData){
-        const offset = pageData.offset;
-        
-        const orderBy = pageData.orderBy;
-        const orderDirection = pageData.orderDirection;
-        const limit = pageData.limit;
-        const total = pageData.total;
+    async pagination(pageData) {
+        const limit = pageData.perPage ?? 3;
+        const page = pageData.page ?? 1;
+        const offset = limit * (page - 1);
+        const orderBy = pageData.orderBy ?? "_id";
+        const orderDirection = pageData.orderDirection ?? -1;
+        const total = await Product.countDocuments();
         const totalPage = Math.ceil(total / limit);
 
         if (orderBy && !allowedFieldMap[orderBy]) {
-            throw new Error('지원하지 않는 필드입니다.');
-          }
-      
-          const sortConfig = (orderBy !== undefined && orderBy !== null) ? { [orderBy]: orderDirection || -1 } : { _id: 1 };
-      
-          if (offset !== undefined && offset !== null && limit !== undefined && limit !== null) {
+            const error = new Error("지원하지 않는 필드입니다.");
+            error.status = 404;
+            throw error;
+        }
+
+        const sortConfig = orderBy !== undefined && orderBy !== null ? { [orderBy]: orderDirection ?? -1 } : { _id: 1 };
+
+        if (offset !== undefined && offset !== null && limit !== undefined && limit !== null) {
             //console.log("여기들어옴");
             const result = await Product.find({}).sort(sortConfig).skip(offset).limit(limit).lean();
-            //console.log(result);
-            return {offset, orderBy, orderDirection, result, totalPage};
-          }
-          //console.log("놉 여기임");
-          return await Product.find({}).sort(sortConfig).lean();
+            return { offset, orderBy, orderDirection, result, totalPage };
+        }
+        //console.log("놉 여기임");
+        return await Product.find({}).sort(sortConfig).lean();
     }
 
     // async pagination(pageData) {
@@ -248,12 +361,9 @@ class ProductService {
     //     //   .skip(perPage * (page - 1))
     //     //   .limit(perPage);
     //     const totalPage = Math.ceil(total / perPage);
-    
+
     //     return {page, perPage, products, totalPage};
     //   }
-
-
-
 }
 
 module.exports = new ProductService();
