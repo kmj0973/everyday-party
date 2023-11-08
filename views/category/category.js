@@ -9,45 +9,43 @@ headerRender();
 
 // card_container에 innerHTML로 넣어줄 템플릿
 const cardTemplate = (categoryData) => {
-
-    if (categoryData !== null) {
-        // 숫자 천 단위로(,)
-        const priceComma = categoryData.price
-            .toString()
-            .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-        return `
-            <div class="category_card">
-                <a href=${`http://localhost:5000/ProductDetailPage/productDetail.html#product?id=${categoryData._id}`}>
-                    <div class="card_img_wrap">
-                        <img class="card_img" src=${categoryData.file.path} 
-                            alt=${categoryData.file.name}
-                        >
+    // 숫자 천 단위로(,)
+    const priceComma = categoryData.price
+        .toString()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return `
+        <div class="category_card">
+            <a href=${`http://localhost:5000/ProductDetailPage/productDetail.html#product?id=${categoryData._id}`}>
+                <div class="card_img_wrap">
+                    <img class="card_img" src=${categoryData.file.path} 
+                        alt=${categoryData.file.name}
+                    >
+                </div>
+                <div class="card_contents">
+                    <h3 class="card_title">${categoryData.name}</h3>
+                    <div class="purchase_info_wrap">
+                        <span class="card_price">${priceComma}원</span>
+                        <button class="card_cart_button">장바구니 버튼</button>
                     </div>
-                    <div class="card_contents">
-                        <h3 class="card_title">${categoryData.name}</h3>
-                        <div class="purchase_info_wrap">
-                            <span class="card_price">${priceComma}원</span>
-                            <button class="card_cart_button">장바구니 버튼</button>
-                        </div>
-                        <p class="card_review">${categoryData.review}+</p>
-                    </div>
-                </a>
-            </div>    
-        `;
-    } else {
-        return `
-            <div class="not_found_card">
-                <iconify-icon 
-                    icon="iconamoon:cloud-no-light" 
-                    style="color: #ccc;"
-                    width="46"
-                >
-                </iconify-icon>
-                <p>상품이 존재하지 않습니다.</p>
-            </div>    
-        `;
-    }
+                    <p class="card_review">${categoryData.review}+</p>
+                </div>
+            </a>
+        </div>    
+    `;
+}
+
+const errorTemplate = () => {
+    return `
+        <div class="not_found_card">
+            <iconify-icon 
+                icon="iconamoon:cloud-no-light" 
+                style="color: #ccc;"
+                width="46"
+            >
+            </iconify-icon>
+            <p>상품이 존재하지 않습니다.</p>
+        </div>    
+    `;
 }
 
 const categoryList = document.querySelectorAll(".category li a");
@@ -101,64 +99,60 @@ const cardRender = async (categoryParams) => {
         // 가격 낮은순 정렬
         const rowPrice = [...data.products].sort((a, b) => a.price - b.price);
 
-        data.products.map((product, i) => {
-            const categoryName = product.category[i].categoryName;
+        data.products.map(product => {
+            const categoryName = product.category[1].categoryName;
 
-            // 카테고리에 해당하는 베스트 상품을 렌더링
-            if (categoryParams === categoryName) {
+            if (categoryParams == categoryName) {
+                // 카테고리 타이틀, 상품 몇건인지 
+                categoryTitle.innerHTML = categoryName;
+                cardAmountElement.innerHTML = `총 ${data.products.length}건`;
+
+                // 카테고리에 해당하는 베스트 상품을 렌더링
                 categoryBestCardElement.innerHTML =
                     highSales.map(categoryData => cardTemplate(categoryData))
                         .join("");
-            }
 
-            // 카테고리에 상품을 렌더링
-            if (categoryParams === categoryName) {
-                cardAmountElement.innerHTML = `총 ${data.products.length}건`;
-                categoryTitle.innerHTML = categoryName;
-
+                // 카테고리에 상품을 렌더링
                 categoryCardElement.innerHTML =
                     data.products.map(categoryData => cardTemplate(categoryData))
                         .join("");
 
-                if (latest) {
-                    selectElement[0].addEventListener("click", () => {
-                        categoryCardElement.innerHTML =
+                // 드롭다운 정렬 클릭 이벤트
+                selectElement.forEach(select => {
+                    select.addEventListener("click", () => {
+                        const selectContents = select.textContent;
+
+                        if(selectContents === "최신순") {
+                            categoryCardElement.innerHTML =
                             latest.map(categoryData => cardTemplate(categoryData))
                                 .join("");
-                    })
-                }
-
-                if (highSales) {
-                    selectElement[1].addEventListener("click", () => {
-                        categoryCardElement.innerHTML =
+                        }
+                        else if(selectContents === "인기순") {
+                            categoryCardElement.innerHTML =
                             highSales.map(categoryData => cardTemplate(categoryData))
                                 .join("");
-                    })
-                }
-
-                if (highPrice) {
-                    selectElement[2].addEventListener("click", () => {
-                        categoryCardElement.innerHTML =
+                        }
+                        else if(selectContents === "높은 가격순") {
+                            categoryCardElement.innerHTML =
                             highPrice.map(categoryData => cardTemplate(categoryData))
                                 .join("");
-                    })
-                }
-
-                if (rowPrice) {
-                    selectElement[3].addEventListener("click", () => {
-                        categoryCardElement.innerHTML =
+                        }
+                        else {
+                            categoryCardElement.innerHTML =
                             rowPrice.map(categoryData => cardTemplate(categoryData))
                                 .join("");
+                        }
                     })
-                }
+                });
+            } else {
+                categoryBestErrorElement.innerHTML = errorTemplate();
+                categoryErrorElement.innerHTML = errorTemplate();
             }
         });
     }
     catch (error) {
-        console.log(error.message)
-        if (error.message = "404") {
-            categoryErrorElement(null);
-            categoryBestErrorElement(null);
+        if (error.message === "404") {
+            alert(`${error.message}에러가 발생했습니다. 다시 시도해 주세요.`);
         }
     }
 };
