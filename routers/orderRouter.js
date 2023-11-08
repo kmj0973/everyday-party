@@ -32,21 +32,13 @@ orderRouter.get("/", async (req, res, next) => {
             }
         }
     } catch (err) {
-        next(err);
+        return next(err);
     }
 });
 
 //주문 생성
 orderRouter.post("/", async (req, res, next) => {
-    const {
-        orderedAt,
-        totalPrice,
-        orderedBy,
-        phoneNumber,
-        address,
-        products,
-        deliveryStatus,
-    } = req.body;
+    const { orderedAt, totalPrice, orderedBy, phoneNumber, address, products, deliveryStatus } = req.body;
     try {
         const newOrder = await OrderService.createOrder({
             orderedAt,
@@ -69,8 +61,7 @@ orderRouter.post("/", async (req, res, next) => {
             });
         }
     } catch (err) {
-        next(err);
-        return;
+        return next(err);
     }
 });
 
@@ -81,17 +72,13 @@ orderRouter.patch("/:id", async (req, res, next) => {
     const { changedStatus } = req.body;
     console.log(totalPrice, changedStatus);
     try {
-        const cancelledOrder = await OrderService.cancelOrder(
-            id,
-            totalPrice,
-            changedStatus,
-        );
+        const cancelledOrder = await OrderService.cancelOrder(id, totalPrice, changedStatus);
 
         res.status(200).json({
             cancelledOrder,
         });
     } catch (err) {
-        next(err);
+        return next(err);
     }
 });
 
@@ -114,7 +101,7 @@ orderRouter.delete("/:id", async (req, res, next) => {
             res.status(404).json({ message: result.message });
         }
     } catch (err) {
-        next(err);
+        return next(err);
     }
 });
 
