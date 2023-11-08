@@ -56,14 +56,14 @@ router.get("/check", async (req, res, next) => {
         if (typeof userId !== "string") {
             const error = new Error("아이디 값이 유효하지 않습니다.");
             error.status = 400;
-            return next(error);
+            next(error);
         }
 
         const user = await userService.getUserById(userId);
         if (user !== null && user !== undefined) {
             const error = new Error("아이디 정보가 이미 존재합니다.");
             error.status = 409;
-            return next(error);
+            next(error);
         } else {
             return res.status(200).json({});
         }
@@ -73,7 +73,7 @@ router.get("/check", async (req, res, next) => {
         if (typeof email !== "string") {
             const error = new Error("이메일 값이 유효하지 않습니다.");
             error.status = 400;
-            return next(error);
+            next(error);
         }
 
         const userByEmail = await userService.getUserByEmail(email);
@@ -81,7 +81,7 @@ router.get("/check", async (req, res, next) => {
         if (userByEmail) {
             const error = new Error("이메일 정보가 이미 존재합니다.");
             error.status = 409;
-            return next(error);
+            next(error);
         } else {
             return res.status(200).json({});
         }
@@ -91,7 +91,7 @@ router.get("/check", async (req, res, next) => {
         if (typeof phone !== "string") {
             const error = new Error("전화번호 값이 유효하지 않습니다.");
             error.status = 400;
-            return next(error);
+            next(error);
         }
 
         const userByPhone = await userService.getUserByPhone(phone);
@@ -99,7 +99,7 @@ router.get("/check", async (req, res, next) => {
         if (userByPhone) {
             const error = new Error("전화번호 정보가 이미 존재합니다.");
             error.status = 409;
-            return next(error);
+            next(error);
         } else {
             return res.status(200).json({});
         }
