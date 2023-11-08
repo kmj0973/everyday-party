@@ -59,7 +59,7 @@ router.get("/check", async (req, res, next) => {
             error.status = 409;
             return next(error);
         } else {
-            return res.sendStatus(200).json({});
+            return res.status(200).json({});
         }
     }
 
@@ -77,7 +77,7 @@ router.get("/check", async (req, res, next) => {
             error.status = 409;
             return next(error);
         } else {
-            return res.sendStatus(200).json({});
+            return res.status(200).json({});
         }
     }
 
@@ -95,7 +95,7 @@ router.get("/check", async (req, res, next) => {
             error.status = 409;
             return next(error);
         } else {
-            return res.sendStatus(200).json({});
+            return res.status(200).json({});
         }
     }
 });
@@ -110,7 +110,7 @@ router.post("/sign-up", authenticateUserData, async (req, res, next) => {
 
     try {
         await userService.createUser(validInfoOfUserInput);
-        return res.sendStatus(200).json({});
+        return res.status(200).json({});
     } catch (error) {
         next(error);
     }
