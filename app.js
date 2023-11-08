@@ -11,7 +11,7 @@ dotenv.config();
 mongoose.connect(process.env.MONGODB_URL);
 
 app.get("/", (req, res) => {
-    res.redirect("/main/Main.html");
+    res.redirect("/main/main.html");
 });
 
 app.use(express.json());
