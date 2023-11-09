@@ -48,11 +48,6 @@ const orderSchema = new Schema({
         type: [String],
         required: true,
     }, //['주소', '상세주소']의 형태로 저장
-    // orderCustomer: {
-    //     type: Schema.Types.ObjectId,
-    //     ref: "User",
-    //     required: true,
-    // },
     products: {
         type: [productInfoSchema],
         required: true,

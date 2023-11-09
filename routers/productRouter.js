@@ -29,6 +29,7 @@ productRouter.get("/", authenticatePageData, async (req, res, next) => {
             next(error);
         }
         products.split(",").forEach((eachProduct) => {
+            //console.log(typeof eachProduct);
             if (typeof eachProduct !== "string") {
                 const error = new Error("찾으려는 물품 값이 유효하지 않습니다.");
                 error.status = 400;

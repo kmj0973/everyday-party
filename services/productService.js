@@ -391,26 +391,6 @@ class ProductService {
         //console.log("놉 여기임");
         return await Product.find({}).sort(sortConfig).lean();
     }
-
-    // async pagination(pageData) {
-    //     const page = pageData.page;
-    //     const perPage = pageData.perPage;
-    //     const [total, products] = await Promise.all([
-    //       Product.countDocuments({}),
-    //       Product.find({})
-    //           .sort({ createdAt: -1 })
-    //           .skip(perPage * (page - 1))
-    //           .limit(perPage)
-    //   ]);
-    //     // const total = await Product.countDocuments({});
-    //     // const products = await Product.find({})
-    //     //   .sort({ createdAt: -1 })
-    //     //   .skip(perPage * (page - 1))
-    //     //   .limit(perPage);
-    //     const totalPage = Math.ceil(total / perPage);
-
-    //     return {page, perPage, products, totalPage};
-    //   }
 }
 
 module.exports = new ProductService();
