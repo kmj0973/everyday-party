@@ -29,7 +29,6 @@ productRouter.get("/", authenticatePageData, async (req, res, next) => {
             next(error);
         }
         products.split(",").forEach((eachProduct) => {
-            //console.log(typeof eachProduct);
             if (typeof eachProduct !== "string") {
                 const error = new Error("찾으려는 물품 값이 유효하지 않습니다.");
                 error.status = 400;
@@ -157,13 +156,13 @@ productRouter.get("/", authenticatePageData, async (req, res, next) => {
     }
 });
 
-
 //상품 생성
 productRouter.post("/", authenticateUserToken, upload.single("product_name"), authenticateProductData, async (req, res, next) => {
     const { name, price, stockedAt, discountRate, category, description, option } = req.body;
 
+    const parsedCategory = JSON.parse(category);
+    const parsedOption = JSON.parse(option);
     try {
-        
         const existingProduct = await productService.checkProductExists(name);
 
         if (existingProduct) {
@@ -174,7 +173,7 @@ productRouter.post("/", authenticateUserToken, upload.single("product_name"), au
 
         const file = req.file !== undefined && req.file !== null ? { path: "/" + req.file.path.replaceAll("\\", "/"), name: req.file.filename } : undefined;
 
-        const productInput = { name, price, stockedAt, discountRate, category, description, option, file };
+        const productInput = { name, price, stockedAt, discountRate, category: parsedCategory, description, option: parsedOption, file };
         const validInfoOfProductInput = validDataUtil.processDataWithPatch(productInput);
 
         //모든 조건을 거치고 상품 만들기
