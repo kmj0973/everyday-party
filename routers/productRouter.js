@@ -3,10 +3,7 @@ const multer = require("multer");
 
 const productService = require("../services/productService");
 
-const { authenticateUserToken} = require("../middleware/authenticateUserToken");
-const { User } = require("../models");
-
-const { authenticatePageData, authenticateProductData } = require("../middleware/index");
+const { authenticatePageData, authenticateProductData, authenticateUserToken } = require("../middleware/index");
 
 const validDataUtil = require("../utils/validDataUtil");
 
