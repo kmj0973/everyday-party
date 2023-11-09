@@ -14,7 +14,9 @@ async function Processing() {
     await getReviewData(); //리뷰
     await reviewSlideEvent(); //리뷰 슬라이드
 }
-
+// getBestProductData();
+// getReviewData();
+// reviewSlideEvent();
 // 베스트 상품 데이터 받아오기
 const bestCardContainer = document.querySelector(".best-products-container");
 
@@ -38,7 +40,7 @@ function createBestCard(products) {
     for (let i = 0; i < 8; i++) {
         cardContainer.innerHTML += `<div class="menu_card">
         <div class="card_img_wrap">
-        <img class="card_img" src="${products[i].file.path}" alt="테스트 이미지" />
+        <a href="/ProductDetailPage/productDetail.html#product?id=${products[i]._id}"><img class="card_img" src="${products[i].file.path}" alt="테스트 이미지" /></a>
         </div>
     <div class="card_contents">
         <h3 class="card_title">${products[i].name}</h3>
@@ -60,7 +62,7 @@ async function getReviewData() {
     try {
         const data = await fetch(`/api/reviews`);
         const reviews = await data.json().then((result) => result.reviews);
-
+        console.log(reviews);
         reviewCardContainer.appendChild(createReviewCard(reviews));
     } catch (err) {
         console.log(err);
@@ -79,7 +81,9 @@ function createReviewCard(reviews) {
                     : reviews[i].product.name
             }</span>
             <p>${reviews[i].article.content}</p>
-            <div>${reviews[i].article.author.name} | ${reviews[i].createdAt.substr(0, 10)}</div>
+            <div>${!reviews[i].article.author ? "null" : reviews[i].article.author.name} | ${reviews[
+            i
+        ].createdAt.substr(0, 10)}</div>
         </div>
     </li>`;
     }

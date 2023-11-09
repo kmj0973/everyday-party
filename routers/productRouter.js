@@ -12,16 +12,14 @@ productRouter.get("/", async (req, res, next) => {
     //const NewPList = products.sort({stockedAt : -1}).limit(10);
     //const ReviewList = products.sort({stockedAt : -1}).limit(10);
 
-    const page = Number(req.query.page || 1); 
+    const page = Number(req.query.page || 1);
     const perPage = Number(req.query.perPage || 3);
     const total = await Product.countDocuments({});
     const offset = perPage * (page - 1); //건너뛸 항목의 수 계산
-    const orderBy = (req.query.orderBy); //어떤 기준으로 정렬할지
-    const orderDirection = (req.query.orderDirection || -1); //오름차순 또는 내림차순
+    const orderBy = req.query.orderBy; //어떤 기준으로 정렬할지
+    const orderDirection = req.query.orderDirection || -1; //오름차순 또는 내림차순
 
-    const paginatedProducts = productService.pagination({ offset, total, limit : perPage, orderBy, orderDirection });
-
-    
+    const paginatedProducts = productService.pagination({ offset, total, limit: perPage, orderBy, orderDirection });
 
     if (products !== undefined && products !== null) {
         products.split(",").forEach((eachProduct) => {
@@ -59,7 +57,8 @@ productRouter.get("/", async (req, res, next) => {
                 return next(error);
             } else {
                 return res.status(200).json({
-                    products: filteredProductByCategory,paginatedProducts
+                    products: filteredProductByCategory,
+                    paginatedProducts,
                 });
             }
         } catch (error) {
@@ -73,7 +72,7 @@ productRouter.get("/", async (req, res, next) => {
             const productsInCategory = await productService.getProductsByCategory(category);
             return res.status(200).json({
                 products: productsInCategory,
-                paginatedProducts : paginatedProducts
+                paginatedProducts: paginatedProducts,
             });
         } catch (error) {
             return next(error);
@@ -87,7 +86,7 @@ productRouter.get("/", async (req, res, next) => {
             const productsInId = await productService.getProductsById(arrOfProductId);
             return res.status(200).json({
                 products: productsInId,
-                paginatedProducts : paginatedProducts
+                paginatedProducts: paginatedProducts,
             });
         } catch (error) {
             return next(error);
@@ -100,7 +99,7 @@ productRouter.get("/", async (req, res, next) => {
         //Best product,
         //New product,
         products: allProducts,
-        paginatedProducts
+        paginatedProducts,
     });
 });
 
@@ -206,4 +205,3 @@ productRouter.delete("/:id", async (req, res, next) => {
 });
 
 module.exports = productRouter;
-

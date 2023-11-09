@@ -1,58 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>everyday-party 관리자페이지</title>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>everyday-party 관리자페이지</title>
 
-    <!-- 아이콘 -->
-    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+        <!-- 아이콘 -->
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Gluten:wght@400;500;600&family=Noto+Sans+KR&display=swap");
+        </style>
+        <!-- iconify -->
+        <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 
-    <!-- 커스텀CSS -->
-    <link rel="stylesheet" href="../public/header/header.css" />
-    <link rel="stylesheet" href="../admin/admin.css" />
-    <script type="module" src="/views/admin/admin.js"></script>
-  </head>
-  <body>
-    <div id="admin_title">관리자 페이지</div>
-    <div id="admin_container">
-      <!-- 관리자 권한 사이드바 -->
-      <div id="side_bar">
-        <div id="menu_container">
-          <div id="products_menu">
-            <div id="products_admin">상품정보 관리</div>
-            <li><a href="#">상품 수정 </a></li>
-            <li><a href="#">상품 추가 </a></li>
-            <li><a href="#">상품 삭제 </a></li>
-          </div>
+        <!-- 커스텀CSS -->
+        <link rel="stylesheet" href="../public/header/header.css" />
+        <link rel="stylesheet" href="../admin/admin.css" />
+        <script type="module" src="./admin.js"></script>
+    </head>
+    <body>
+        <section>
+            <div id="admin_title">관리자 페이지</div>
+            <div class="container">
+                <div class="side-bar">
+                    <ul>
+                        <li class="product-info-page">상품정보 관리</li>
+                        <li>주문정보 관리</li>
+                        <li>카테고리 관리</li>
+                    </ul>
+                </div>
+                <div class="main-wrapper">
+                    <!-- 상품정보 관리 페이지 -->
+                    <div class="main-title">
+                        <button class="delete-product-btn">상품 삭제</button>
+                        <span class="title">Product</span>
+                        <button class="add-product-page-btn">상품 추가</button>
+                    </div>
+                    <div class="main-category" border="1px">
+                        <ul>
+                            <li>상품 아이디</li>
+                            <li>상품 정보</li>
+                            <li>카테고리</li>
+                            <li>상품 가격</li>
+                            <li>색상/사이즈</li>
+                        </ul>
+                    </div>
+                    <div class="main-list">
+                        <!-- 상품 리스트 -->
+                    </div>
+                    <!-- 상품 추가 페이지 -->
+                    <div class="product-details-page hide">
+                        <input type="file" id="product-image" accept="image/*" />
+                        <img src="" class="product-image-preview" />
+                        <label for="product-name">상품 이름</label>
+                        <input tyoe="text" id="product-name" placeholder="상품 이름" />
 
-          <div id="category_menu">
-            <div id="category_admin">카테고리 관리</div>
-            <li><a href="#">카테고리 수정 </a></li>
-            <li><a href="#">카테고리 추가 </a></li>
-            <li><a href="#">카테고리 삭제 </a></li>
-          </div>
+                        <label for="product-price">상품 가격</label>
+                        <input type="number" id="product-price" placeholder="상품 가격" />
 
-          <div id="orderinfo_menu">
-            <div id="orderinfo_admin">주문정보 관리</div>
-            <li><a href="#">주문정보 수정</a></li>
-            <li><a href="#">주문정보 조회</a></li>
-            <li><a href="#">주문정보 삭제</a></li>
-          </div>
-        </div>
-      </div>
-      <!-- 관리 메인 페이지 -->
-      <div id="main_container">
-        <div>왼쪽의 사이드 메뉴 클릭 시 해당 관리 항목이 표시되는 부분</div>
-      </div>
-    </div>
-    <!-- Footer -->
-    <footer class="footer">
-      <div class="footer-logo">
-        <a href="/"
-          ><img class="logo-image" src="../public/image/logo.png"
-        /></a>
-      </div>
-    </footer>
-  </body>
+                        <label for="product-category"
+                            >상품 카테고리 <span>2가지 이상일 경우 콤마(,)를 사용하여 단어를 분리해주세요.</span></label
+                        >
+                        <input type="text" id="product-category" placeholder="상품 카테고리" />
+
+                        <label for="product-color"
+                            >상품 색상 <span>2가지 이상일 경우 콤마(,)를 사용하여 단어를 분리해주세요.</span></label
+                        >
+                        <input type="text" id="product-color" placeholder="상품 색상" />
+
+                        <label for="product-size"
+                            >상품 사이즈 <span>2가지 이상일 경우 콤마(,)를 사용하여 단어를 분리해주세요.</span></label
+                        >
+                        <input type="text" id="product-size" placeholder="상품 사이즈" />
+                        <button class="add-product-btn">상품 추가하기</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-logo">
+                <a href="/"><img class="logo-image" src="../public/image/logo.png" /></a>
+            </div>
+        </footer>
+    </body>
 </html>

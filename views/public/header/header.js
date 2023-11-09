@@ -1,6 +1,6 @@
-let token = localStorage.getItem("access-token");
-
+const token = localStorage.getItem("access-token");
 const userToken = await getUesrInfo(); //유저 정보 받아오기
+
 async function getUesrInfo() {
     try {
         const data = await fetch("/api/users/me", {
@@ -10,10 +10,14 @@ async function getUesrInfo() {
         });
 
         const userData = await data.json();
-        console.log(userData.user.name);
+
+        if (userData.message == "토큰이 만료되었습니다.") {
+            localStorage.removeItem("access-token");
+        }
+
         return userData;
     } catch (err) {
-        console.log(err);
+        console.log(err.message);
     }
 }
 
@@ -27,18 +31,18 @@ export const Header = () => {
                 </a>
                 <ul class="user_menu">
                 ${
-                    userToken.user.name == ""
+                    token == null
                         ? `<li><a href="/login/login.html">로그인</a></li>
                 <li><a href="/auth/auth.html">회원가입</a></li>`
                         : `<li>${userToken.user.name} 님</li>`
                 }
                     <li style="padding-top:4px">
-                        <a href="#">
+                        <a href="/myPage/myPage.html">
                         <iconify-icon icon="ph:user-fill" style="color: #181619;" width="22"></iconify-icon>
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="/cart/cart.html">
                             <iconify-icon 
                                 icon="ion:bag" 
                                 style="color: #181619;"
