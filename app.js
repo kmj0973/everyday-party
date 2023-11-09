@@ -10,6 +10,10 @@ dotenv.config();
 
 mongoose.connect(process.env.MONGODB_URL);
 
+app.get("/", (req, res) => {
+    res.redirect("/main/main.html");
+});
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

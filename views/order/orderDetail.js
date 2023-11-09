@@ -71,12 +71,9 @@ const orderTemplate = () => {
 
 const orderRender = async () => {
     try{
-        const id = "6549d50e6efbc2356c1efcd4"
-        const response = await fetch(`/api/orders/${id}`);
+        const response = await fetch(`/api/orders`);
         const orderData = await response.json();
 
-        
-    
         console.log(orderData);
     } catch (error) {
         if (error.message === "404") {
