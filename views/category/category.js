@@ -71,10 +71,12 @@ for (let i = 0; i < categoryList.length; i++) {
     categoryList[i].addEventListener("click", () => {
         // URLSearchParams로 쿼리 파라미터 값 가져오기
         const href = categoryList[i].getAttribute("href");
-        const url = new URL(href.replace(/#/g, "?"));
+        const newHref = `http://localhost:5000${href}`;
+        const url = new URL(newHref.replace(/#/g, "?"));
         const categoryParams = new URLSearchParams(url.search).get("category");
 
     cardRender(categoryParams);
+    localStorage.setItem("selectedCategory", categoryParams);
   });
 }
 

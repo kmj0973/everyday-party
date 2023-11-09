@@ -67,77 +67,33 @@ headerRender();
 // );
 
 
-// 하연님
-// const cartItem = localStorage.getItem('cart');
-
-// const arrOfProductId = JSON.parse(cartItem)
-//   .map((item) => item.id)
-//   .join(',');
-
-// if (arrOfProductId.length > 0) {
-//   // fetch(`/api/products?products=${arrOfProductId}`)
-//   fetch(
-//     `/api/products?products=${'65491fef6b0762c9aa44acfa,6543563c88123149c933da9e'}`
-//   )
-//     .then((result) => result.json())
-//     .then((data) => {
-//       const products = data.products;
-//       Array.from(products).forEach((eachProduct, index) => {
-//         addToCart(
-//           eachProduct._id,
-//           eachProduct.name,
-//           Number(eachProduct.price) * Number(cartItem[index].quantity),
-//           Number(cartItem[index].quantity)
-//         );
-//       });
-//     });
-// }
-
-
 //----------------api test----------------------------------------
 
 // 로컬스토리지에서 상품 데이터 받아오기
-
 const cartData = localStorage.getItem('cart');
 console.log(cartData);
-// const cartItems = [
-//   // { id: 1, name: '풍선', price: 1000, quantity: 1 },
-//   // { id: 2, name: '의상', price: 2000, quantity: 2 },
-// ];
-
-// JSON 문자열을 객체, 배열로 변환 (로컬스토리지)
-const cartItems = JSON.parse(cartData);
-
 
 
 // 1. 장바구니에 담겨온 상품이 표현되는 부분
 // id값을 기준으로 상품이 담겨오는 함수
-// function addToCart(id, name, price, quantity) {
-//   const productInCartIndex = cartItems.findIndex((item) => item.id === id);
-
-//   if (productInCartIndex !== -1) {
-//     // 담아온 상품이 장바구니에 이미 존재한다면,
-//     cartItems[productInCartIndex].quantity += quantity; // 해당제품 수량만 증가
-//   } else {
-//     cartItems.push({ id, name, price, quantity }); // 장바구니에 없는 상품이면 상품을 장바구니에 추가
-//   }
-
-//   updateCart();
-// }
-
+let cartItems = JSON.parse(localStorage.getItem("cart"));
 const newCartItems = [];
 for (let i = 0; i < cartItems.length; i++) {
-  const productInCartIndex = newCartItems.findIndex((item) => item.id === cartItems[i].id);
-  
-  if (productInCartIndex !== -1) {
-    newCartItems[productInCartIndex].quantity = parseInt(newCartItems[productInCartIndex].quantity) + parseInt(cartItems[i].quantity); // 해당제품 수량만 증가
-  } else {
-    newCartItems.push({ id: cartItems[i].id, name: cartItems[i].name, price: cartItems[i].price, quantity: cartItems[i].quantity, option: cartItems[i].option });
-  }
-  
-  localStorage.setItem("cart", JSON.stringify(newCartItems));
-  updateCart()
+    console.log(i, newCartItems, cartItems);
+    const productInCartIndex = newCartItems.findIndex((item) => item.id === cartItems[i].id);
+    if (productInCartIndex !== -1) {
+        newCartItems[productInCartIndex].quantity = parseInt(newCartItems[productInCartIndex].quantity) + parseInt(cartItems[i].quantity); // 해당제품 수량만 증가
+        console.log(newCartItems[productInCartIndex].quantity);
+    } else {
+        newCartItems.push({ id: cartItems[i].id, name: cartItems[i].name, price: cartItems[i].price, quantity: cartItems[i].quantity, option: cartItems[i].option,});
+    }
 }
+
+localStorage.setItem("cart", JSON.stringify(newCartItems));
+
+// JSON 문자열을 객체, 배열로 변환 (로컬스토리지)
+cartItems = JSON.parse(localStorage.getItem("cart"));
+updateCart();
 
 
 
@@ -156,7 +112,7 @@ function removeFromCart(id) {
   updateCart();
 }
 
-function updateCart() {
+   function updateCart() {
   const itemsList = document.getElementById('items_list');
   itemsList.innerHTML = ''; // 리스트 비우기
 
@@ -165,6 +121,8 @@ function updateCart() {
     const itemDiv = document.createElement('div');
     itemDiv.setAttribute('class', 'itemDiv');
     itemsList.appendChild(itemDiv);
+    
+    
 
     // 체크박스 생성
     const checkboxInput = document.createElement('input');
@@ -231,20 +189,20 @@ function updateCart() {
     quantityButtons.append(minusButton, itemQuantity, plusButton);
     itemDiv.appendChild(quantityButtons);
 
-    // 휴지통 생성
-    const removeButton = document.createElement('button');
-    removeButton.setAttribute('class', 'removeButton');
-    removeButton.textContent = '';
-    removeButton.onclick = function () {
-      removeFromCart(item.id);
-      itemDiv.remove();
-    };
-    itemDiv.appendChild(removeButton);
+    // // 휴지통 생성 
+    // const removeButton = document.createElement('button');
+    // removeButton.setAttribute('class', 'removeButton');
+    // removeButton.textContent = '';
+    // removeButton.onclick = function () {
+    //   removeFromCart(item.id);
+    //   itemDiv.remove();
+    // };
+    // itemDiv.appendChild(removeButton);
   });
 
   // 2. 결제 정보를 나타내는 부분
 
-  // renderTotal();
+  renderTotal();
 
   function renderTotal() {
     const totalPrice = document.querySelector('.total_price');
@@ -254,12 +212,7 @@ function updateCart() {
     totalDiv.setAttribute('class', 'totalDiv');
     itemsList.appendChild(totalDiv);
 
-    // // 배송비 FIXME: 상품금액이 0원이어도 3000으로 표기됨
-
-    // const shippingFee = totalPrice === 0 ? 0 : 3000;
-    // const shippingFeeNumber = document.querySelector('.shipping_fee_number');
-    // shippingFeeNumber.textContent = `: ${shippingFee} 원`;
-
+   
     // 총 결제금액
     const sumPriceHelper = document.querySelector('.sum_price_helper');
     sumPriceHelper.textContent = `${sumPrice().toLocaleString()} 원`;
@@ -268,14 +221,16 @@ function updateCart() {
 }
 // 총 상품금액 계산 함수
 function calculateTotalPrice() {
-  console.log('총 상품금액 확인:', cartItems);
   let price = 0;
   cartItems.forEach((item) => {
     price += item.price * item.quantity;
   });
-  console.log('총 상품금액 계산이후:', cartItems);
-  return price.toLocaleString(); // 3자리 마다 , 삽입
+  return price // 3자리 마다 , 삽입
+ 
+  
 }
+
+
 
 //  총상품가격
 const total = calculateTotalPrice();
@@ -284,6 +239,15 @@ const total = calculateTotalPrice();
 function sumPrice() {
   return calculateTotalPrice();
 }
+
+ // 배송비 FIXME: 상품금액이 0원이어도 3000으로 표기됨
+
+ const shippingFee = total === 0 ? 0 : 3000;
+ const shippingFeeNumber = document.querySelector('.shipping_fee_number');
+ shippingFeeNumber.textContent = `: ${shippingFee.toLocaleString()} 원`;
+ 
+
+
 
 //3. 상품 구매를 나타내는 부분
 //전체상품 구매 함수
@@ -342,12 +306,12 @@ function selectedOrder() {
     }
   });
 
+  if (isChecked) {
+    alert('주문 완료!');
+  } else {
+    alert('선택된 상품이 없습니다!');
+  }
 }
-//   if (isChecked) {
-//     alert('주문 완료!');
-//   } else {
-//     alert('선택된 상품이 없습니다!');
-//   }
 
 //   fetch(`api/orders`, {
 //     method: 'POST',
@@ -391,5 +355,12 @@ updateCart(); // 상품을 담을 때 외부에 전달해주는 함수. export.
 /**
  *  이후에 orderpage로 주문id 넘겨주는 작업 해야함. 지은님 채팅 참고
  *
- *
+ *구매- -> 주문완료 페이지 넘길 때 localStorage 에 담으면 안 되는 이유는
+ ex) 관리자페이지에서 해당 상품에 대한 정보를 조작하면, local로는 따라갈 수가 없음.
+ 그래서 api로 해야함. 
  * */
+
+
+
+
+
