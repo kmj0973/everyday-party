@@ -7,32 +7,7 @@ const headerRender = () => {
 
 headerRender();
 
-// 로컬스토리지
-/**
- 로컬스토리지에 빈 cartItems 배열 만들어놓기. 혜원님key값:cart와 동일해야 하는지?-> 동일해야함.
- 추후 merge 하고 난 뒤 localStorage.setItem은 필요 없으므로 삭제.
- * 
- */
-// 로컬스토리지에 실제 잘 저장 되는지 test.
-// localStorage.setItem(
-//   'cart',
-//   JSON.stringify([
-//     // { _id: '6543563c88123149c933da9e', quantity: 1 },
-//     { id: '65491fef6b0762c9aa44acfa', quantity: 1 },
-//     // { _id: 2, quantity: 1 },
-//     // { id: 1, name: '풍선', price: 1000, quantity: 1 },
-//   ])
-// );
 
-const cartData = localStorage.getItem('cart');
-console.log(cartData);
-// const cartItems = [
-//   // { id: 1, name: '풍선', price: 1000, quantity: 1 },
-//   // { id: 2, name: '의상', price: 2000, quantity: 2 },
-// ];
-
-// JSON 문자열을 객체, 배열로 변환 (로컬스토리지)
-const cartItems = JSON.parse(cartData);
 
 //---------------api test----------------------------------------
 
@@ -91,72 +66,80 @@ const cartItems = JSON.parse(cartData);
 //   console.log
 // );
 
-/**gpt
-const promises = [
-  fetch('/api/products')
-    .then((response) => response.json())
-    .then((data) => data.products[0]._id),
-  fetch('/api/products')
-    .then((response) => response.json())
-    .then((data) => data.products[0].name),
-  fetch('/api/products')
-    .then((response) => response.json())
-    .then((data) => data.products[0].price),
-  fetch('/api/products')
-    .then((response) => response.json())
-    .then((data) => data.products[0].quantity),
-];
 
-Promise.all(promises)
-  .then(([_id, name, price, quantity]) => {
-    addToCart(_id, name, price, quantity);
-  })
-  .catch((error) => {
-    console.error('상품 정보를 가져올 때 오류 발생:', error);
-  });
-*/
 // 하연님
-const cartItem = localStorage.getItem('cart');
+// const cartItem = localStorage.getItem('cart');
 
-const arrOfProductId = JSON.parse(cartItem)
-  .map((item) => item._id)
-  .join(',');
+// const arrOfProductId = JSON.parse(cartItem)
+//   .map((item) => item.id)
+//   .join(',');
 
-if (arrOfProductId.length > 0) {
-  // fetch(`/api/products?products=${arrOfProductId}`)
-  fetch(
-    `/api/products?products=${'65491fef6b0762c9aa44acfa,6543563c88123149c933da9e'}`
-  )
-    .then((result) => result.json())
-    .then((data) => {
-      const products = data.products;
-      Array.from(products).forEach((eachProduct, index) => {
-        addToCart(
-          eachProduct._id,
-          eachProduct.name,
-          Number(eachProduct.price) * Number(cartItem[index].quantity),
-          Number(cartItem[index].quantity)
-        );
-      });
-    });
-}
+// if (arrOfProductId.length > 0) {
+//   // fetch(`/api/products?products=${arrOfProductId}`)
+//   fetch(
+//     `/api/products?products=${'65491fef6b0762c9aa44acfa,6543563c88123149c933da9e'}`
+//   )
+//     .then((result) => result.json())
+//     .then((data) => {
+//       const products = data.products;
+//       Array.from(products).forEach((eachProduct, index) => {
+//         addToCart(
+//           eachProduct._id,
+//           eachProduct.name,
+//           Number(eachProduct.price) * Number(cartItem[index].quantity),
+//           Number(cartItem[index].quantity)
+//         );
+//       });
+//     });
+// }
+
 
 //----------------api test----------------------------------------
 
+// 로컬스토리지에서 상품 데이터 받아오기
+
+const cartData = localStorage.getItem('cart');
+console.log(cartData);
+// const cartItems = [
+//   // { id: 1, name: '풍선', price: 1000, quantity: 1 },
+//   // { id: 2, name: '의상', price: 2000, quantity: 2 },
+// ];
+
+// JSON 문자열을 객체, 배열로 변환 (로컬스토리지)
+const cartItems = JSON.parse(cartData);
+
+
+
 // 1. 장바구니에 담겨온 상품이 표현되는 부분
 // id값을 기준으로 상품이 담겨오는 함수
-function addToCart(_id, name, price, quantity) {
-  const productInCartIndex = cartItems.findIndex((item) => item.id === _id);
+// function addToCart(id, name, price, quantity) {
+//   const productInCartIndex = cartItems.findIndex((item) => item.id === id);
 
+//   if (productInCartIndex !== -1) {
+//     // 담아온 상품이 장바구니에 이미 존재한다면,
+//     cartItems[productInCartIndex].quantity += quantity; // 해당제품 수량만 증가
+//   } else {
+//     cartItems.push({ id, name, price, quantity }); // 장바구니에 없는 상품이면 상품을 장바구니에 추가
+//   }
+
+//   updateCart();
+// }
+
+const newCartItems = [];
+for (let i = 0; i < cartItems.length; i++) {
+  const productInCartIndex = newCartItems.findIndex((item) => item.id === cartItems[i].id);
+  
   if (productInCartIndex !== -1) {
-    // 담아온 상품이 장바구니에 이미 존재한다면,
-    cartItems[productInCartIndex].quantity += quantity; // 해당제품 수량만 증가
+    newCartItems[productInCartIndex].quantity = parseInt(newCartItems[productInCartIndex].quantity) + parseInt(cartItems[i].quantity); // 해당제품 수량만 증가
   } else {
-    cartItems.push({ _id, name, price, quantity }); // 장바구니에 없는 상품이면 상품을 장바구니에 추가
+    newCartItems.push({ id: cartItems[i].id, name: cartItems[i].name, price: cartItems[i].price, quantity: cartItems[i].quantity, option: cartItems[i].option });
   }
-
-  updateCart();
+  
+  localStorage.setItem("cart", JSON.stringify(newCartItems));
+  updateCart()
 }
+
+
 
 // id값을 기준으로 상품을 제거하는 함수
 function removeFromCart(id) {
@@ -359,16 +342,46 @@ function selectedOrder() {
     }
   });
 
-  if (isChecked) {
-    alert('주문 완료!');
-  } else {
-    alert('선택된 상품이 없습니다!');
-  }
 }
+//   if (isChecked) {
+//     alert('주문 완료!');
+//   } else {
+//     alert('선택된 상품이 없습니다!');
+//   }
+
+//   fetch(`api/orders`, {
+//     method: 'POST',
+//     body: JSON.stringify({
+//       id: "6543563c88123149c933da9e"
+//     })
+//   }).then(result => {
+//     if(result.status === "200") {
+//       alert("주문 완료")
+//     }
+//   }).then(res => console.log(res.message))
+// }
+
+  
 
 // 선택상품 구매 이벤트리스너
 const selectedOrderButton = document.querySelector('.selected_order_button');
 selectedOrderButton.addEventListener('click', selectedOrder);
+
+
+
+// 계속 쇼핑하기 이벤트 리스너
+
+function mainpage(){
+  window.location.href = 'http://localhost:5000/main/main.html'
+}
+const keepShoppingButton = document.querySelector('.keep_shopping_button')
+keepShoppingButton.addEventListener('click', mainpage)
+
+
+
+
+
+
 
 updateCart(); // 상품을 담을 때 외부에 전달해주는 함수. export.
 
