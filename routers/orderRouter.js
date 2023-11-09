@@ -19,12 +19,12 @@ orderRouter.get("/", async (req, res, next) => {
             const orderlist = await Order.find({});
             res.status(200).json({ orderlist });
         } else {
-            console.log('부분 조회를 진입하였습니다.')
+            //console.log('부분 조회를 진입하였습니다.')
 
             // 특정 아이디로 주문 조회
             const oneOrder = await Order.findOne({ _id: id }); // 아이디를 기준으로 조회
             if (oneOrder) {
-                console.log('부분 조회를 성공하였습니다.')
+                //console.log('부분 조회를 성공하였습니다.')
                 res.status(200).json({ order: oneOrder, paginatedProducts });
             } else {
                 res.status(404).json({ message: '해당 주문을 찾을 수 없습니다.' });
@@ -71,9 +71,8 @@ orderRouter.patch("/:id", async (req, res, next) => {
     const { id } = req.params;
 
     const { changedStatus } = req.body;
-    console.log(totalPrice, changedStatus);
     try {
-        const cancelledOrder = await OrderService.cancelOrder(id, totalPrice, changedStatus);
+        const cancelledOrder = await OrderService.cancelOrder(id, changedStatus);
 
         res.status(200).json({
             cancelledOrder,

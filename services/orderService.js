@@ -23,13 +23,12 @@ class OrderService {
    * @param (orderId, deliveryStatus) 사용자 아이디와 배송상태
    * @return
    */
-  async cancelOrder(id, totalPrice, changeStatus) {
+  async cancelOrder(id, changeStatus) {
     const order = await Order.findByIdAndUpdate(
       id,
       {
         $set: {
           deliveryStatus: changeStatus,
-          totalPrice: totalPrice
         }
       },
       { new: true, runValidators: true }
