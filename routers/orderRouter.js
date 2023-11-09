@@ -26,7 +26,7 @@ orderRouter.get("/", async (req, res, next) => {
             const oneOrder = await Order.findOne({ _id: id }); // 아이디를 기준으로 조회
             if (oneOrder) {
                 //console.log('부분 조회를 성공하였습니다.')
-                res.status(200).json({ order: oneOrder, paginatedProducts });
+                res.status(200).json({ order: oneOrder });
             } else {
                 res.status(404).json({
                     message: "해당 주문을 찾을 수 없습니다.",
