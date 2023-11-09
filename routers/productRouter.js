@@ -2,6 +2,10 @@ const { Router } = require("express");
 //const { authenticateUser, isAdmin } = require("../middleware/isAdmin");
 const productService = require("../services/productService");
 const { authenticatePageData } = require("../middleware/index");
+const { authenticateUserToken} = require("../middleware/authenticateUserToken");
+const { User } = require("../models");
+
+
 
 const productRouter = Router();
 
@@ -116,24 +120,14 @@ productRouter.get("/", authenticatePageData, async (req, res, next) => {
     }
 });
 
-// productRouter.get('/:id', async (req, res, next) => {
-//     console.log("아이템 조회 라우터")
-//     const id = req.params.id;
-//     try {
-//         const newProduct = await Product.find({id});
-
-//         res.json(newProduct);
-//     } catch (err) {
-//         next(err);
-//     }
-// })
 
 //상품 생성
-productRouter.post("/", async (req, res, next) => {
+productRouter.post("/",  async (req, res, next) => {
     //console.log("상품을 post합니다!");
     const { name, price, stockedAt, discountRate, category, description, option, file } = req.body;
 
     try {
+        
         const existingProduct = await productService.checkProductExists(name);
 
         if (existingProduct) {
