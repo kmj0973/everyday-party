@@ -52,8 +52,8 @@ const orderSchema = new Schema({
         type: String,
         required: true,
         enum: deliveryStatusEnum,
-        default: "주문완료",
-    },
+        default: "주문완료"
+    }
 });
 
 module.exports = { orderSchema, productInfoSchema };

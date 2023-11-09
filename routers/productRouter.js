@@ -3,7 +3,7 @@ const multer = require("multer");
 
 const productService = require("../services/productService");
 
-const { authenticateUserToken } = require("../middleware/authenticateUserToken");
+const { authenticateUserToken} = require("../middleware/authenticateUserToken");
 const { User } = require("../models");
 
 const { authenticatePageData, authenticateProductData } = require("../middleware/index");
@@ -160,11 +160,13 @@ productRouter.get("/", authenticatePageData, async (req, res, next) => {
     }
 });
 
+
 //상품 생성
 productRouter.post("/", authenticateUserToken, upload.single("product_name"), authenticateProductData, async (req, res, next) => {
     const { name, price, stockedAt, discountRate, category, description, option } = req.body;
 
     try {
+        
         const existingProduct = await productService.checkProductExists(name);
 
         if (existingProduct) {

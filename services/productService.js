@@ -311,7 +311,7 @@ class ProductService {
         const category = await Category.findOne({ categoryName: productData.category });
         const option = new Option({
             size: productData.option.size,
-            color: productData.option.color,
+            color: productData.option.color
         });
 
         if (productData.file !== undefined && productData.file !== null) {
