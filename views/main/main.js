@@ -75,15 +75,9 @@ function createReviewCard(reviews) {
         cardContainer.innerHTML += `<li>
         <img src="${reviews[i].product.file.path}" />
         <div class="review-details">
-            <span>${
-                reviews[i].product.name.length > 20
-                    ? reviews[i].product.name.substr(0, 18) + "..."
-                    : reviews[i].product.name
-            }</span>
+            <span>${reviews[i].product.name.length > 20 ? reviews[i].product.name.substr(0, 18) + "..." : reviews[i].product.name}</span>
             <p>${reviews[i].article.content}</p>
-            <div>${!reviews[i].article.author ? "null" : reviews[i].article.author.name} | ${reviews[
-            i
-        ].createdAt.substr(0, 10)}</div>
+            <div>${!reviews[i].article.author ? "null" : reviews[i].article.author.name} | ${reviews[i].createdAt.substr(0, 10)}</div>
         </div>
     </li>`;
     }

@@ -70,9 +70,9 @@ orderRouter.patch("/:id", async (req, res, next) => {
     const { id } = req.params;
 
     const { changedStatus } = req.body;
-    console.log(totalPrice, changedStatus);
+    console.log(changedStatus);
     try {
-        const cancelledOrder = await OrderService.cancelOrder(id, totalPrice, changedStatus);
+        const cancelledOrder = await OrderService.cancelOrder(id, changedStatus);
 
         res.status(200).json({
             cancelledOrder,
