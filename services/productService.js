@@ -308,12 +308,11 @@ class ProductService {
             productData.category = await Category.find({ categoryName: { $in: productData.category } });
         }
 
-        if (productData.option !== undefined && productData.option !== null) {
-            productData.option = new Option({
-                size: productData.option.size,
-                color: productData.option.color,
-            });
-        }
+        const category = await Category.findOne({ categoryName: productData.category });
+        const option = new Option({
+            size: productData.option.size,
+            color: productData.option.color
+        });
 
         if (productData.file !== undefined && productData.file !== null) {
             productData.file = new File({
@@ -391,26 +390,6 @@ class ProductService {
         //console.log("놉 여기임");
         return await Product.find({}).sort(sortConfig).lean();
     }
-
-    // async pagination(pageData) {
-    //     const page = pageData.page;
-    //     const perPage = pageData.perPage;
-    //     const [total, products] = await Promise.all([
-    //       Product.countDocuments({}),
-    //       Product.find({})
-    //           .sort({ createdAt: -1 })
-    //           .skip(perPage * (page - 1))
-    //           .limit(perPage)
-    //   ]);
-    //     // const total = await Product.countDocuments({});
-    //     // const products = await Product.find({})
-    //     //   .sort({ createdAt: -1 })
-    //     //   .skip(perPage * (page - 1))
-    //     //   .limit(perPage);
-    //     const totalPage = Math.ceil(total / perPage);
-
-    //     return {page, perPage, products, totalPage};
-    //   }
 }
 
 module.exports = new ProductService();
