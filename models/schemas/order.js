@@ -56,7 +56,7 @@ const orderSchema = new Schema({
         type: String,
         required: true,
         enum: deliveryStatusEnum,
-    },
+    }
 });
 
-module.exports = {orderSchema, productInfoSchema};
+module.exports = { orderSchema, productInfoSchema };

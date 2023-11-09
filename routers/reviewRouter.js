@@ -9,7 +9,7 @@ reviewRouter.get("/", async (req, res, next) => {
     if (curDataNum !== undefined && curDataNum !== null && typeof curDataNum !== "number") {
         const error = new Error("쿼리 값이 유효하지 않습니다.");
         error.status = 400;
-        next(error);
+        return next(error);
     }
 
     const curReview = await reviewService.getCurrentReview(curDataNum ?? 8);
@@ -25,7 +25,7 @@ reviewRouter.get("/products", async (req, res, next) => {
             if (typeof eachId !== "string") {
                 const error = new Error("물품 아이디 값이 유효하지 않습니다.");
                 error.status = 400;
-                next(error);
+                return next(error);
             }
         });
     }
@@ -46,7 +46,7 @@ reviewRouter.get("/users", async (req, res, next) => {
             if (typeof eachId !== "string") {
                 const error = new Error("유저 아이디 값이 유효하지 않습니다.");
                 error.status = 400;
-                next(error);
+                return next(error);
             }
         });
     }
