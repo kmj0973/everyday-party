@@ -119,12 +119,12 @@ router.post("/sign-up", authenticateUserData, async (req, res, next) => {
     const validInfoOfUserInput = validDataUtil.processDataWithPatch(userInput);
     validInfoOfUserInput.password = await passwordUtil.hashPassword(validInfoOfUserInput.password);
 
-    try {
-        await userService.createUser(validInfoOfUserInput);
-        return res.status(200).json({});
-    } catch (error) {
-        return next(error);
-    }
+    // try {
+    //     await userService.createUser(validInfoOfUserInput);
+    //     return res.status(200).json({});
+    // } catch (error) {
+    //     return next(error);
+    // }
 });
 
 module.exports = router;

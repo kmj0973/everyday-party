@@ -1,10 +1,7 @@
 const jwtUtil = require("../utils/jwtUtil");
 
 async function authenticateUserToken(req, res, next) {
-    if (
-        req.header("Authorization") === undefined ||
-        req.header("Authorization") === null
-    ) {
+    if (req.header("Authorization") === undefined || req.header("Authorization") === null) {
         const error = new Error("토큰이 필요합니다.");
         error.status = 401;
         return next(error);
@@ -35,6 +32,10 @@ async function authenticateUserToken(req, res, next) {
             error.status = 401;
             return next(error);
         }
+
+        const newError = new Error("알 수 없는 에러가 발생했습니다.");
+        newError.status = 500;
+        return next(newError);
     }
 }
 
