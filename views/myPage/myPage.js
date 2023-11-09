@@ -101,6 +101,30 @@ async function getProductInfo(id){
 function createProductInfo(orderInfo){
     const productInfoContainer = document.createElement('div');
     productInfoContainer.setAttribute('class','product-info-container');
+    
+    // Promise.all(orderInfo)
+    //     .then((productInfo)=>getProductInfo('654a60f195cd6f5052eaad13'))
+    //     .then(productData=>{
+    //         console.log('상품데이터 확인',productData.products[0]);
+    //             productInfoContainer.innerHTML += `
+    //             <div class="total-num">총 ${order.products.length}건</div>
+    //                 <div class="order-date">주문일자 ${order.orderedAt}</div>
+    //                 <div class="product-info">
+    //                     <img class='product-img' src='${productData.products[0].file.path}' >
+    //                     <div class="product-name">${productData.products[0].name}</div>
+    //                     <div class="product-price">${productData.products[0].price}</div>
+    //                     <div class="btn-container">
+    //                         <div>${order.deliveryStatus}</div>
+    //                         <div>리뷰쓰기</div>
+    //                     </div>
+    //                 </div>
+    //                 <div class="show-all">
+    //                     <div>총 ${Number(order.totalPrice).toLocaleString()}원 주문 전체보기</div>
+    //                 </div>
+    //             </div>
+    //             `
+    //     })
+    //? 프로미스를 반환하는 함수는 getProductInfo 아닌가요? promise.all을 어떻게 써야할지 모르겠다 
     orderInfo.forEach((order,i)=>{
         //! 9일 오피스아워 (promise all 사용해서 한번에처리)
         getProductInfo("654a60f195cd6f5052eaad13")
@@ -112,7 +136,7 @@ function createProductInfo(orderInfo){
                     <div class="product-info">
                         <img class='product-img' src='${productData.products[0].file.path}' >
                         <div class="product-name">${productData.products[0].name}</div>
-                        <div class="product-price">${productData.products[0].price}</div>
+                        <div class="product-price">${Number(productData.products[0].price).toLocaleString()}</div>
                         <div class="btn-container">
                             <div>${order.deliveryStatus}</div>
                             <div>리뷰쓰기</div>
@@ -162,11 +186,13 @@ for(let i=0;i<items.length;i++){
 
 showUserInfo();
 //7. 정보 수정 페이지 -> 유저 정보 불러오기 
+const getUserId = document.querySelector('.userID');
+const getUserName = document.querySelector('.userName')
+const getUserNumber = document.querySelector('.userNumber');
+const getUserAddress = document.querySelector('.userAdress');
+const getUserPassword = document.querySelector('.userPw');
+
 async function showUserInfo(){
-    const getUserId = document.querySelector('.userID');
-    const getUserName = document.querySelector('.userName')
-    const getUserNumber = document.querySelector('.userNumber');
-    const getUserAddress = document.querySelector('.userAdress');
 
     getUserInfo()
         .then(userData=>{
@@ -181,6 +207,86 @@ async function showUserInfo(){
             alert('유저 데이터를 들고올 수 없습니다.')
         })
     
+    //8. 수정하기 버튼 클릭시 input창 활성화 
+}
+
+let BtnClicked = false;
+
+const modifyBtn = document.querySelector('.modify-btn');
+
+modifyBtn.addEventListener('click',()=>{
+    if(!BtnClicked){
+        const values = {
+            id: getUserId.textContent,
+            name: getUserName.textContent,
+            phone: getUserNumber.textContent,
+            password : '새로운 비밀번호를 입력하세요',
+            address: getUserAddress.textContent
+        };
+    
+        for (const key in values) {
+                //인풋 요소 생성 + 타입 : text, class이름 지정 
+            const inputElement = document.createElement('input');
+            inputElement.setAttribute('type', 'text');
+            inputElement.setAttribute('class', 'modify-input-box modify-'+key);
+            inputElement.value = values[key];
+            
+            //부모요소에 append Child 해주기 
+            const parentElement = document.querySelector('.' + key + '-box');
+            parentElement.appendChild(inputElement);
+            
+            //인풋 창 안에 기존 값 넣어주기, 이전 div는 지워주기 
+            getUserId.style.display = 'none';
+            getUserName.style.display = 'none';
+            getUserNumber.style.display = 'none';
+            getUserAddress.style.display = 'none';
+            getUserPassword.style.display = 'none';
+        }
+    
+        modifyBtn.innerText = '저장하기'
+        modifyBtn.style.backgroundColor = '#F9E103'; 
+        BtnClicked = true;
+    }else{
+        console.log('저장되었습니다');
+        //input value 가져오기 
+
+        //getUser -- 에 innerHTML 로 바뀐 value 집어넣기 
+
+        // 기존 input 창은 삭제하기 
+        // 입력 값 가져오기
+        const updatedValues = {
+            id: document.querySelector('.modify-id').value,
+            name: document.querySelector('.modify-name').value,
+            phone: document.querySelector('.modify-phone').value,
+            address: document.querySelector('.modify-address').value
+            // 비밀번호는 따로 처리 필요
+        };
+
+        // 수정된 값을 div에 집어넣기
+        for (const key in updatedValues) {
+            const divElement = document.querySelector('.' + key + '-box .info-content');
+            divElement.textContent = updatedValues[key];
+            divElement.style.display='none';
+        }
+
+        // 입력 요소 삭제 및 div 요소 화면에 보이도록 설정
+        document.querySelectorAll('.modify-input-box').forEach(element => {
+            element.remove();
+        });
+
+        document.querySelectorAll('.info-content').forEach(element => {
+            element.style.display = 'block';
+        });
+
+        
+
+        modifyBtn.innerText = '수정하기';
+        modifyBtn.style.backgroundColor = '#FCEDC4';
+        BtnClicked = false;
+    }
+    
+   
 
     
-}
+})
+
