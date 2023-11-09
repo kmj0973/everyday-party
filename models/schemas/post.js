@@ -26,7 +26,7 @@ const postSchema = new Schema(
     },
     {
         timestamps: true,
-    }
+    },
 );
 
 module.exports = postSchema;

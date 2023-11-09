@@ -31,7 +31,7 @@ export const Header = () => {
                 </a>
                 <ul class="user_menu">
                 ${
-                    token == null
+                    token == null|| !userToken
                         ? `<li><a href="/login/login.html">로그인</a></li>
                 <li><a href="/auth/auth.html">회원가입</a></li>`
                         : `<li>${userToken.user.name} 님</li>`
@@ -65,12 +65,12 @@ export const Header = () => {
                     </iconify-icon>
                 </a>
                 <ul class="category">
-                    <li><a class="category_link" href=${`http://localhost:5000/category/category.html#category=${"new"}`}>신상품</a></li>
-                    <li><a class="category_link" href=${`http://localhost:5000/category/category.html#category=${"best"}`}>베스트</a></li>
-                    <li><a class="category_link" href=${`http://localhost:5000/category/category.html#category=${"clothes"}`}>의류</a></li>
-                    <li><a class="category_link" href=${`http://localhost:5000/category/category.html#category=${"props"}`}>소품</a></li>
-                    <li><a class="category_link" href=${`http://localhost:5000/category/category.html#category=${"balloons"}`}>풍선</a></li>
-                    <li><a class="category_link" href=${`http://localhost:5000/category/category.html#category=${"decorations"}`}>장식</a></li>
+                    <li><a class="category_link" href=${`/category/category.html#category=${"new"}`}>신상품</a></li>
+                    <li><a class="category_link" href=${`/category/category.html#category=${"best"}`}>베스트</a></li>
+                    <li><a class="category_link" href=${`/category/category.html#category=${"clothes"}`}>의류</a></li>
+                    <li><a class="category_link" href=${`/category/category.html#category=${"props"}`}>소품</a></li>
+                    <li><a class="category_link" href=${`/category/category.html#category=${"balloons"}`}>풍선</a></li>
+                    <li><a class="category_link" href=${`/category/category.html#category=${"decorations"}`}>장식</a></li>
                 </ul>
             </div>
         </nav>

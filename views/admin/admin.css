@@ -92,6 +92,7 @@ section {
     width: 100%;
     height: 25%;
     border: 2px solid black;
+    background-color: white;
     margin-bottom: 10px;
 }
 .list-top {
@@ -111,6 +112,7 @@ section {
 }
 .list-body div {
     width: 8%;
+    font-size: 12px;
     word-wrap: break-word;
 }
 .list-body img {
@@ -146,7 +148,7 @@ section {
     overflow-y: auto;
 }
 .product-details-page img {
-    height: 30%;
+    width: 200px;
 }
 .product-details-page input {
     width: 100%;

@@ -20,6 +20,7 @@ const mainCategory = document.querySelector(".main-category");
 await getAllProductData();
 
 async function getAllProductData() {
+    //전체 상품데이터 받아오기
     try {
         const data = await fetch("/api/products").then((result) => result.json());
 
@@ -47,9 +48,7 @@ function createProductList(products) {
         <div class="product-details">${products[i].name}</div>
         <div>${products[i].category.map((result) => result.categoryName)}</div>
         <div>${products[i].price.toLocaleString()}</div>
-        <div>${products[i].option.color.map((result) => result)}/${products[i].option.size.map(
-            (result) => result
-        )}</div>
+        <div>${products[i].option.color.map((result) => result)} / ${products[i].option.size.map((result) => result)}</div>
     </div><div>`;
     }
     return listWrapper;
@@ -65,7 +64,6 @@ function onFileChange(e) {
         filePath = e.target.result;
     };
     preview.readAsDataURL(fileImage.files[0]);
-    console.log(fileImage.files[0]);
 }
 
 fileImage.addEventListener("change", onFileChange);
@@ -82,10 +80,12 @@ async function onAddBtn(e) {
             throw new Error("상품 이름 또는 가격을 확인해주세요");
         }
         console.log(productCategory.value.split(","));
+        // const form = new FormData();
+        // form.append("product-image", fileImage.files[0]);
         const data = {
             name: productName.value,
             price: productPrice.value,
-            //category: "halloween",
+            category: "halloween",
             option: { color: productColor.value.split(","), size: productSize.value.split(",") },
             file: { name: fileImage.files[0].name, path: filePath },
         };
@@ -95,7 +95,7 @@ async function onAddBtn(e) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         });
-        //console.log(JSON.stringify(data));
+        window.location.href = "/admin/admin.html";
     } catch (err) {
         alert(err.message);
     }
@@ -106,14 +106,14 @@ addProductBtn.addEventListener("click", onAddBtn);
 //db 상품 삭제 이벤트
 const deleteCheck = document.querySelectorAll(".delete-check");
 const deleteBtn = document.querySelector(".delete-product-btn");
-let deleteid = [];
+let deleteid = []; // 삭제 아이디 배열
 async function onDeleteBtn(e) {
     if (!confirm("삭제하시겠습니까?")) {
         return;
     }
     for (let i = 0; i < deleteCheck.length; i++) {
         if (deleteCheck[i].checked) {
-            deleteid.push(deleteCheck[i].nextSibling.nextSibling.innerText.substr(3));
+            deleteid.push(deleteCheck[i].nextSibling.nextSibling.innerText.substr(3)); //삭제할 아이디 하나씩 넣기
             deleteCheck[i].parentElement.parentElement.parentElement.remove();
         }
     }
@@ -132,21 +132,69 @@ deleteBtn.addEventListener("click", onDeleteBtn);
 
 //db 상품 수정 이벤트
 const modifyBtn = document.querySelectorAll(".modify-btn");
-
+const modifyCheckBtn = document.querySelector(".modify-product-btn");
+let fileName = "";
+let path = "";
+let imageId = "";
 async function onModifyBtn(e) {
     console.log(e.target.previousElementSibling.children[1].innerText.substr(3));
-    // try {
-    //     const response = await fetch(
-    //         `/api/products/${e.target.previousElementSibling.children[1].innerText.substr(3)}`,
-    //         {
-    //             method: "PATCH",
-    //         }
-    //     );
-    // } catch (err) {
-    //     alert(err.message);
-    // }
-}
+    imageId = e.target.previousElementSibling.children[1].innerText.substr(3);
+    try {
+        const data = await fetch(`/api/products?products=${imageId}`).then((result) => result.json());
 
+        const products = await data.products;
+        const catelist = [];
+
+        products[0].category.map((n) => {
+            catelist.push(n.categoryName);
+        });
+        console.log(products[0].file.name);
+        productName.value = products[0].name;
+        productPrice.value = products[0].price;
+        productCategory.value = catelist.join(",");
+        productColor.value = products[0].option.color.join(",");
+        productSize.value = products[0].option.size.join(",");
+        document.querySelector(".product-image-preview").src = products[0].file.path;
+        path = products[0].file.path;
+        if (fileImage.files[0] === undefined) {
+            fileName = products[0].file.name;
+        }
+        console.log(fileImage);
+    } catch (err) {
+        alert(err.message);
+    }
+}
+async function onModifyCheckBtn(e) {
+    try {
+        if (!confirm("수정하시겠습니까?")) {
+            return;
+        }
+        if (!productName.value || !productPrice.value) {
+            throw new Error("상품 이름 또는 가격을 확인해주세요");
+        }
+        console.log(productCategory.value.split(","));
+        // const form = new FormData();
+        // form.append("product-image", fileImage.files[0]);
+
+        const data = {
+            name: productName.value,
+            price: productPrice.value,
+            //category: "halloween",
+            option: { color: productColor.value.split(","), size: productSize.value.split(",") },
+            file: { name: fileImage.files[0] !== undefined ? fileImage.files[0].name : fileName, path: path },
+        };
+        console.log(data);
+        const response = await fetch(`/api/products/${imageId}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+        });
+        window.location.href = "/admin/admin.html";
+    } catch (err) {
+        alert(err.message);
+    }
+}
+modifyCheckBtn.addEventListener("click", onModifyCheckBtn);
 modifyBtn.forEach((m) => {
     m.addEventListener("click", onModifyBtn);
     m.addEventListener("click", onShowProductDetailsPage);
@@ -172,6 +220,12 @@ function onShowProductDetailsPage() {
     mainList.classList.add("hide");
     mainCategory.classList.add("hide");
     productDetailPage.classList.remove("hide");
+    productName.value = "";
+    productPrice.value = "";
+    productCategory.value = "";
+    productColor.value = "";
+    productSize.value = "";
+    document.querySelector(".product-image-preview").src = "";
 }
 
 addProductPageBtn.addEventListener("click", onShowProductDetailsPage);

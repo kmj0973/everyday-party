@@ -8,7 +8,7 @@ headerRender();
 
 //순차 함수 실행
 Processing();
-
+//promiseAll
 async function Processing() {
     await getBestProductData(); //베스트 상품
     await getReviewData(); //리뷰

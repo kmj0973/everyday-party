@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
@@ -24,8 +24,8 @@
                 <div class="side-bar">
                     <ul>
                         <li class="product-info-page">상품정보 관리</li>
-                        <li>주문정보 관리</li>
-                        <li>카테고리 관리</li>
+                        <li class="product-order-page">주문정보 관리</li>
+                        <li class="product-category-page">카테고리 관리</li>
                     </ul>
                 </div>
                 <div class="main-wrapper">
@@ -49,7 +49,7 @@
                     </div>
                     <!-- 상품 추가 페이지 -->
                     <div class="product-details-page hide">
-                        <input type="file" id="product-image" accept="image/*" />
+                        <input type="file" name="product-image" id="product-image" accept="image/*" />
                         <img src="" class="product-image-preview" />
                         <label for="product-name">상품 이름</label>
                         <input tyoe="text" id="product-name" placeholder="상품 이름" />
@@ -57,21 +57,69 @@
                         <label for="product-price">상품 가격</label>
                         <input type="number" id="product-price" placeholder="상품 가격" />
 
-                        <label for="product-category"
-                            >상품 카테고리 <span>2가지 이상일 경우 콤마(,)를 사용하여 단어를 분리해주세요.</span></label
-                        >
+                        <label for="product-category">상품 카테고리 <span>2가지 이상일 경우 콤마(,)를 사용하여 단어를 분리해주세요.</span></label>
                         <input type="text" id="product-category" placeholder="상품 카테고리" />
 
-                        <label for="product-color"
-                            >상품 색상 <span>2가지 이상일 경우 콤마(,)를 사용하여 단어를 분리해주세요.</span></label
-                        >
+                        <label for="product-color">상품 색상 <span>2가지 이상일 경우 콤마(,)를 사용하여 단어를 분리해주세요.</span></label>
                         <input type="text" id="product-color" placeholder="상품 색상" />
 
-                        <label for="product-size"
-                            >상품 사이즈 <span>2가지 이상일 경우 콤마(,)를 사용하여 단어를 분리해주세요.</span></label
-                        >
+                        <label for="product-size">상품 사이즈 <span>2가지 이상일 경우 콤마(,)를 사용하여 단어를 분리해주세요.</span></label>
                         <input type="text" id="product-size" placeholder="상품 사이즈" />
                         <button class="add-product-btn">상품 추가하기</button>
+                        <button class="modify-product-btn">상품 수정하기</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section>
+            <div id="admin_title">관리자 페이지</div>
+            <div class="container">
+                <div class="side-bar">
+                    <ul>
+                        <li class="product-info-page">상품정보 관리</li>
+                        <li class="product-order-page">주문정보 관리</li>
+                        <li class="product-category-page">카테고리 관리</li>
+                    </ul>
+                </div>
+                <div class="main-wrapper">
+                    <!-- 상품정보 관리 페이지 -->
+                    <div class="main-title">
+                        <button class="delete-product-btn">상품 삭제</button>
+                        <span class="title">Product</span>
+                        <button class="add-product-page-btn">상품 추가</button>
+                    </div>
+                    <div class="main-category" border="1px">
+                        <ul>
+                            <li>상품 아이디</li>
+                            <li>상품 정보</li>
+                            <li>카테고리</li>
+                            <li>상품 가격</li>
+                            <li>색상/사이즈</li>
+                        </ul>
+                    </div>
+                    <div class="main-list">
+                        <!-- 상품 리스트 -->
+                    </div>
+                    <!-- 상품 추가 페이지 -->
+                    <div class="product-details-page hide">
+                        <input type="file" name="product-image" id="product-image" accept="image/*" />
+                        <img src="" class="product-image-preview" />
+                        <label for="product-name">상품 이름</label>
+                        <input tyoe="text" id="product-name" placeholder="상품 이름" />
+
+                        <label for="product-price">상품 가격</label>
+                        <input type="number" id="product-price" placeholder="상품 가격" />
+
+                        <label for="product-category">상품 카테고리 <span>2가지 이상일 경우 콤마(,)를 사용하여 단어를 분리해주세요.</span></label>
+                        <input type="text" id="product-category" placeholder="상품 카테고리" />
+
+                        <label for="product-color">상품 색상 <span>2가지 이상일 경우 콤마(,)를 사용하여 단어를 분리해주세요.</span></label>
+                        <input type="text" id="product-color" placeholder="상품 색상" />
+
+                        <label for="product-size">상품 사이즈 <span>2가지 이상일 경우 콤마(,)를 사용하여 단어를 분리해주세요.</span></label>
+                        <input type="text" id="product-size" placeholder="상품 사이즈" />
+                        <button class="add-product-btn">상품 추가하기</button>
+                        <button class="modify-product-btn">상품 수정하기</button>
                     </div>
                 </div>
             </div>
