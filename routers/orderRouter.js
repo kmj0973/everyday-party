@@ -1,8 +1,8 @@
 const { Router } = require("express");
-const { Order, ProductInfo } = require("../models");
-const { Product, Option } = require("../models");
+const { Order, ProductInfo, User } = require("../models");
 
 const OrderService = require("../services/orderService");
+const UserService = require("../services/userService");
 
 const orderRouter = Router();
 
@@ -18,13 +18,13 @@ orderRouter.get("/", async (req, res, next) => {
             const orderlist = await Order.find({});
             res.status(200).json({ orderlist });
         } else {
-            console.log("부분 조회를 진입하였습니다.");
+            //console.log('부분 조회를 진입하였습니다.')
 
             // 특정 아이디로 주문 조회
-            const oneOrder = await Order.findOne({ _id: id }); // 아이디를 기준으로 조회
+            const oneOrder = await Order.findOne({ _id: id }); //.populate("ProductInfo"); // 아이디를 기준으로 조회
             if (oneOrder) {
-                console.log("부분 조회를 성공하였습니다.");
-                res.status(200).json({ order: oneOrder, paginatedProducts });
+                //console.log('부분 조회를 성공하였습니다.')
+                res.status(200).json({ order: oneOrder });
             } else {
                 res.status(404).json({
                     message: "해당 주문을 찾을 수 없습니다.",
@@ -38,14 +38,22 @@ orderRouter.get("/", async (req, res, next) => {
 
 //주문 생성
 orderRouter.post("/", async (req, res, next) => {
+    //const id = req.header("Authorization").split(" ")[1];
+    const id = req.header("id");
+    //console.log(id);
     const { orderedAt, totalPrice, orderedBy, phoneNumber, address, products, deliveryStatus } = req.body;
+    const user = await User.findById({ _id: id });
+    const userAddress = user ? user.address : null;
+    const userPhone = user ? user.phoneNumber : null;
+
+    //console.log(userAddress);
     try {
         const newOrder = await OrderService.createOrder({
             orderedAt,
             totalPrice,
             orderedBy,
-            phoneNumber,
-            address,
+            phoneNumber: userPhone,
+            address: userAddress,
             products,
             deliveryStatus,
         });
@@ -70,9 +78,8 @@ orderRouter.patch("/:id", async (req, res, next) => {
     const { id } = req.params;
 
     const { changedStatus } = req.body;
-    console.log(totalPrice, changedStatus);
     try {
-        const cancelledOrder = await OrderService.cancelOrder(id, totalPrice, changedStatus);
+        const cancelledOrder = await OrderService.cancelOrder(id, changedStatus);
 
         res.status(200).json({
             cancelledOrder,
