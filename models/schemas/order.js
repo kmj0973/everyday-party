@@ -1,4 +1,4 @@
-const { Schema } = require("mongoose");
+const { Schema, default: mongoose } = require("mongoose");
 
 const productInfoSchema = new Schema({
     product: {
@@ -26,6 +26,7 @@ const orderSchema = new Schema({
     orderedAt: {
         type: Date,
         required: true,
+        default: Date.now,
     },
     totalPrice: {
         type: Number,
@@ -37,7 +38,7 @@ const orderSchema = new Schema({
         //default: "Anonymous",
     },
     phoneNumber: {
-        type: String,
+        type: [String],
     },
     address: {
         type: [String],
@@ -51,6 +52,7 @@ const orderSchema = new Schema({
         type: String,
         required: true,
         enum: deliveryStatusEnum,
+        default: "주문완료"
     }
 });
 
