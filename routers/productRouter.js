@@ -78,6 +78,34 @@ productRouter.get("/", authenticatePageData, async (req, res, next) => {
     //카테고리만 입력
     if (category !== undefined && category !== null) {
         try {
+            if (category === "new") {
+                const { products, totalPage } = await productService.getAllProducts({ ...pageData, orderBy: "stockedAt" });
+                if (totalPage !== undefined && totalPage !== null) {
+                    return res.status(200).json({
+                        products,
+                        totalPage,
+                    });
+                } else {
+                    return res.status(200).json({
+                        products,
+                    });
+                }
+            }
+
+            if (category === "best") {
+                const { products, totalPage } = await productService.getAllProducts({ ...pageData, orderBy: "sales" });
+                if (totalPage !== undefined && totalPage !== null) {
+                    return res.status(200).json({
+                        products,
+                        totalPage,
+                    });
+                } else {
+                    return res.status(200).json({
+                        products,
+                    });
+                }
+            }
+
             const { products, totalPage } = await productService.getProductsByCategory(category, pageData);
             if (totalPage !== undefined && totalPage !== null) {
                 return res.status(200).json({
@@ -134,7 +162,7 @@ productRouter.get("/", authenticatePageData, async (req, res, next) => {
 
 
 //상품 생성
-productRouter.post("/", upload.single("product_name"), authenticateProductData, async (req, res, next) => {
+productRouter.post("/", authenticateUserToken, upload.single("product_name"), authenticateProductData, async (req, res, next) => {
     const { name, price, stockedAt, discountRate, category, description, option } = req.body;
 
     try {
