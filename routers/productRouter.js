@@ -1,13 +1,25 @@
 const { Router } = require("express");
-//const { authenticateUser, isAdmin } = require("../middleware/isAdmin");
+const multer = require("multer");
+
 const productService = require("../services/productService");
-const { authenticatePageData } = require("../middleware/index");
+
 const { authenticateUserToken} = require("../middleware/authenticateUserToken");
 const { User } = require("../models");
 
+const { authenticatePageData, authenticateProductData } = require("../middleware/index");
 
+const validDataUtil = require("../utils/validDataUtil");
 
 const productRouter = Router();
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, "./images/product");
+    },
+    filename: function (req, file, cb) {
+        cb(null, `${Date.now()}_${file.originalname}`);
+    },
+});
+const upload = multer({ storage: storage });
 
 productRouter.get("/", authenticatePageData, async (req, res, next) => {
     const { products, category, page, perPage, orderBy, orderDirection } = req.query;
@@ -122,9 +134,8 @@ productRouter.get("/", authenticatePageData, async (req, res, next) => {
 
 
 //상품 생성
-productRouter.post("/",  async (req, res, next) => {
-    //console.log("상품을 post합니다!");
-    const { name, price, stockedAt, discountRate, category, description, option, file } = req.body;
+productRouter.post("/", upload.single("product_name"), authenticateProductData, async (req, res, next) => {
+    const { name, price, stockedAt, discountRate, category, description, option } = req.body;
 
     try {
         
@@ -136,19 +147,15 @@ productRouter.post("/",  async (req, res, next) => {
             throw error;
         }
 
+        const file = req.file !== undefined && req.file !== null ? { path: "/" + req.file.path.replaceAll("\\", "/"), name: req.file.filename } : undefined;
+
+        const productInput = { name, price, stockedAt, discountRate, category, description, option, file };
+        const validInfoOfProductInput = validDataUtil.processDataWithPatch(productInput);
+
         //모든 조건을 거치고 상품 만들기
         newProduct = await productService.createProduct({
-            name,
-            price,
-            discountRate,
-            category,
-            stockedAt,
-            description,
-            option,
-            file,
+            validInfoOfProductInput,
         });
-
-        //console.log("상품이 생성되었습니다.");
 
         //생성된 아이템
         res.status(201).json(newProduct);
