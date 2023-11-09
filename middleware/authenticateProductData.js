@@ -39,14 +39,16 @@ function authenticateProductData(req, res, next) {
         }
     }
 
-    if (category !== null && category !== undefined) {
-        if (!Array.isArray(category)) {
+    const parsedCategory = JSON.parse(category);
+
+    if (parsedCategory !== null && parsedCategory !== undefined) {
+        if (!Array.isArray(parsedCategory)) {
             const error = new Error("카테고리 값이 유효하지 않습니다.");
             error.status = 400;
             return next(error);
         }
 
-        category.forEach((eachCategory) => {
+        parsedCategory.forEach((eachCategory) => {
             if (typeof eachCategory !== "string") {
                 const error = new Error("카테고리 값이 유효하지 않습니다.");
                 error.status = 400;
@@ -63,15 +65,17 @@ function authenticateProductData(req, res, next) {
         }
     }
 
-    if (option !== null && option !== undefined) {
-        console.log(Object.prototype.toString.call(option));
-        if (Object.prototype.toString.call(option).slice(8, -1) !== "Object") {
+    const parsedOption = JSON.parse(option);
+
+    if (parsedOption !== null && parsedOption !== undefined) {
+        console.log(Object.prototype.toString.call(parsedOption));
+        if (Object.prototype.toString.call(parsedOption).slice(8, -1) !== "Object") {
             const error = new Error("옵션 값이 유효하지 않습니다.");
             error.status = 400;
             return next(error);
         }
 
-        for ([key, eachOption] in Object.entries(option)) {
+        for ([key, eachOption] in Object.entries(parsedOption)) {
             if (eachOption !== undefined && eachOption !== null) {
                 if (Array.isArray(eachOption)) {
                     const error = new Error("옵션 값이 유효하지 않습니다.");
