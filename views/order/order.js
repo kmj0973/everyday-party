@@ -74,6 +74,8 @@ const orderRender = async () => {
         const id = "6549d50e6efbc2356c1efcd4"
         const response = await fetch(`/api/orders/${id}`);
         const orderData = await response.json();
+
+        
     
         console.log(orderData);
     } catch (error) {

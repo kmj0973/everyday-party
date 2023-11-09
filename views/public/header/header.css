@@ -28,11 +28,11 @@ a {
 /* 탑메뉴 */
 .top_menu_wrap {
     padding: 12px 0;
-    background-color: #F9E103;
-}   
+    background-color: #f9e103;
+}
 
 .logo {
-    width: 12%;
+    width: 52%;
     cursor: pointer;
 }
 
@@ -78,4 +78,13 @@ nav {
     width: 10%;
     font-weight: 600;
     text-align: center;
+}
+
+.category > li a {
+    display: block;
+    transition: all 0.4s;
+}
+
+.category > li a:hover {
+    color: #f9e103;
 }
