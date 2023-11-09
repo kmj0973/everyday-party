@@ -7,6 +7,7 @@ const postSchema = require("./schemas/post");
 const { optionSchema, productSchema } = require("./schemas/product");
 const reviewSchema = require("./schemas/review");
 const userSchema = require("./schemas/user");
+const fileSchema = require("./schemas/types/file");
 
 const Category = mongoose.model("Category", categorySchema);
 const Comment = mongoose.model("Comment", commentSchema);
@@ -17,6 +18,7 @@ const Product = mongoose.model("Product", productSchema);
 const Option = mongoose.model("Option", optionSchema);
 const Review = mongoose.model("Review", reviewSchema);
 const User = mongoose.model("User", userSchema);
+const File = mongoose.model("File", fileSchema);
 
 module.exports = {
     Category,
@@ -29,4 +31,5 @@ module.exports = {
     Review,
     User,
     ProductInfo,
+    File,
 };

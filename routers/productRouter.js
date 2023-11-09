@@ -1,68 +1,38 @@
 const { Router } = require("express");
-//const { authenticateUser, isAdmin } = require("../middleware/isAdmin");
+const multer = require("multer");
+
 const productService = require("../services/productService");
 
+const { authenticateUserToken} = require("../middleware/authenticateUserToken");
+const { User } = require("../models");
+
+const { authenticatePageData, authenticateProductData } = require("../middleware/index");
+
+const validDataUtil = require("../utils/validDataUtil");
+
 const productRouter = Router();
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, "./images/product");
+    },
+    filename: function (req, file, cb) {
+        cb(null, `${Date.now()}_${file.originalname}`);
+    },
+});
+const upload = multer({ storage: storage });
 
-productRouter.get("/", async (req, res, next) => {
+productRouter.get("/", authenticatePageData, async (req, res, next) => {
     const { products, category, page, perPage, orderBy, orderDirection } = req.query;
-
-    if (page !== undefined && page !== null) {
-        if (isNaN(Number(page))) {
-            const error = new Error("페이지 값이 유효하지 않습니다.");
-            error.status = 400;
-            return next(error);
-        }
-
-        if (Number(page) <= 0) {
-            const error = new Error("페이지 값이 유효하지 않습니다.");
-            error.status = 400;
-            return next(error);
-        }
-    }
-
-    if (perPage !== undefined && perPage !== null) {
-        if (isNaN(Number(perPage))) {
-            const error = new Error("페이지 값이 유효하지 않습니다.");
-            error.status = 400;
-            return next(error);
-        }
-
-        if (Number(perPage) <= 0) {
-            const error = new Error("페이지 값이 유효하지 않습니다.");
-            error.status = 400;
-            return next(error);
-        }
-    }
-
-    if (orderBy !== undefined && orderBy !== null) {
-        if (typeof orderBy !== "string") {
-            const error = new Error("정렬 기준 값이 유효하지 않습니다.");
-            error.status = 400;
-            return next(error);
-        }
-    }
-
-    if (orderDirection !== undefined && orderDirection !== null) {
-        if (isNaN(Number(orderDirection))) {
-            const error = new Error("정렬 순서 값이 유효하지 않습니다.");
-            error.status = 400;
-            return next(error);
-        }
-
-        if (Number(orderDirection) !== -1 && Number(orderDirection) !== 1) {
-            const error = new Error("정렬 순서 값이 유효하지 않습니다.");
-            error.status = 400;
-            return next(error);
-        }
-    }
-
     const pageData = { page, perPage, orderBy, orderDirection };
 
-    const paginatedProducts = await productService.pagination(pageData);
-
     if (products !== undefined && products !== null) {
+        if (products === "") {
+            const error = new Error("찾으려는 물품 값이 유효하지 않습니다.");
+            error.status = 400;
+            next(error);
+        }
         products.split(",").forEach((eachProduct) => {
+            //console.log(typeof eachProduct);
             if (typeof eachProduct !== "string") {
                 const error = new Error("찾으려는 물품 값이 유효하지 않습니다.");
                 error.status = 400;
@@ -109,10 +79,16 @@ productRouter.get("/", async (req, res, next) => {
     if (category !== undefined && category !== null) {
         try {
             const { products, totalPage } = await productService.getProductsByCategory(category, pageData);
-            return res.status(200).json({
-                products,
-                totalPage,
-            });
+            if (totalPage !== undefined && totalPage !== null) {
+                return res.status(200).json({
+                    products,
+                    totalPage,
+                });
+            } else {
+                return res.status(200).json({
+                    products,
+                });
+            }
         } catch (error) {
             return next(error);
         }
@@ -123,10 +99,16 @@ productRouter.get("/", async (req, res, next) => {
         const arrOfProductId = products.split(",");
         try {
             const { products, totalPage } = await productService.getProductsById(arrOfProductId, pageData);
-            return res.status(200).json({
-                products,
-                totalPage,
-            });
+            if (totalPage !== undefined && totalPage !== null) {
+                return res.status(200).json({
+                    products,
+                    totalPage,
+                });
+            } else {
+                return res.status(200).json({
+                    products,
+                });
+            }
         } catch (error) {
             return next(error);
         }
@@ -135,33 +117,28 @@ productRouter.get("/", async (req, res, next) => {
     //카테고리, 물품 아이디 미 입력 시
     try {
         const { products, totalPage } = await productService.getAllProducts(pageData);
-        return res.status(200).json({
-            products,
-            totalPage,
-        });
+        if (totalPage !== undefined && totalPage !== null) {
+            return res.status(200).json({
+                products,
+                totalPage,
+            });
+        } else {
+            return res.status(200).json({
+                products,
+            });
+        }
     } catch (error) {
         return next(error);
     }
 });
 
-// productRouter.get('/:id', async (req, res, next) => {
-//     console.log("아이템 조회 라우터")
-//     const id = req.params.id;
-//     try {
-//         const newProduct = await Product.find({id});
-
-//         res.json(newProduct);
-//     } catch (err) {
-//         next(err);
-//     }
-// })
 
 //상품 생성
-productRouter.post("/", async (req, res, next) => {
-    //console.log("상품을 post합니다!");
-    const { name, price, stockedAt, discountRate, category, description, option, file } = req.body;
+productRouter.post("/", upload.single("product_name"), authenticateProductData, async (req, res, next) => {
+    const { name, price, stockedAt, discountRate, category, description, option } = req.body;
 
     try {
+        
         const existingProduct = await productService.checkProductExists(name);
 
         if (existingProduct) {
@@ -170,19 +147,15 @@ productRouter.post("/", async (req, res, next) => {
             throw error;
         }
 
+        const file = req.file !== undefined && req.file !== null ? { path: "/" + req.file.path.replaceAll("\\", "/"), name: req.file.filename } : undefined;
+
+        const productInput = { name, price, stockedAt, discountRate, category, description, option, file };
+        const validInfoOfProductInput = validDataUtil.processDataWithPatch(productInput);
+
         //모든 조건을 거치고 상품 만들기
         newProduct = await productService.createProduct({
-            name,
-            price,
-            discountRate,
-            category,
-            stockedAt,
-            description,
-            option,
-            file,
+            validInfoOfProductInput,
         });
-
-        //console.log("상품이 생성되었습니다.");
 
         //생성된 아이템
         res.status(201).json(newProduct);

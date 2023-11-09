@@ -1,8 +1,7 @@
 const userService = require("../services/userService");
 
 async function authenticateUserData(req, res, next) {
-    const { userId, password, grade, email, name, address, phone, birthday } =
-        req.body;
+    const { userId, password, grade, email, name, address, phone, birthday } = req.body;
 
     //유저 아이디 검증 - 문자열 / 존재하는 아이디
     if (userId !== undefined && userId !== null) {
@@ -39,8 +38,7 @@ async function authenticateUserData(req, res, next) {
 
     //이메일 검증 - 문자열 / 이메일 형식
     if (email !== undefined && email !== null) {
-        const emailRegex =
-            /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
+        const emailRegex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
         if (!emailRegex.exec(email) || typeof email !== "string") {
             const error = new Error("이메일 값이 유효하지 않습니다.");
             error.status = 400;
@@ -59,7 +57,7 @@ async function authenticateUserData(req, res, next) {
 
     //주소 - 문자열
     if (address !== undefined && address !== null) {
-        if (typeof address !== "object") {
+        if (Array.isArray(address)) {
             const error = new Error("주소 값이 유효하지 않습니다.");
             error.status = 400;
             return next(error);
