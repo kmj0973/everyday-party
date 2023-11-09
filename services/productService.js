@@ -1,13 +1,13 @@
 const mongoose = require("mongoose");
 
-const { Product, Option, Category } = require("../models/index");
+const { Product, Option, Category, File } = require("../models/index");
 
 const allowedFieldMap = {
     _id: true,
     name: true,
     price: true,
     stockedAt: true,
-    sales: true
+    sales: true,
 };
 
 const getFormatPageData = async (pageData) => {
@@ -41,7 +41,18 @@ class ProductService {
         }
 
         if ((pageData.perPage !== undefined && pageData.perPage !== null) || (pageData.page !== undefined && pageData.page !== null)) {
-            const products = await Product.find({}).populate("category").sort(sortConfig).skip(offset).limit(limit).lean();
+            const products = await Product.find({})
+                .populate("category")
+                .sort(sortConfig)
+                .skip(offset)
+                .limit(limit)
+                .lean()
+                .catch((error) => {
+                    const newError = new Error("물품 데이터를 가져오던 중 오류가 발생했습니다.");
+                    newError.status = 500;
+                    throw newError;
+                });
+
             if (products.length === 0) {
                 const error = new Error("해당 페이지가 존재하지 않습니다.");
                 error.status = 404;
@@ -49,7 +60,15 @@ class ProductService {
             }
             return { products, totalPage };
         } else {
-            const products = await Product.find({}).populate("category").sort(sortConfig).lean();
+            const products = await Product.find({})
+                .populate("category")
+                .sort(sortConfig)
+                .lean()
+                .catch((error) => {
+                    const newError = new Error("물품 데이터를 가져오던 중 오류가 발생했습니다.");
+                    newError.status = 500;
+                    throw newError;
+                });
             return { products };
         }
     }
@@ -61,7 +80,14 @@ class ProductService {
      * @return {Product} 물품 모델 객체의 배열
      */
     async getProductById(id) {
-        const product = await Product.findById(id).lean();
+        const product = await Product.findById(id)
+            .lean()
+            .catch((error) => {
+                const newError = new Error("물품 데이터를 가져오던 중 오류가 발생했습니다.");
+                newError.status = 500;
+                throw newError;
+            });
+
         if (product === null || product === undefined) {
             const error = new Error("찾으려는 물품이 존재하지 않습니다.");
             error.status = 404;
@@ -97,7 +123,12 @@ class ProductService {
                 .sort(sortConfig)
                 .skip(offset)
                 .limit(limit)
-                .lean();
+                .lean()
+                .catch((error) => {
+                    const newError = new Error("물품 데이터를 가져오던 중 오류가 발생했습니다.");
+                    newError.status = 500;
+                    throw newError;
+                });
             if (products.length === 0) {
                 const error = new Error("해당 페이지가 존재하지 않습니다.");
                 error.status = 404;
@@ -109,7 +140,12 @@ class ProductService {
             const products = await Product.find({ _id: { $in: arrOfId } })
                 .populate("category")
                 .sort(sortConfig)
-                .lean();
+                .lean()
+                .catch((error) => {
+                    const newError = new Error("물품 데이터를 가져오던 중 오류가 발생했습니다.");
+                    newError.status = 500;
+                    throw newError;
+                });
             if (products.length === 0) {
                 const error = new Error("찾으려는 물품이 존재하지 않습니다.");
                 error.status = 404;
@@ -137,7 +173,13 @@ class ProductService {
         }
 
         if ((pageData.perPage !== undefined && pageData.perPage !== null) || (pageData.page !== undefined && pageData.page !== null)) {
-            const matchCategoryData = await Category.findOne({ categoryName: category }).lean();
+            const matchCategoryData = await Category.findOne({ categoryName: category })
+                .lean()
+                .catch((error) => {
+                    const newError = new Error("카테고리 데이터를 가져오던 중 오류가 발생했습니다.");
+                    newError.status = 500;
+                    throw newError;
+                });
             if (matchCategoryData === undefined || matchCategoryData === null) {
                 const error = new Error("해당 카테고리는 존재하지 않습니다.");
                 error.status = 404;
@@ -148,7 +190,12 @@ class ProductService {
                     .sort(sortConfig)
                     .skip(offset)
                     .limit(limit)
-                    .lean();
+                    .lean()
+                    .catch((error) => {
+                        const newError = new Error("물품 데이터를 가져오던 중 오류가 발생했습니다.");
+                        newError.status = 500;
+                        throw newError;
+                    });
                 if (products.length === 0) {
                     const error = new Error("해당 페이지가 존재하지 않습니다.");
                     error.status = 404;
@@ -157,7 +204,13 @@ class ProductService {
                 return { products, totalPage };
             }
         } else {
-            const matchCategoryData = await Category.findOne({ categoryName: category }).lean();
+            const matchCategoryData = await Category.findOne({ categoryName: category })
+                .lean()
+                .catch((error) => {
+                    const newError = new Error("카테고리 데이터를 가져오던 중 오류가 발생했습니다.");
+                    newError.status = 500;
+                    throw newError;
+                });
             if (matchCategoryData === undefined || matchCategoryData === null) {
                 const error = new Error("해당 카테고리는 존재하지 않습니다.");
                 error.status = 404;
@@ -166,7 +219,12 @@ class ProductService {
                 const products = await Product.find({ category: { $in: [].concat(matchCategoryData._id) } })
                     .populate("category")
                     .sort(sortConfig)
-                    .lean();
+                    .lean()
+                    .catch((error) => {
+                        const newError = new Error("물품 데이터를 가져오던 중 오류가 발생했습니다.");
+                        newError.status = 500;
+                        throw newError;
+                    });
                 return { products };
             }
         }
@@ -243,28 +301,31 @@ class ProductService {
         return existingProduct;
     }
 
-    async createProduct(productData) {
-        if (!productData.name || !productData.price) {
-            const error = new Error("상품 정보가 부족합니다(상품 이름 또는 가격)!!");
-            error.status = 400;
-            throw error;
+    async createProduct({ validInfoOfProductInput }) {
+        const productData = validInfoOfProductInput;
+
+        if (productData.category !== undefined && productData.category !== null) {
+            productData.category = await Category.find({ categoryName: { $in: productData.category } });
         }
 
-        const category = await Category.findOne({categoryName: productData.category});
-        const option = new Option({
-            size: productData.option.size,
-            color: productData.option.color
-        });
+        if (productData.option !== undefined && productData.option !== null) {
+            productData.option = new Option({
+                size: productData.option.size,
+                color: productData.option.color,
+            });
+        }
 
-        const newProduct = await Product.create({
-            name: productData.name,
-            price: productData.price,
-            discountRate: productData.discountRate,
-            category: category._id,
-            stockedAt: productData.stockedAt,
-            description: productData.description,
-            option: option,
-            file: productData.file
+        if (productData.file !== undefined && productData.file !== null) {
+            productData.file = new File({
+                name: productData.file.name,
+                path: productData.file.path,
+            });
+        }
+
+        const newProduct = await Product.create(productData).catch((error) => {
+            const newError = new Error("물품 데이터를 생성하던 중 오류가 발생했습니다.");
+            newError.status = 500;
+            throw newError;
         });
 
         return newProduct;
@@ -273,7 +334,7 @@ class ProductService {
     async updateProduct(id, data) {
         try {
             const updatedProduct = await Product.findByIdAndUpdate(id, data, {
-                new: true
+                new: true,
             });
 
             return updatedProduct;
@@ -292,12 +353,12 @@ class ProductService {
                 return {
                     success: true,
                     message: "제품이 성공적으로 삭제되었습니다.",
-                    data: deleteProduct
+                    data: deleteProduct,
                 };
             } else {
                 return {
                     success: false,
-                    message: "해당 ID의 상품을 찾을 수 없습니다."
+                    message: "해당 ID의 상품을 찾을 수 없습니다.",
                 };
             }
         } catch (err) {
