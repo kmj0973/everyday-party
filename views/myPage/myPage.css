@@ -39,6 +39,11 @@
     flex-direction: column;
     margin-left:30px;
 }
+
+.profile-img{
+    width:134px;
+    height:134px;
+}
 .order-info-container{
     display: flex;
     flex-direction: row;
@@ -142,11 +147,19 @@
 
 }
 .info-title{
-    width:300px;
+    width:182px;
 }
 .info-content{
-    width:600px;
+    width:300px;
     margin-left:200px;
+}
+.modify-input-box{
+    width:300px;
+    margin-left:200px;
+    /* border: 1px solid red; */
+}
+.hide{
+    display:none;
 }
 .modify-btn-container{
     display: flex;

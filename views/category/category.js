@@ -73,7 +73,10 @@ for (let i = 0; i < categoryList.length; i++) {
         const href = categoryList[i].getAttribute("href");
         const newHref = `http://localhost:5000${href}`;
         const url = new URL(newHref.replace(/#/g, "?"));
+<<<<<<< HEAD
         const categoryParams = new URLSearchParams(url.search).get("category");
+=======
+>>>>>>> 31dd476c999708f8e845c08336c45ad59212e5a2
 
     cardRender(categoryParams);
     localStorage.setItem("selectedCategory", categoryParams);
