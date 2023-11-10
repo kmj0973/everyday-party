@@ -4,18 +4,18 @@ const mongoose = require("mongoose");
 class OrderService {
   constructor() { }
 
-    /**
-   * 주문 내역 생성
-   *
-   * @param 받아온 orderData 객체
-   * @return 생성된 orderData 객체
-   */
-    async createOrder(orderData) {
+  /**
+ * 주문 내역 생성
+ *
+ * @param 받아온 orderData 객체
+ * @return 생성된 orderData 객체
+ */
+  async createOrder(orderData) {
 
-      const newOrder = await Order.create(orderData);
-      return newOrder;
-    }
-  
+    const newOrder = await Order.create(orderData);
+    return newOrder;
+  }
+
 
   /**
    * 주문 취소 진행해서 저장하는 함수
@@ -24,7 +24,7 @@ class OrderService {
    * @return
    */
   async cancelOrder(id, currentGrade, changeStatus) {
-    if(currentGrade === 'user') {
+    if (currentGrade === 'user') {
       const order = await Order.findByIdAndUpdate(
         id,
         {
@@ -40,7 +40,7 @@ class OrderService {
       }
       return order;
     }
-    if(currentGrade === 'admin') {
+    if (currentGrade === 'admin') {
       const order = await Order.findByIdAndUpdate(
         id,
         {
