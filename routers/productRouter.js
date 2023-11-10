@@ -158,36 +158,35 @@ productRouter.get("/", authenticatePageData, async (req, res, next) => {
 //상품 생성
 productRouter.post("/", authenticateUserToken, upload.single("product_name"), authenticateProductData, async (req, res, next) => {
     const { name, price, stockedAt, discountRate, category, description, option } = req.body;
-    const  currentGrade  = req.user.grade;
+    const currentGrade = req.user.grade;
     if (currentGrade === "admin") {
         try {
             const existingProduct = await productService.checkProductExists(name);
-    
+
             if (existingProduct) {
                 const error = new Error("이미 존재하는 상품입니다.");
                 error.status = 409;
                 return next(error);
             }
-    
+
             const file = req.file !== undefined && req.file !== null ? { path: "/" + req.file.path.replaceAll("\\", "/"), name: req.file.filename } : undefined;
             const parsedCategory = category !== undefined && category !== null ? JSON.parse(category) : undefined;
             const parsedOption = option !== undefined && option !== null ? JSON.parse(option) : undefined;
 
             const productInput = { name, price, stockedAt, discountRate, category: parsedCategory, description, option: parsedOption, file };
             const validInfoOfProductInput = validDataUtil.processDataWithPatch(productInput);
-    
+
             //모든 조건을 거치고 상품 만들기
             newProduct = await productService.createProduct({
                 validInfoOfProductInput,
             });
-    
+
             //생성된 아이템
             res.status(201).json(newProduct);
         } catch (error) {
             return next(error);
         }
-    }
-    else {
+    } else {
         const error = new Error("관리자 이외에는 접근이 불가능합니다.");
         error.status = 403;
         return next(error);
@@ -204,26 +203,22 @@ productRouter.patch("/:id", authenticateUserToken, upload.single("product_name")
             });
         }
 
-        const  currentGrade  = req.user.grade;
+        const currentGrade = req.user.grade;
 
         if (currentGrade === "admin") {
             const { name, price, stockedAt, discountRate, category, description, option } = req.body;
-            
-            if(name !== undefined || name !== null){
-                const {productByName, productById} = Promise.all([
-                    await productService.checkProductExists(name),
-                    await productService.getProductById(id)
-                ]);
 
-                if(productByName !== undefined && productByName !== null){
-                    if(productByName._id !== productById._id){
+            if (name !== undefined || name !== null) {
+                const { productByName, productById } = Promise.all([await productService.checkProductExists(name), await productService.getProductById(id)]);
+
+                if (productByName !== undefined && productByName !== null) {
+                    if (productByName._id !== productById._id) {
                         const error = new Error("이미 존재하는 상품으로 변경이 불가능합니다.");
                         error.status = 409;
                         return next(error);
                     }
                 }
             }
-             
 
             const file = req.file !== undefined && req.file !== null ? { path: "/" + req.file.path.replaceAll("\\", "/"), name: req.file.filename } : undefined;
             const parsedCategory = category !== undefined && category !== null ? JSON.parse(category) : undefined;
@@ -232,7 +227,7 @@ productRouter.patch("/:id", authenticateUserToken, upload.single("product_name")
             const productInput = { name, price, stockedAt, discountRate, category: parsedCategory, description, option: parsedOption, file };
             const validInfoOfProductInput = validDataUtil.processDataWithPatch(productInput);
 
-            const updatedProduct = await productService.updateProduct(id, {productData: validInfoOfProductInput});
+            const updatedProduct = await productService.updateProduct(id, { productData: validInfoOfProductInput });
 
             if (!updatedProduct) {
                 return res.status(404).json({ message: "상품을 찾을 수 없습니다." });
@@ -241,8 +236,6 @@ productRouter.patch("/:id", authenticateUserToken, upload.single("product_name")
         } else {
             return res.status(403).json({ message: "관리자 외에 접근할 수 없습니다." });
         }
-
-        
     } catch (error) {
         console.log(error);
         const newError = new Error("서버 내 오류가 발생했습니다.");
@@ -254,7 +247,7 @@ productRouter.patch("/:id", authenticateUserToken, upload.single("product_name")
 //상품 삭제 -> admin만 가능하게끔
 productRouter.delete("/:id", authenticateUserToken, async (req, res, next) => {
     try {
-        const  currentGrade  = req.user.grade;
+        const currentGrade = req.user.grade;
         const { id } = req.params;
 
         if (id === undefined || id === null) {
@@ -263,18 +256,16 @@ productRouter.delete("/:id", authenticateUserToken, async (req, res, next) => {
             });
         }
 
-        if(currentGrade === 'admin'){
+        if (currentGrade === "admin") {
             const deleted = await productService.deleteProduct(id);
             if (deleted.success) {
                 return res.status(204).json({});
             } else {
                 return res.status(404).json({ message: deleted.message });
             }
-        }
-        else {
+        } else {
             return res.status(403).json({ message: "관리자 외에 접근할 수 없습니다." });
         }
-        
     } catch (error) {
         console.log(error);
         const newError = new Error("서버 내 오류가 발생했습니다.");
