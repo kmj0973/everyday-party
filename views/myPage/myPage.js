@@ -16,8 +16,8 @@ headerRender();
 //토큰 없을 경우 (실행x) 예외처리 (페이지 이동 )
 //토큰 있을 경우 getUserInfo 함수 실행
 //! 테스트 token
-//let token = localStorage.getItem('token'); 
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ0ZXN0MSIsImdyYWRlIjoidXNlciIsImlhdCI6MTY5OTQyNzQ5MSwiZXhwIjoxNjk5NDI4OTkxfQ.9fSXsE-wQZrKH_-HIuOrP-b74tAQ4lO9gOZSyeedwWE'
+let token = localStorage.getItem('access-token'); 
+//const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ0ZXN0MSIsImdyYWRlIjoidXNlciIsImlhdCI6MTY5OTQyNzQ5MSwiZXhwIjoxNjk5NDI4OTkxfQ.9fSXsE-wQZrKH_-HIuOrP-b74tAQ4lO9gOZSyeedwWE'
 
 pageRender();
 
@@ -36,13 +36,14 @@ async function pageRender(){
                 profileUserName.innerHTML = userData.user.name;
                 profileUserID.innerHTML = userData.user.userId
                 //주문내역 뿌려주기
-                getOrderList('test001'); //인자로 사용자 이름을 보내주는 방식 getOrderList(userData.user.name)
+                getOrderList(userData.user.name); //인자로 사용자 이름을 보내주는 방식 getOrderList(userData.user.name)
     
             })
             .catch(error=>{
                 console.log(error);
                 alert('유저 정보를 가져오지 못함');
             })
+        
     }
 }
 
@@ -64,27 +65,25 @@ async function pageRender(){
 
  
 
-  /**
-   * 하나 더 하면 좋은 것 
-   */
-
  
 
 //3. 해당 사용자의 구매 목록 가져오기 
 async function getOrderList(userName){
     const ProductInfoBox = document.querySelector('.product-list-container');
-    const data = await fetch('/api/orders');
-    const orderList = await data.json().then((res)=>res.orderlist);
-    //console.log('orderlist ',orderList);
+    
 
     try{
+        const data = await fetch('/api/orders');
+        const orderList = await data.json().then((res)=>res.orderlist);
+        //console.log('orderlist ',orderList);
         //주문 목록에서 구매자를 기준으로 필터링, 빈 배열일경우를 대비하여 OPTIONAL CHAINING 사용
         const userOrders = orderList?.filter(({orderedBy})=>orderedBy===userName);
         console.log('userOrders' , userOrders);
-        ProductInfoBox.appendChild(createProductInfo(userOrders));        
+        ProductInfoBox.appendChild(await createProductInfo(userOrders));        
 
-    }catch{
-        alert('주문 목록을 불러올 수 없습니다.')
+    }catch(error){
+        alert('주문 목록을 불러올 수 없습니다.');
+        console.log(error);
     }
 
 }
@@ -97,38 +96,45 @@ async function getProductInfo(id){
 }
 
 //5. 사용자의 날짜별 구매 목록 렌더링하기
-//!로케일스트링 통일하기 (가격)
-function createProductInfo(orderInfo){
+async function createProductInfo(orderInfo){
     const productInfoContainer = document.createElement('div');
     productInfoContainer.setAttribute('class','product-info-container');
-    orderInfo.forEach((order,i)=>{
-        //! 9일 오피스아워 (promise all 사용해서 한번에처리)
-        getProductInfo("654a60f195cd6f5052eaad13")
-            .then(productData=>{
-                console.log('상품데이터 확인',productData.products[0]);
-                productInfoContainer.innerHTML += `
-                <div class="total-num">총 ${order.products.length}건</div>
-                    <div class="order-date">주문일자 ${order.orderedAt}</div>
-                    <div class="product-info">
-                        <img class='product-img' src='${productData.products[0].file.path}' >
-                        <div class="product-name">${productData.products[0].name}</div>
-                        <div class="product-price">${productData.products[0].price}</div>
-                        <div class="btn-container">
-                            <div>${order.deliveryStatus}</div>
-                            <div>리뷰쓰기</div>
-                        </div>
-                    </div>
-                    <div class="show-all">
-                        <div>총 ${Number(order.totalPrice).toLocaleString()}원 주문 전체보기</div>
+
+    try {
+        const productDataArray = await Promise.all(orderInfo.map(async (order) => {
+            try {
+                console.log('order : ', order.products[0]._id);
+                const productData = await getProductInfo(order.products[0]._id);
+                return productData.products[0];
+            } catch (error) {
+                throw new Error('상품데이터 반환 불가');
+            }
+        }));
+
+        productDataArray.forEach((productData, i) => {
+            const orderContainer = document.createElement('div');
+            orderContainer.setAttribute('class', 'product-info-container');
+
+            productInfoContainer.innerHTML += `
+                <div class="total-num">총 ${orderInfo[i].products.length}건</div>
+                <div class="order-date">주문일자 ${orderInfo[i].orderedAt}</div>
+                <div class="product-info">
+                    <img class='product-img' src='${productData.file.path}' >
+                    <div class="product-name">${productData.name}</div>
+                    <div class="product-price">${Number(productData.price).toLocaleString()}</div>
+                    <div class="btn-container">
+                        <div>${orderInfo[i].deliveryStatus}</div>
+                        <div>리뷰쓰기</div>
                     </div>
                 </div>
-                `
-            })
-            .catch(error=>console.log('상품데이터 반환 불가'));
-        //getProductInfo('654a60f195cd6f5052eaad12'); order.products[0]._id
-        
-    })
-    
+                <div class="show-all">
+                    <div>총 ${Number(orderInfo[i].totalPrice).toLocaleString()}원 주문 전체보기</div>
+                </div>
+            </div>`;
+        });
+    } catch (error) {
+        console.error(error);
+    }
     
     return productInfoContainer;
 }
@@ -162,11 +168,13 @@ for(let i=0;i<items.length;i++){
 
 showUserInfo();
 //7. 정보 수정 페이지 -> 유저 정보 불러오기 
+const getUserId = document.querySelector('.userID');
+const getUserName = document.querySelector('.userName')
+const getUserNumber = document.querySelector('.userNumber');
+const getUserAddress = document.querySelector('.userAdress');
+const getUserPassword = document.querySelector('.userPw');
+
 async function showUserInfo(){
-    const getUserId = document.querySelector('.userID');
-    const getUserName = document.querySelector('.userName')
-    const getUserNumber = document.querySelector('.userNumber');
-    const getUserAddress = document.querySelector('.userAdress');
 
     getUserInfo()
         .then(userData=>{
@@ -181,6 +189,112 @@ async function showUserInfo(){
             alert('유저 데이터를 들고올 수 없습니다.')
         })
     
+    //8. 수정하기 버튼 클릭시 input창 활성화 
+}
+
+let BtnClicked = false;
+
+const modifyBtn = document.querySelector('.modify-btn');
+
+modifyBtn.addEventListener('click',()=>{
+    if(!BtnClicked){
+        const values = {
+            id: getUserId.textContent,
+            name: getUserName.textContent,
+            phone: getUserNumber.textContent,
+            password : '새로운 비밀번호를 입력하세요',
+            address: getUserAddress.textContent
+        };
+    
+        for (const key in values) {
+                //인풋 요소 생성 + 타입 : text, class이름 지정 
+            const inputElement = document.createElement('input');
+            inputElement.setAttribute('type', 'text');
+            inputElement.setAttribute('class', 'modify-input-box modify-'+key);
+            inputElement.value = values[key];
+            
+            //부모요소에 append Child 해주기 
+            const parentElement = document.querySelector('.' + key + '-box');
+            parentElement.appendChild(inputElement);
+            
+            //인풋 창 안에 기존 값 넣어주기, 이전 div는 지워주기 
+            getUserId.style.display = 'none';
+            getUserName.style.display = 'none';
+            getUserNumber.style.display = 'none';
+            getUserAddress.style.display = 'none';
+            getUserPassword.style.display = 'none';
+        }
+    
+        modifyBtn.innerText = '저장하기'
+        modifyBtn.style.backgroundColor = '#F9E103'; 
+        BtnClicked = true;
+    }else{
+        console.log('저장되었습니다');
+        //input value 가져오기 
+
+        //getUser -- 에 innerHTML 로 바뀐 value 집어넣기 
+
+        // 기존 input 창은 삭제하기 
+        // 입력 값 가져오기
+        const updatedValues = {
+            id: document.querySelector('.modify-id').value,
+            name: document.querySelector('.modify-name').value,
+            phone: document.querySelector('.modify-phone').value,
+            address: document.querySelector('.modify-address').value,
+            password:document.querySelector('.modify-password').value
+            // 비밀번호는 따로 처리 필요
+        };
+
+        // 수정된 값을 div에 집어넣기
+        for (const key in updatedValues) {
+            const divElement = document.querySelector('.' + key + '-box .info-content');
+            divElement.textContent = updatedValues[key];
+            divElement.style.display='none';
+        }
+
+        // 입력 요소 삭제 및 div 요소 화면에 보이도록 설정
+        document.querySelectorAll('.modify-input-box').forEach(element => {
+            element.remove();
+        });
+
+        document.querySelectorAll('.info-content').forEach(element => {
+            element.style.display = 'block';
+        });
+
+        
+
+        modifyBtn.innerText = '수정하기';
+        modifyBtn.style.backgroundColor = '#FCEDC4';
+        BtnClicked = false;
+        setUserInfo(updatedValues.id,updatedValues.email,updatedValues.name,updatedValues.address,updatedValues.phone);
+    }
+    
+   
 
     
-}
+})
+
+async function setUserInfo(Id, email, name, address,phone){
+    //? put으로 어떤 정보를 어떻게 보내야하는지 api 명세서에서 어떻게 확인하지? 
+    const response = await fetch('/api/users/me', {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body:JSON.stringify({
+            userId: Id,
+            email: email, 
+            name: name,
+            address:address,
+            phone: phone, 
+        })
+      });
+      
+      try{
+          const userData = await response.json();
+          return userData;
+      }catch(error){
+        console.log(error);
+      }
+ }
