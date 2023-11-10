@@ -14,7 +14,7 @@ const productInfoSchema = new Schema({
             type: String,
         },
     },
-    count: {
+    quantity: {
         type: Number,
         required: true,
     },
@@ -26,7 +26,7 @@ const orderSchema = new Schema({
     orderedAt: {
         type: Date,
         required: true,
-        default: Date.now,
+        default: new Date(),
     },
     totalPrice: {
         type: Number,
