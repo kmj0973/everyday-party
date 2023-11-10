@@ -21,7 +21,7 @@ orderRouter.get("/", async (req, res, next) => {
             const oneOrder = await Order.findOne({ _id: id })//.populate("ProductInfo"); // 아이디를 기준으로 조회
             if (oneOrder) {
                 //console.log('부분 조회를 성공하였습니다.')
-                res.status(200).json({ order: oneOrder });
+                res.status(200).json({ order: oneOrder }).populate("products.product");;
             } else {
                 res.status(404).json({
                     message: "해당 주문을 찾을 수 없습니다.",
@@ -43,13 +43,15 @@ orderRouter.post("/", async (req, res, next) => {
     const userAddress = user ? user.address : null;
     const userPhone = user ? user.phoneNumber : null;
     const userName = user ? user.name : null;
+    const userId = user ? user.userId : null;
+
 
     //console.log(userAddress); 
     try {
         const newOrder = await OrderService.createOrder({
             orderedAt : new Date(),
             totalPrice,
-            orderedBy : userName,
+            orderedBy : userId,
             phoneNumber: userPhone,
             address: userAddress,
             products,
