@@ -1,4 +1,4 @@
-const { Schema } = require("mongoose");
+const { Schema, default: mongoose } = require("mongoose");
 
 const productInfoSchema = new Schema({
     product: {
@@ -14,7 +14,7 @@ const productInfoSchema = new Schema({
             type: String,
         },
     },
-    count: {
+    quantity: {
         type: Number,
         required: true,
     },
@@ -31,6 +31,7 @@ const orderSchema = new Schema({
     orderedAt: {
         type: Date,
         required: true,
+        default: Date.now,
     },
     totalPrice: {
         type: Number,
@@ -42,17 +43,12 @@ const orderSchema = new Schema({
         //default: "Anonymous",
     },
     phoneNumber: {
-        type: String,
+        type: [String],
     },
     address: {
         type: [String],
         required: true,
     }, //['주소', '상세주소']의 형태로 저장
-    // orderCustomer: {
-    //     type: Schema.Types.ObjectId,
-    //     ref: "User",
-    //     required: true,
-    // },
     products: {
         type: [productInfoSchema],
         required: true,
@@ -61,7 +57,8 @@ const orderSchema = new Schema({
         type: String,
         required: true,
         enum: deliveryStatusEnum,
-    },
+        default: "주문완료"
+    }
 });
 
-module.exports = {orderSchema, productInfoSchema};
+module.exports = { orderSchema, productInfoSchema };

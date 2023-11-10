@@ -15,7 +15,7 @@ const postSchema = new Schema(
             required: true,
             default: [],
         },
-        files: {
+        files: { 
             type: [fileSchema],
             default: [],
         },
@@ -26,7 +26,7 @@ const postSchema = new Schema(
     },
     {
         timestamps: true,
-    }
+    },
 );
 
 module.exports = postSchema;
