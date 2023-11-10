@@ -45,7 +45,7 @@
 .title-best-products {
     margin-top: 80px;
     margin-bottom: 30px;
-    font-size: 20px;
+    font-size: 24px;
     text-align: center;
 }
 .best-products-section {
@@ -118,8 +118,7 @@
 }
 
 .card_cart_button:hover {
-    background: url("https://api.iconify.design/bi/bag-fill.svg?color=%23181619&width=24") no-repeat center center /
-        contain;
+    background: url("https://api.iconify.design/bi/bag-fill.svg?color=%23181619&width=24") no-repeat center center / contain;
 }
 
 .card_review {
@@ -133,8 +132,7 @@
     width: 12px;
     height: 12px;
     margin-right: 5px;
-    background: url("https://api.iconify.design/teenyicons/chat-outline.svg?color=%23888&width=12") no-repeat center
-        center / contain;
+    background: url("https://api.iconify.design/teenyicons/chat-outline.svg?color=%23888&width=12") no-repeat center center / contain;
 }
 /*============Best Products Card Part============*/
 
@@ -142,7 +140,7 @@
 .title-events-collection {
     margin-top: 50px;
     margin-bottom: 30px;
-    font-size: 20px;
+    font-size: 24px;
     text-align: center;
 }
 .events-collection-section {
@@ -159,15 +157,15 @@
 }
 .events-collection-list {
     list-style: none;
-    width: 1080px;
+    width: 1200px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
 }
 .events-collection-list li img {
-    width: 350px;
-    height: 200px;
+    width: 390px;
+    height: 310px;
     margin: 5px;
 }
 /*============Events Collection Part============*/
@@ -176,7 +174,7 @@
 .title-reviews {
     margin-top: 80px;
     margin-bottom: 30px;
-    font-size: 20px;
+    font-size: 24px;
     text-align: center;
 }
 .reviews-section {

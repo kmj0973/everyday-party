@@ -60,7 +60,7 @@ async function onAuthorize(e) {
             body: JSON.stringify(objectData), // JSON 문자열로 변환
         });
         console.log(JSON.stringify(objectData));
-        //window.location.href = "/login/login.html";
+        window.location.href = "/login/login.html";
     } catch (err) {
         alert(err.message);
     }
