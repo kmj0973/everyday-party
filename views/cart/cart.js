@@ -62,10 +62,6 @@ function updateCart() {
         itemDiv.setAttribute("class", "itemDiv");
         itemsList.appendChild(itemDiv);
 
-        const imageBox = document.createElement("img");
-        imageBox.setAttribute("src", "item.url");
-        itemDiv.appendChild(imageBox);
-
         // 체크박스 생성
         const checkboxInput = document.createElement("input");
         checkboxInput.setAttribute("type", "checkbox");
@@ -73,22 +69,34 @@ function updateCart() {
         checkboxInput.setAttribute("checked", true);
         itemDiv.appendChild(checkboxInput);
 
+        // 썸네일 이미지
+        const imageBox = document.createElement("img");
+        imageBox.setAttribute("src", "item.url");
+        itemDiv.appendChild(imageBox);
+
         // 상품명
         const itemName = document.createElement("p");
         itemName.setAttribute("class", "itemName");
         itemName.textContent = item.name;
         itemDiv.appendChild(itemName);
 
+        // 상품옵션
+        const itemOption = document.createElement("p");
+        itemOption.setAttribute("class", "itemOption");
+        itemOption.textContent = "/ " + "옵션:" + item.option + " /";
+        itemDiv.appendChild(itemOption);
+
         // 상품가격
         const itemPrice = document.createElement("p");
         itemPrice.setAttribute("class", "itemPrice");
-        itemPrice.textContent = item.price + "원";
+        itemPrice.textContent = item.price.toLocaleString() + "원";
         itemDiv.appendChild(itemPrice);
+        console.log(typeof itemPrice);
 
-        //상품명+상품가격
+        //상품명+상품옵션+상품가격
         const itemNamePrice = document.createElement("div");
         itemNamePrice.setAttribute("id", "itemNamePrice");
-        itemNamePrice.append(itemName, itemPrice);
+        itemNamePrice.append(itemName, itemOption, itemPrice);
         itemDiv.appendChild(itemNamePrice);
 
         // 수량 감소 버튼
@@ -185,7 +193,6 @@ function calculateShippingFee() {
 const shippingFee = calculateShippingFee();
 const shippingFeeNumber = document.querySelector(".shipping_fee_number");
 shippingFeeNumber.textContent = `: ${shippingFee.toLocaleString()} 원`;
-console.log(shippingFeeNumber.textContent);
 
 // 총 결제금액 계산함수
 function sumPrice() {
@@ -194,7 +201,6 @@ function sumPrice() {
 
 //3. 상품 구매를 나타내는 부분
 //전체상품 구매 함수
-
 async function allOrder() {
     try {
         const response = await fetch("/api/users/me", {
