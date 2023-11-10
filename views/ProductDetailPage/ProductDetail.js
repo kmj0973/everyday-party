@@ -67,8 +67,8 @@ for(let i=0;i<items.length;i++){
 const nowUrl = location.href;
 //const nowUrl = 'http://localhost:5000/ProductDetailPage/productDetail.html?id=654a60f195cd6f5052eaad13';
 const searchParams = new URLSearchParams(nowUrl);
-const productId = searchParams.get("id");
-console.log('쿼리스트링으로 받아온 id', productId);
+//const productId = searchParams.get("id");
+//console.log('쿼리스트링으로 받아온 id', productId);
 
 
 //받아온 아이디를 기준으로 products 배열에서 객체를 찾음, 그리고 name, price 등등 조회하기 
@@ -79,7 +79,7 @@ const productDescription = document.querySelector('.product-description');
 const colorOptionSelect = document.querySelector('.color');
 const sizeOptionSelect = document.querySelector('.size');
 let productImg = '';
-//const productId = "654a60f195cd6f5052eaad13";
+const productId = "654a60f295cd6f5052eaad3c";
 
 //api 호출하여 이름, 가격, 상품 설명을 보여준다. 
 
@@ -133,9 +133,9 @@ let selectedQuantity = '';
 
 
 //카트 추가하는 함수
-function addCartItem(selectedOption,selectedQuantity){
+function addCartItem(selectedColorOption,selectedSizeOption,selectedQuantity){
     //원래방식대로라면 prooductInfo에는 id, option, quantity만 넣는방식 추천 
-    const productInfo = {id:productId,name:productName.innerHTML,price:productPrice.innerHTML,quantity:selectedQuantity,option:selectedOption,imgsrc:productImg};
+    const productInfo = {id:productId,name:productName.innerHTML,price:productPrice.innerHTML,quantity:selectedQuantity,option:[selectedColorOption,selectedSizeOption],imgsrc:productImg};
     //카트 배열 가져오기 -> string 형태의 prevCart를 배열로 변환 
     const previousCart = JSON.parse(localStorage.getItem('cart'));
     //console.log('isArray?',Array.isArray(previousCart),previousCart);
@@ -160,23 +160,45 @@ function addCartItem(selectedOption,selectedQuantity){
 //5. 구매하기 버튼 눌렀을 때 
 
 cartBtn.addEventListener('click',()=>{
-    
-    selectedColorOption = colorOptionSelect.options[colorOptionSelect.selectedIndex].value;
-    //selectedSizeOption = sizeOptionSelect.options[sizeOptionSelect.selectedIndex].value;
-    selectedQuantity = productQuantity.value;
 
-    console.log('selected : ', selectedColorOption, selectedSizeOption);
+    if(colorOptionSelect.options.length === 0 && sizeOptionSelect.options.length !== 0 ){
+        selectedColorOption = null;
+        selectedSizeOption = sizeOptionSelect.options[sizeOptionSelect.selectedIndex].value;
+
+    }else if (colorOptionSelect.options.length !== 0 && sizeOptionSelect.options.length ===0){
+        selectedColorOption = colorOptionSelect.options[colorOptionSelect.selectedIndex].value;
+        selectedSizeOption =null;
+
+    }else if (colorOptionSelect.options.length !== 0 && sizeOptionSelect.options.length !==0){
+        selectedColorOption = colorOptionSelect.options[colorOptionSelect.selectedIndex].value;
+        selectedSizeOption = sizeOptionSelect.options[sizeOptionSelect.selectedIndex].value;
+    }else if(colorOptionSelect.options.length === 0 && sizeOptionSelect.options.length ===0){
+        selectedColorOption = null;
+        selectedSizeOption =null;
+    }
     
-    console.log(`옵션 : ${selectedColorOption}, 개수 : ${selectedQuantity}`);
-    addCartItem(selectedColorOption,selectedQuantity);
+    selectedQuantity = productQuantity.value;    
+    addCartItem(selectedColorOption,selectedSizeOption,selectedQuantity);
 })
 
 
 
 buyBtn.addEventListener('click',()=>{
     
-    selectedOption = option.options[option.selectedIndex].value;
-    selectedQuantity = productQuantity.value;
-    console.log(`옵션 : ${selectedOption}, 개수 : ${selectedQuantity}`);
-    addCartItem(selectedOption,selectedQuantity);
+    if(colorOptionSelect.options.length === 0 && sizeOptionSelect.options.length !== 0 ){
+        selectedColorOption = null;
+        selectedSizeOption = sizeOptionSelect.options[sizeOptionSelect.selectedIndex].value;
+
+    }else if (colorOptionSelect.options.length !== 0 && sizeOptionSelect.options.length ===0){
+        selectedColorOption = colorOptionSelect.options[colorOptionSelect.selectedIndex].value;
+        selectedSizeOption =null;
+
+    }else if (colorOptionSelect.options.length !== 0 && sizeOptionSelect.options.length !==0){
+        selectedColorOption = colorOptionSelect.options[colorOptionSelect.selectedIndex].value;
+        selectedSizeOption = sizeOptionSelect.options[sizeOptionSelect.selectedIndex].value;
+    }else if(colorOptionSelect.options.length === 0 && sizeOptionSelect.options.length ===0){
+        selectedColorOption = null;
+        selectedSizeOption =null;
+    }
+    addCartItem(selectedColorOption,selectedSizeOption,selectedQuantity);
 })

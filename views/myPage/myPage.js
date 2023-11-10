@@ -16,8 +16,8 @@ headerRender();
 //토큰 없을 경우 (실행x) 예외처리 (페이지 이동 )
 //토큰 있을 경우 getUserInfo 함수 실행
 //! 테스트 token
-//let token = localStorage.getItem('token'); 
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ0ZXN0MSIsImdyYWRlIjoidXNlciIsImlhdCI6MTY5OTQyNzQ5MSwiZXhwIjoxNjk5NDI4OTkxfQ.9fSXsE-wQZrKH_-HIuOrP-b74tAQ4lO9gOZSyeedwWE'
+let token = localStorage.getItem('access-token'); 
+//const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ0ZXN0MSIsImdyYWRlIjoidXNlciIsImlhdCI6MTY5OTQyNzQ5MSwiZXhwIjoxNjk5NDI4OTkxfQ.9fSXsE-wQZrKH_-HIuOrP-b74tAQ4lO9gOZSyeedwWE'
 
 pageRender();
 
@@ -36,7 +36,7 @@ async function pageRender(){
                 profileUserName.innerHTML = userData.user.name;
                 profileUserID.innerHTML = userData.user.userId
                 //주문내역 뿌려주기
-                getOrderList('test001'); //인자로 사용자 이름을 보내주는 방식 getOrderList(userData.user.name)
+                getOrderList(userData.user.name); //인자로 사용자 이름을 보내주는 방식 getOrderList(userData.user.name)
     
             })
             .catch(error=>{
@@ -70,18 +70,20 @@ async function pageRender(){
 //3. 해당 사용자의 구매 목록 가져오기 
 async function getOrderList(userName){
     const ProductInfoBox = document.querySelector('.product-list-container');
-    const data = await fetch('/api/orders');
-    const orderList = await data.json().then((res)=>res.orderlist);
-    //console.log('orderlist ',orderList);
+    
 
     try{
+        const data = await fetch('/api/orders');
+        const orderList = await data.json().then((res)=>res.orderlist);
+        //console.log('orderlist ',orderList);
         //주문 목록에서 구매자를 기준으로 필터링, 빈 배열일경우를 대비하여 OPTIONAL CHAINING 사용
         const userOrders = orderList?.filter(({orderedBy})=>orderedBy===userName);
         console.log('userOrders' , userOrders);
-        ProductInfoBox.appendChild(createProductInfo(userOrders));        
+        ProductInfoBox.appendChild(await createProductInfo(userOrders));        
 
-    }catch{
-        alert('주문 목록을 불러올 수 없습니다.')
+    }catch(error){
+        alert('주문 목록을 불러올 수 없습니다.');
+        console.log(error);
     }
 
 }
@@ -94,72 +96,45 @@ async function getProductInfo(id){
 }
 
 //5. 사용자의 날짜별 구매 목록 렌더링하기
-//!로케일스트링 통일하기 (가격)
 async function createProductInfo(orderInfo){
     const productInfoContainer = document.createElement('div');
     productInfoContainer.setAttribute('class','product-info-container');
 
-    //? 프로미스를 반환하는 함수는 getProductInfo 밖에 없는거 아닌가? promise.all을 어떻게 써야할지 모르겠다 
-    //? orderInfo.promise.all(getProductInfo).then(productData=>{ ... }) 이런식인가?  
-    //? promise.all(orderInfo.map( 맵은 새로운 배열을 생성해주는 것 ) ).then(productData=>{ ... })
-    //? promise.all은 하나의 작업에 오류가 나도 전체가 실패하니까 에러처리 같은거 잘 해줘야함 
-    
-    const productDataArray = Promise.all(orderInfo.map(async (order)=>{
-        try {
-            const productData = await getProductInfo("654a60f195cd6f5052eaad13");
-            return productData.products[0];
-        } catch (error) {
-            throw new Error('상품데이터 반환 불가');
-        }
-    }));
-    
-    productDataArray.forEach((productData, i)=>{
-        productInfoContainer.innerHTML += `
-                <div class="total-num">총 ${order.products.length}건</div>
-                    <div class="order-date">주문일자 ${order.orderedAt}</div>
-                    <div class="product-info">
-                        <img class='product-img' src='${productData.products[0].file.path}' >
-                        <div class="product-name">${productData.products[0].name}</div>
-                        <div class="product-price">${Number(productData.products[0].price).toLocaleString()}</div>
-                        <div class="btn-container">
-                            <div>${order.deliveryStatus}</div>
-                            <div>리뷰쓰기</div>
-                        </div>
-                    </div>
-                    <div class="show-all">
-                        <div>총 ${Number(order.totalPrice).toLocaleString()}원 주문 전체보기</div>
+    try {
+        const productDataArray = await Promise.all(orderInfo.map(async (order) => {
+            try {
+                console.log('order : ', order.products[0]._id);
+                const productData = await getProductInfo(order.products[0]._id);
+                return productData.products[0];
+            } catch (error) {
+                throw new Error('상품데이터 반환 불가');
+            }
+        }));
+
+        productDataArray.forEach((productData, i) => {
+            const orderContainer = document.createElement('div');
+            orderContainer.setAttribute('class', 'product-info-container');
+
+            productInfoContainer.innerHTML += `
+                <div class="total-num">총 ${orderInfo[i].products.length}건</div>
+                <div class="order-date">주문일자 ${orderInfo[i].orderedAt}</div>
+                <div class="product-info">
+                    <img class='product-img' src='${productData.file.path}' >
+                    <div class="product-name">${productData.name}</div>
+                    <div class="product-price">${Number(productData.price).toLocaleString()}</div>
+                    <div class="btn-container">
+                        <div>${orderInfo[i].deliveryStatus}</div>
+                        <div>리뷰쓰기</div>
                     </div>
                 </div>
-                `
-    });
-    // orderInfo.forEach((order,i)=>{
-    //     //! 9일 오피스아워 (promise all 사용해서 한번에처리)
-    //     getProductInfo("654a60f195cd6f5052eaad13")
-    //         .then(productData=>{
-    //             console.log('상품데이터 확인',productData.products[0]);
-    //             productInfoContainer.innerHTML += `
-    //             <div class="total-num">총 ${order.products.length}건</div>
-    //                 <div class="order-date">주문일자 ${order.orderedAt}</div>
-    //                 <div class="product-info">
-    //                     <img class='product-img' src='${productData.products[0].file.path}' >
-    //                     <div class="product-name">${productData.products[0].name}</div>
-    //                     <div class="product-price">${Number(productData.products[0].price).toLocaleString()}</div>
-    //                     <div class="btn-container">
-    //                         <div>${order.deliveryStatus}</div>
-    //                         <div>리뷰쓰기</div>
-    //                     </div>
-    //                 </div>
-    //                 <div class="show-all">
-    //                     <div>총 ${Number(order.totalPrice).toLocaleString()}원 주문 전체보기</div>
-    //                 </div>
-    //             </div>
-    //             `
-    //         })
-    //         .catch(error=>console.log('상품데이터 반환 불가'));
-    //     //getProductInfo('654a60f195cd6f5052eaad12'); order.products[0]._id
-        
-    // })
-    
+                <div class="show-all">
+                    <div>총 ${Number(orderInfo[i].totalPrice).toLocaleString()}원 주문 전체보기</div>
+                </div>
+            </div>`;
+        });
+    } catch (error) {
+        console.error(error);
+    }
     
     return productInfoContainer;
 }
@@ -265,7 +240,8 @@ modifyBtn.addEventListener('click',()=>{
             id: document.querySelector('.modify-id').value,
             name: document.querySelector('.modify-name').value,
             phone: document.querySelector('.modify-phone').value,
-            address: document.querySelector('.modify-address').value
+            address: document.querySelector('.modify-address').value,
+            password:document.querySelector('.modify-password').value
             // 비밀번호는 따로 처리 필요
         };
 
@@ -290,6 +266,7 @@ modifyBtn.addEventListener('click',()=>{
         modifyBtn.innerText = '수정하기';
         modifyBtn.style.backgroundColor = '#FCEDC4';
         BtnClicked = false;
+        setUserInfo(updatedValues.id,updatedValues.email,updatedValues.name,updatedValues.address,updatedValues.phone);
     }
     
    
@@ -297,7 +274,7 @@ modifyBtn.addEventListener('click',()=>{
     
 })
 
-async function setUserInfo(Id, password, email, name, address,phone){
+async function setUserInfo(Id, email, name, address,phone){
     //? put으로 어떤 정보를 어떻게 보내야하는지 api 명세서에서 어떻게 확인하지? 
     const response = await fetch('/api/users/me', {
         method: 'PUT',
@@ -307,7 +284,6 @@ async function setUserInfo(Id, password, email, name, address,phone){
         },
         body:JSON.stringify({
             userId: Id,
-            password: password,
             email: email, 
             name: name,
             address:address,
