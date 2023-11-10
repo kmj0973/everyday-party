@@ -29,7 +29,7 @@ const cardTemplate = (categoryData) => {
                 </div>
             </a>
         </div>    
-    `;
+    `; 
 };
 
 const errorTemplate = () => {
@@ -59,9 +59,24 @@ const selectElement = document.querySelectorAll(".option_list li");
 document.addEventListener("DOMContentLoaded", () => {
     const selectedCategory = localStorage.getItem("selectedCategory");
 
-    if (selectedCategory) {
-        cardRender(selectedCategory);
-    }
+  if (selectedCategory) {
+    cardRender(selectedCategory);
+  }
+  // 카테고리 버튼을 클릭했을 때 실행되는 이벤트 함수
+  for (let i = 0; i < categoryList.length; i++) {
+    categoryList[i].addEventListener("click", () => {
+        // URLSearchParams로 쿼리 파라미터 값 가져오기
+        const href = categoryList[i].getAttribute("href");
+        const newHref = `http://localhost:5000${href}`;
+        const url = new URL(newHref.replace(/#/g, "?"));
+        const categoryParams = new URLSearchParams(url.search).get("category");
+
+    // localStorage에 categoryParams값 저장
+    localStorage.setItem("selectedCategory", categoryParams);
+
+    cardRender(categoryParams);
+  });
+}
 });
 
 // 카테고리 버튼을 클릭했을 때 실행되는 이벤트 함수
