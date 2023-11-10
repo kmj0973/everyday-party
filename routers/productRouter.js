@@ -210,7 +210,7 @@ productRouter.patch("/:id", authenticateUserToken, upload.single("product_name")
             const { name, price, stockedAt, discountRate, category, description, option } = req.body;
             
             if(name !== undefined || name !== null){
-                const [productByName, productById] = Promise.all([
+                const {productByName, productById} = Promise.all([
                     await productService.checkProductExists(name),
                     await productService.getProductById(id)
                 ]);
@@ -263,14 +263,10 @@ productRouter.delete("/:id", authenticateUserToken, async (req, res, next) => {
             });
         }
 
-        if(currentGrade === 'admin')
-        {
+        if(currentGrade === 'admin'){
             const deleted = await productService.deleteProduct(id);
             if (deleted.success) {
-                return res.status(204).json({
-                    message: deleted.message,
-                    data: deleted.data,
-                });
+                return res.status(204).json({});
             } else {
                 return res.status(404).json({ message: deleted.message });
             }
