@@ -159,11 +159,8 @@ productRouter.get("/", authenticatePageData, async (req, res, next) => {
 productRouter.post("/", authenticateUserToken, upload.single("product_name"), authenticateProductData, async (req, res, next) => {
     const { name, price, stockedAt, discountRate, category, description, option } = req.body;
 
-    const parsedCategory = JSON.parse(category);
-    const parsedOption = JSON.parse(option);
-
     const  currentGrade  = req.user.grade;
-    if (currentGrade == "admin") {
+    if (currentGrade === "admin") {
         try {
             const existingProduct = await productService.checkProductExists(name);
     
@@ -174,7 +171,9 @@ productRouter.post("/", authenticateUserToken, upload.single("product_name"), au
             }
     
             const file = req.file !== undefined && req.file !== null ? { path: "/" + req.file.path.replaceAll("\\", "/"), name: req.file.filename } : undefined;
-    
+            const parsedCategory = category !== undefined && category !== null ? JSON.parse(category) : undefined;
+            const parsedOption = option !== undefined && option !== null ? JSON.parse(option) : undefined;
+
             const productInput = { name, price, stockedAt, discountRate, category: parsedCategory, description, option: parsedOption, file };
             const validInfoOfProductInput = validDataUtil.processDataWithPatch(productInput);
     
@@ -185,15 +184,15 @@ productRouter.post("/", authenticateUserToken, upload.single("product_name"), au
     
             //생성된 아이템
             res.status(201).json(newProduct);
-        } catch (err) {
-            return next(err);
+        } catch (error) {
+            return next(error);
         }
     }
     else {
-        return res.status(403).json({ message: "관리자 외에 접근할 수 없습니다." });
+        const error = new Error("관리자 이외에는 접근이 불가능합니다.");
+        error.status = 403;
+        return next(error);
     }
-    
-    
 });
 
 //상품 수정 -> admin만 가능하게끔
