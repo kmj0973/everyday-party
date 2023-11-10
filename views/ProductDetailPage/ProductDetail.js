@@ -62,9 +62,7 @@ for(let i=0;i<items.length;i++){
  * => URLSearchParams (key,value값으로 뽑아줌, 여기에 location.href를 보내주면 객체 형태로 현재 쿼리 스트링으로 날라온 키,value값을 뽑아줌)
  */
 
-//! 도메인 주소 : http://localhost:5000/ProductDetailPage/productDetail.html#product?id=654a60f195cd6f5052eaad2c 
-//! 아직 최신화 안되어서 잘 모름 
-//http://localhost:5000/ProductDetailPage/productDetail.html#product?id=654a60f195cd6f5052eaad1d
+
 // 현재 URL을 가져옵니다.
 const currentUrl = new URL(window.location.href);
 
