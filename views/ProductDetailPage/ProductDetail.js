@@ -64,12 +64,15 @@ for(let i=0;i<items.length;i++){
 
 //! 도메인 주소 : http://localhost:5000/ProductDetailPage/productDetail.html#product?id=654a60f195cd6f5052eaad2c 
 //! 아직 최신화 안되어서 잘 모름 
-const nowUrl = location.href;
-//const nowUrl = 'http://localhost:5000/ProductDetailPage/productDetail.html?id=654a60f195cd6f5052eaad13';
-const searchParams = new URLSearchParams(nowUrl);
-//const productId = searchParams.get("id");
-//console.log('쿼리스트링으로 받아온 id', productId);
+//http://localhost:5000/ProductDetailPage/productDetail.html#product?id=654a60f195cd6f5052eaad1d
+// 현재 URL을 가져옵니다.
+const currentUrl = new URL(window.location.href);
 
+const newSearch = currentUrl.hash.replace('#product', '');
+console.log(newSearch);
+const productId = new URLSearchParams(newSearch).get("id");
+
+console.log('id:', productId);
 
 //받아온 아이디를 기준으로 products 배열에서 객체를 찾음, 그리고 name, price 등등 조회하기 
 
@@ -78,8 +81,7 @@ const productPrice = document.querySelector('.product-price');
 const productDescription = document.querySelector('.product-description');
 const colorOptionSelect = document.querySelector('.color');
 const sizeOptionSelect = document.querySelector('.size');
-let productImg = '';
-const productId = "654a60f295cd6f5052eaad3c";
+//const productId = "654a60f295cd6f5052eaad3c";
 
 //api 호출하여 이름, 가격, 상품 설명을 보여준다. 
 
@@ -93,8 +95,8 @@ fetch(`/api/products?products=${productId}`)
         productName.innerHTML = product.name;
         productPrice.innerHTML = product.price;
         productDescription.innerHTML = product.description;
-        productImg = product.file.path;
-        console.log('img src' ,productImg);
+        const productImg = product.file.path;
+        document.querySelector('.product-img').setAttribute('src', productImg);
         // product.option 배열의 길이 체크, 포문 돌면서 option 생성 
         
         const colorOption = product.option.color;
