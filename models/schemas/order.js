@@ -23,11 +23,6 @@ const productInfoSchema = new Schema({
 const deliveryStatusEnum = ["주문완료", "배송준비", "배송중", "배송완료", "주문취소"];
 
 const orderSchema = new Schema({
-    // method: {
-    //     type: String,
-    //     enum: ["Card", "Cash"],
-    //     required: true,
-    // },
     orderedAt: {
         type: Date,
         required: true,

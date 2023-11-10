@@ -1,10 +1,26 @@
 const { Router } = require("express");
-//const { authenticateUser, isAdmin } = require("../middleware/isAdmin");
-const productService = require("../services/productService");
-const { authenticatePageData, authenticateUserToken } = require("../middleware/index");
+const multer = require("multer");
 
+const productService = require("../services/productService");
+<<<<<<< HEAD
+const { authenticatePageData, authenticateUserToken } = require("../middleware/index");
+=======
+
+const { authenticatePageData, authenticateProductData, authenticateUserToken } = require("../middleware/index");
+>>>>>>> cb307f162e37c08e8191223eaa1b6afd8df8b9ae
+
+const validDataUtil = require("../utils/validDataUtil");
 
 const productRouter = Router();
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, "./images/product");
+    },
+    filename: function (req, file, cb) {
+        cb(null, `${Date.now()}_${file.originalname}`);
+    },
+});
+const upload = multer({ storage: storage });
 
 productRouter.get("/", authenticatePageData, async (req, res, next) => {
     const { products, category, page, perPage, orderBy, orderDirection } = req.query;
@@ -17,7 +33,6 @@ productRouter.get("/", authenticatePageData, async (req, res, next) => {
             next(error);
         }
         products.split(",").forEach((eachProduct) => {
-            //console.log(typeof eachProduct);
             if (typeof eachProduct !== "string") {
                 const error = new Error("찾으려는 물품 값이 유효하지 않습니다.");
                 error.status = 400;
@@ -63,6 +78,34 @@ productRouter.get("/", authenticatePageData, async (req, res, next) => {
     //카테고리만 입력
     if (category !== undefined && category !== null) {
         try {
+            if (category === "new") {
+                const { products, totalPage } = await productService.getAllProducts({ ...pageData, orderBy: "stockedAt" });
+                if (totalPage !== undefined && totalPage !== null) {
+                    return res.status(200).json({
+                        products,
+                        totalPage,
+                    });
+                } else {
+                    return res.status(200).json({
+                        products,
+                    });
+                }
+            }
+
+            if (category === "best") {
+                const { products, totalPage } = await productService.getAllProducts({ ...pageData, orderBy: "sales" });
+                if (totalPage !== undefined && totalPage !== null) {
+                    return res.status(200).json({
+                        products,
+                        totalPage,
+                    });
+                } else {
+                    return res.status(200).json({
+                        products,
+                    });
+                }
+            }
+
             const { products, totalPage } = await productService.getProductsByCategory(category, pageData);
             if (totalPage !== undefined && totalPage !== null) {
                 return res.status(200).json({
@@ -117,16 +160,16 @@ productRouter.get("/", authenticatePageData, async (req, res, next) => {
     }
 });
 
-
 //상품 생성
-productRouter.post("/", authenticateUserToken, async (req, res, next) => {
-    //console.log("상품을 post합니다!");
-    const { name, price, stockedAt, discountRate, category, description, option, file } = req.body;
+productRouter.post("/", authenticateUserToken, upload.single("product_name"), authenticateProductData, async (req, res, next) => {
+    const { name, price, stockedAt, discountRate, category, description, option } = req.body;
+
+    const parsedCategory = JSON.parse(category);
+    const parsedOption = JSON.parse(option);
 
     const  currentGrade  = req.user.grade;
-    if (currentGrade == "admin"){
+    if (currentGrade == "admin") {
         try {
-        
             const existingProduct = await productService.checkProductExists(name);
     
             if (existingProduct) {
@@ -135,28 +178,26 @@ productRouter.post("/", authenticateUserToken, async (req, res, next) => {
                 throw error;
             }
     
+            const file = req.file !== undefined && req.file !== null ? { path: "/" + req.file.path.replaceAll("\\", "/"), name: req.file.filename } : undefined;
+    
+            const productInput = { name, price, stockedAt, discountRate, category: parsedCategory, description, option: parsedOption, file };
+            const validInfoOfProductInput = validDataUtil.processDataWithPatch(productInput);
+    
             //모든 조건을 거치고 상품 만들기
             newProduct = await productService.createProduct({
-                name,
-                price,
-                discountRate,
-                category,
-                stockedAt,
-                description,
-                option,
-                file,
+                validInfoOfProductInput,
             });
-    
-            //console.log("상품이 생성되었습니다.");
     
             //생성된 아이템
             res.status(201).json(newProduct);
         } catch (err) {
             return next(err);
         }
-    }else {
+    }
+    else {
         return res.status(403).json({ message: "관리자 외에 접근할 수 없습니다." });
     }
+    
     
 });
 

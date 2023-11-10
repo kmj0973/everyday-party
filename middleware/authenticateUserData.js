@@ -57,7 +57,7 @@ async function authenticateUserData(req, res, next) {
 
     //주소 - 문자열
     if (address !== undefined && address !== null) {
-        if (typeof address !== "object") {
+        if (!Array.isArray(address)) {
             const error = new Error("주소 값이 유효하지 않습니다.");
             error.status = 400;
             return next(error);
