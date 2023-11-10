@@ -111,7 +111,7 @@ router.post("/sign-up", authenticateUserData, async (req, res, next) => {
         grade,
         email,
         name,
-        address,
+        address, 
         phone,
         birthday,
     };
