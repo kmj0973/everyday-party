@@ -2,12 +2,7 @@ const { Router } = require("express");
 const multer = require("multer");
 
 const productService = require("../services/productService");
-<<<<<<< HEAD
-const { authenticatePageData, authenticateUserToken } = require("../middleware/index");
-=======
-
 const { authenticatePageData, authenticateProductData, authenticateUserToken } = require("../middleware/index");
->>>>>>> cb307f162e37c08e8191223eaa1b6afd8df8b9ae
 
 const validDataUtil = require("../utils/validDataUtil");
 
