@@ -41,7 +41,7 @@ orderRouter.post("/", async (req, res, next) => {
     const { orderedAt, totalPrice, orderedBy, phoneNumber, address, products, deliveryStatus } = req.body;
     const user = await User.findById({ _id: id });
     const userAddress = user ? user.address : null;
-    const userPhone = user ? user.phoneNumber : null;
+    const userPhone = user ? user.phone : null;
     const userName = user ? user.name : null;
     const userId = user ? user.userId : null;
 
