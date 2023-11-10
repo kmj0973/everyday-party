@@ -78,7 +78,8 @@ console.log(cartData);
 // id값을 기준으로 상품이 담겨오는 함수
 let cartItems = JSON.parse(localStorage.getItem("cart"));
 const newCartItems = [];
-for (let i = 0; i < cartItems.length; i++) {
+if(cartItems !== null){
+  for (let i = 0; i < cartItems.length; i++) {
     console.log(i, newCartItems, cartItems);
     const productInCartIndex = newCartItems.findIndex((item) => item.id === cartItems[i].id);
     if (productInCartIndex !== -1) {
@@ -88,6 +89,8 @@ for (let i = 0; i < cartItems.length; i++) {
         newCartItems.push({ id: cartItems[i].id, name: cartItems[i].name, price: cartItems[i].price, quantity: cartItems[i].quantity, option: cartItems[i].option,});
     }
 }
+}
+
 
 localStorage.setItem("cart", JSON.stringify(newCartItems));
 
@@ -219,6 +222,10 @@ function removeFromCart(id) {
   }
   renderTotal();
 }
+
+//  총상품가격
+const total = calculateTotalPrice();
+
 // 총 상품금액 계산 함수
 function calculateTotalPrice() {
   let price = 0;
@@ -232,20 +239,28 @@ function calculateTotalPrice() {
 
 
 
-//  총상품가격
-const total = calculateTotalPrice();
+
+ // 배송비 FIXME: 상품금액이 0원이어도 3000으로 표기됨
+ function calculateShippingFee(){
+  if(cartItems.length === 0 || total === 0){
+    return 0
+  }else{
+    return 3000;
+  }
+}
+
+ const shippingFee = calculateShippingFee();
+ const shippingFeeNumber = document.querySelector('.shipping_fee_number');
+ shippingFeeNumber.textContent = `: ${shippingFee.toLocaleString()} 원`;
+ console.log(shippingFeeNumber.textContent)
+
 
 //총 결제금액 계산 함수
 function sumPrice() {
-  return calculateTotalPrice();
+  return calculateTotalPrice()+calculateShippingFee()
 }
 
- // 배송비 FIXME: 상품금액이 0원이어도 3000으로 표기됨
 
- const shippingFee = total === 0 ? 0 : 3000;
- const shippingFeeNumber = document.querySelector('.shipping_fee_number');
- shippingFeeNumber.textContent = `: ${shippingFee.toLocaleString()} 원`;
- 
 
 
 
@@ -264,11 +279,40 @@ function allOrder() {
 const allOrderButton = document.querySelector('.all_order_button');
 allOrderButton.addEventListener('click', allOrder);
 
+
+//itemDiv를 배열로 받아와서, check가 된 상품id를 찾고? 삭제하면 다시 해당 상품들을 localStorage.setItem("cart", JSON.stringify(newCartItems)); 에 담아준다.(남은 상품만 담기겠지) 다시 localStorage.getItem("cart", JSON.stringify(newCartItems)) 받아와서 뿌려주면. 
+//  // 배송비 FIXME: 상품금액이 0원이어도 3000으로 표기됨
+//  function calculateShippingFee(){
+//   if(cartItems.length === 0 || total === 0){
+//     return 0
+//   }else{
+//     return 3000;
+//   }
+// }
+
+//  const shippingFee = calculateShippingFee();
+//  const shippingFeeNumber = document.querySelector('.shipping_fee_number');
+//  shippingFeeNumber.textContent = `: ${shippingFee.toLocaleString()} 원`;
+//  console.log(shippingFeeNumber.textContent)
+
+
+
+
 //전체상품 삭제 함수
 function removeAllItems() {
   cartItems.length = 0; //장바구니비우기
   updateCart();
+  window.localStorage.removeItem('cart'); // 로컬스토리지에서도 삭제될 수 있도록
+
+  calculateTotalPrice();
+  console.log(calculateTotalPrice())
+  calculateShippingFee();
+  console.log(calculateShippingFee())
+  updateCart();
+  location.reload();
 }
+
+// renderTotal();
 
 //전체상품 삭제 이벤트리스너
 const deleteAllButton = document.querySelector('.delete_all_button');
@@ -312,6 +356,10 @@ function selectedOrder() {
     alert('선택된 상품이 없습니다!');
   }
 }
+
+
+
+
 
 //   fetch(`api/orders`, {
 //     method: 'POST',
@@ -359,8 +407,6 @@ updateCart(); // 상품을 담을 때 외부에 전달해주는 함수. export.
  ex) 관리자페이지에서 해당 상품에 대한 정보를 조작하면, local로는 따라갈 수가 없음.
  그래서 api로 해야함. 
  * */
-
-
 
 
 
