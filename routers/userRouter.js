@@ -28,8 +28,16 @@ userRouter.put("/me", authenticateUserToken, authenticateUserData, async (req, r
         return next(error);
     }
 
-    const { userId, password, grade, email, name, address, phone, birthday } = req.body;
-    const userInput = { userId, password, grade, email, name, address, phone, birthday };
+    const { userId, password, email, name, address, phone, birthday } = req.body;
+    const userInput = {
+        userId,
+        password,
+        email,
+        name,
+        address,
+        phone,
+        birthday,
+    };
 
     const validInfoOfUserInput = validDataUtil.processDataWithPut(user, userInput);
     validInfoOfUserInput.password = await passwordUtil.hashPassword(validInfoOfUserInput.password);
