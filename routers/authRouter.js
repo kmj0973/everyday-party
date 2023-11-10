@@ -57,7 +57,7 @@ router.get("/check", async (req, res, next) => {
         if (user !== null && user !== undefined) {
             const error = new Error("아이디 정보가 이미 존재합니다.");
             error.status = 409;
-            next(error);
+            return next(error);
         } else {
             return res.status(200).json({});
         }
@@ -113,7 +113,6 @@ router.post("/sign-up", authenticateUserData, async (req, res, next) => {
             return next(error);
         }
     }
-    
 
     const userInput = {
         userId,
@@ -133,7 +132,9 @@ router.post("/sign-up", authenticateUserData, async (req, res, next) => {
         await userService.createUser(validInfoOfUserInput);
         return res.status(200).json({});
     } catch (error) {
-        return next(error);
+        const newError = new Error("서버 내 오류가 발생하였습니다.");
+        newError.status = 500;
+        throw newError;
     }
 });
 
