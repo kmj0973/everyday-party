@@ -64,11 +64,8 @@ function authenticateProductData(req, res, next) {
         }
     }
 
-   
-
     if (option !== null && option !== undefined) {
         const parsedOption = JSON.parse(option);
-        console.log(Object.prototype.toString.call(parsedOption));
         if (Object.prototype.toString.call(parsedOption).slice(8, -1) !== "Object") {
             const error = new Error("옵션 값이 유효하지 않습니다.");
             error.status = 400;

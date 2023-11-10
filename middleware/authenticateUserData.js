@@ -67,7 +67,8 @@ async function authenticateUserData(req, res, next) {
 
     //전화번호 - 문자열
     if (phone !== undefined && phone !== null) {
-        if (typeof phone !== "string") {
+        const phoneRegex = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
+        if (!phoneRegex.exec(phone) || typeof phone !== "string") {
             const error = new Error("전화번호 값이 유효하지 않습니다.");
             error.status = 400;
             return next(error);
