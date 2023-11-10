@@ -331,15 +331,40 @@ class ProductService {
         return newProduct;
     }
 
-    async updateProduct(id, data) {
+    async updateProduct(id, {productData}) {
         try {
-            const updatedProduct = await Product.findByIdAndUpdate(id, data, {
+            if (productData.category !== undefined && productData.category !== null) {
+                productData.category = await Category.find({ categoryName: { $in: productData.category } });
+            }
+    
+            if (productData.option !== undefined && productData.option !== null) {
+                productData.option = new Option({
+                    size: productData.option.size,
+                    color: productData.option.color,
+                });
+            }
+    
+            if (productData.file !== undefined && productData.file !== null) {
+                productData.file = new File({
+                    name: productData.file.name,
+                    path: productData.file.path,
+                });
+            }
+
+            const updatedProduct = await Product.findByIdAndUpdate(id, productData, {
                 new: true,
+            }).catch((error) => {
+                const newError = new Error("물품 데이터를 갱신하던 중 오류를 발생했습니다.");
+                newError.status = 500;
+                throw newError;
             });
 
             return updatedProduct;
-        } catch (err) {
-            throw err;
+        } catch (error) {
+            console.log(error);
+            const newError = new Error("서버 내 오류가 발생하였습니다.");
+            newError.status = 500;
+            throw newError;
         }
     }
 
@@ -347,9 +372,13 @@ class ProductService {
         try {
             const objectId = new mongoose.Types.ObjectId(id);
 
-            const deleteProduct = await Product.deleteOne({ _id: objectId });
+            const deleteProduct = await Product.deleteOne({ _id: objectId }).catch((error) => {
+                const newError = new Error("물품 데이터를 삭제하던 중 오류를 발생했습니다.");
+                newError.status = 500;
+                throw newError;
+            });
 
-            if (deleteProduct.deletedCount > 0) {
+            if (deleteProduct.deletedCount !== 0) {
                 return {
                     success: true,
                     message: "제품이 성공적으로 삭제되었습니다.",
@@ -361,8 +390,10 @@ class ProductService {
                     message: "해당 ID의 상품을 찾을 수 없습니다.",
                 };
             }
-        } catch (err) {
-            throw err;
+        } catch (error) {
+            const newError = new Error("서버 내 오류가 발생했습니다.");
+            newError.status = 500;
+            throw newError;
         }
     }
 
