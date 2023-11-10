@@ -18,10 +18,10 @@ orderRouter.get("/", async (req, res, next) => {
             res.status(200).json({ orderlist });
         } else {
             // 특정 아이디로 주문 조회
-            const oneOrder = await Order.findOne({ _id: id })//.populate("ProductInfo"); // 아이디를 기준으로 조회
+            const oneOrder = await Order.findOne({ _id: id }).populate("products.product"); // 아이디를 기준으로 조회
             if (oneOrder) {
                 //console.log('부분 조회를 성공하였습니다.')
-                res.status(200).json({ order: oneOrder }).populate("products.product");;
+                res.status(200).json({ order: oneOrder }).populate("products.product");
             } else {
                 res.status(404).json({
                     message: "해당 주문을 찾을 수 없습니다.",
@@ -39,6 +39,7 @@ orderRouter.post("/", async (req, res, next) => {
     const id = req.header("id");
     //console.log(id);
     const { orderedAt, totalPrice, orderedBy, phoneNumber, address, products, deliveryStatus } = req.body;
+
     const user = await User.findById({ _id: id });
     const userAddress = user ? user.address : null;
     const userPhone = user ? user.phone : null;
@@ -77,12 +78,19 @@ orderRouter.post("/", async (req, res, next) => {
 orderRouter.patch("/:id", authenticateUserToken, async (req, res, next) => {
 
     const  currentGrade  = req.user.grade;
-    console.log(currentGrade);
 
     const { id } = req.params;
-
     const { changedStatus } = req.body;
+
+    if (currentGrade !== "admin") {
+        return res.status(403).json({ message: "관리자 외에 접근할 수 없습니다." });
+    }
+    
     try {
+        if (!id) {
+            return res.status(400).json({ message: "삭제할 주문의 아이디를 제공해야 합니다." });
+        }
+
         const cancelledOrder = await OrderService.cancelOrder(id, currentGrade, changedStatus);
         res.status(200).json({
             cancelledOrder,
@@ -101,6 +109,11 @@ orderRouter.delete("/:id", authenticateUserToken, async (req, res, next) => {
     }
     try {
         const id = req.params.id;
+
+        if (!id) {
+            return res.status(400).json({ message: "삭제할 주문의 아이디를 제공해야 합니다." });
+        }
+
         if (id === undefined) {
             res.status(404).json({
                 message: "해당 상품의 아이디가 필요합니다.",
