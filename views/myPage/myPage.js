@@ -43,6 +43,7 @@ async function pageRender(){
                 console.log(error);
                 alert('유저 정보를 가져오지 못함');
             })
+        
     }
 }
 
@@ -63,10 +64,6 @@ async function pageRender(){
  }
 
  
-
-  /**
-   * 하나 더 하면 좋은 것 
-   */
 
  
 
@@ -98,39 +95,26 @@ async function getProductInfo(id){
 
 //5. 사용자의 날짜별 구매 목록 렌더링하기
 //!로케일스트링 통일하기 (가격)
-function createProductInfo(orderInfo){
+async function createProductInfo(orderInfo){
     const productInfoContainer = document.createElement('div');
     productInfoContainer.setAttribute('class','product-info-container');
+
+    //? 프로미스를 반환하는 함수는 getProductInfo 밖에 없는거 아닌가? promise.all을 어떻게 써야할지 모르겠다 
+    //? orderInfo.promise.all(getProductInfo).then(productData=>{ ... }) 이런식인가?  
+    //? promise.all(orderInfo.map( 맵은 새로운 배열을 생성해주는 것 ) ).then(productData=>{ ... })
+    //? promise.all은 하나의 작업에 오류가 나도 전체가 실패하니까 에러처리 같은거 잘 해줘야함 
     
-    // Promise.all(orderInfo)
-    //     .then((productInfo)=>getProductInfo('654a60f195cd6f5052eaad13'))
-    //     .then(productData=>{
-    //         console.log('상품데이터 확인',productData.products[0]);
-    //             productInfoContainer.innerHTML += `
-    //             <div class="total-num">총 ${order.products.length}건</div>
-    //                 <div class="order-date">주문일자 ${order.orderedAt}</div>
-    //                 <div class="product-info">
-    //                     <img class='product-img' src='${productData.products[0].file.path}' >
-    //                     <div class="product-name">${productData.products[0].name}</div>
-    //                     <div class="product-price">${productData.products[0].price}</div>
-    //                     <div class="btn-container">
-    //                         <div>${order.deliveryStatus}</div>
-    //                         <div>리뷰쓰기</div>
-    //                     </div>
-    //                 </div>
-    //                 <div class="show-all">
-    //                     <div>총 ${Number(order.totalPrice).toLocaleString()}원 주문 전체보기</div>
-    //                 </div>
-    //             </div>
-    //             `
-    //     })
-    //? 프로미스를 반환하는 함수는 getProductInfo 아닌가요? promise.all을 어떻게 써야할지 모르겠다 
-    orderInfo.forEach((order,i)=>{
-        //! 9일 오피스아워 (promise all 사용해서 한번에처리)
-        getProductInfo("654a60f195cd6f5052eaad13")
-            .then(productData=>{
-                console.log('상품데이터 확인',productData.products[0]);
-                productInfoContainer.innerHTML += `
+    const productDataArray = Promise.all(orderInfo.map(async (order)=>{
+        try {
+            const productData = await getProductInfo("654a60f195cd6f5052eaad13");
+            return productData.products[0];
+        } catch (error) {
+            throw new Error('상품데이터 반환 불가');
+        }
+    }));
+    
+    productDataArray.forEach((productData, i)=>{
+        productInfoContainer.innerHTML += `
                 <div class="total-num">총 ${order.products.length}건</div>
                     <div class="order-date">주문일자 ${order.orderedAt}</div>
                     <div class="product-info">
@@ -147,11 +131,34 @@ function createProductInfo(orderInfo){
                     </div>
                 </div>
                 `
-            })
-            .catch(error=>console.log('상품데이터 반환 불가'));
-        //getProductInfo('654a60f195cd6f5052eaad12'); order.products[0]._id
+    });
+    // orderInfo.forEach((order,i)=>{
+    //     //! 9일 오피스아워 (promise all 사용해서 한번에처리)
+    //     getProductInfo("654a60f195cd6f5052eaad13")
+    //         .then(productData=>{
+    //             console.log('상품데이터 확인',productData.products[0]);
+    //             productInfoContainer.innerHTML += `
+    //             <div class="total-num">총 ${order.products.length}건</div>
+    //                 <div class="order-date">주문일자 ${order.orderedAt}</div>
+    //                 <div class="product-info">
+    //                     <img class='product-img' src='${productData.products[0].file.path}' >
+    //                     <div class="product-name">${productData.products[0].name}</div>
+    //                     <div class="product-price">${Number(productData.products[0].price).toLocaleString()}</div>
+    //                     <div class="btn-container">
+    //                         <div>${order.deliveryStatus}</div>
+    //                         <div>리뷰쓰기</div>
+    //                     </div>
+    //                 </div>
+    //                 <div class="show-all">
+    //                     <div>총 ${Number(order.totalPrice).toLocaleString()}원 주문 전체보기</div>
+    //                 </div>
+    //             </div>
+    //             `
+    //         })
+    //         .catch(error=>console.log('상품데이터 반환 불가'));
+    //     //getProductInfo('654a60f195cd6f5052eaad12'); order.products[0]._id
         
-    })
+    // })
     
     
     return productInfoContainer;
@@ -290,3 +297,28 @@ modifyBtn.addEventListener('click',()=>{
     
 })
 
+async function setUserInfo(Id, password, email, name, address,phone){
+    //? put으로 어떤 정보를 어떻게 보내야하는지 api 명세서에서 어떻게 확인하지? 
+    const response = await fetch('/api/users/me', {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body:JSON.stringify({
+            userId: Id,
+            password: password,
+            email: email, 
+            name: name,
+            address:address,
+            phone: phone, 
+        })
+      });
+      
+      try{
+          const userData = await response.json();
+          return userData;
+      }catch(error){
+        console.log(error);
+      }
+ }

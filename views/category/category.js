@@ -72,8 +72,8 @@ for (let i = 0; i < categoryList.length; i++) {
 
         // URLSearchParams로 쿼리 파라미터 값 가져오기
         const href = categoryList[i].getAttribute("href");
-        const url = new URL(href.replace(/#/g, "?"));
-        const categoryParams = new URLSearchParams(url.search).get("category");
+        const newHref = `http://localhost:5000${href}`;
+        const url = new URL(newHref.replace(/#/g, "?"));
 
         // localStorage에 categoryParams값 저장
         localStorage.setItem("selectedCategory", categoryParams);

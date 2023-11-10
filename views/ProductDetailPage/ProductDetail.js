@@ -62,13 +62,24 @@ for(let i=0;i<items.length;i++){
  * => URLSearchParams (key,value값으로 뽑아줌, 여기에 location.href를 보내주면 객체 형태로 현재 쿼리 스트링으로 날라온 키,value값을 뽑아줌)
  */
 
+//! 도메인 주소 : http://localhost:5000/ProductDetailPage/productDetail.html#product?id=654a60f195cd6f5052eaad2c 
+//! 아직 최신화 안되어서 잘 모름 
+const nowUrl = location.href;
+//const nowUrl = 'http://localhost:5000/ProductDetailPage/productDetail.html?id=654a60f195cd6f5052eaad13';
+const searchParams = new URLSearchParams(nowUrl);
+const productId = searchParams.get("id");
+console.log('쿼리스트링으로 받아온 id', productId);
+
 
 //받아온 아이디를 기준으로 products 배열에서 객체를 찾음, 그리고 name, price 등등 조회하기 
 
 const productName = document.querySelector('.product-name');
 const productPrice = document.querySelector('.product-price');
 const productDescription = document.querySelector('.product-description');
-const productId = "654a60f195cd6f5052eaad13";
+const colorOptionSelect = document.querySelector('.color');
+const sizeOptionSelect = document.querySelector('.size');
+let productImg = '';
+//const productId = "654a60f195cd6f5052eaad13";
 
 //api 호출하여 이름, 가격, 상품 설명을 보여준다. 
 
@@ -82,6 +93,30 @@ fetch(`/api/products?products=${productId}`)
         productName.innerHTML = product.name;
         productPrice.innerHTML = product.price;
         productDescription.innerHTML = product.description;
+        productImg = product.file.path;
+        console.log('img src' ,productImg);
+        // product.option 배열의 길이 체크, 포문 돌면서 option 생성 
+        
+        const colorOption = product.option.color;
+        const sizeOption = product.option.size; 
+        //console.log(colorOption);
+        for(let i=0; i<colorOption.length; i++){
+            const optionElement = document.createElement('option');
+            optionElement.setAttribute('class', 'option-select');
+            
+            optionElement.innerText = colorOption[i];
+            console.log(optionElement.value);
+            colorOptionSelect.appendChild(optionElement)
+        }
+
+        for(let i=0; i<sizeOption.length; i++){
+            const optionElement = document.createElement('option');
+            optionElement.setAttribute('class', 'option-select');
+            
+            optionElement.innerText = sizeOption[i];
+            console.log(optionElement.value);
+            sizeOptionSelect.appendChild(optionElement)
+        }
 
     })
     .catch((error) => {alert('상품 상세 정보를 불러오지 못했습니다.')
@@ -89,21 +124,19 @@ console.log(error)});
 
 
 //4. 장바구니,구매하기 버튼 클릭했을 때 로컬스토리지에 개수,옵션값 저장
-//!! 저장방식 수정 -> 동훈님과 논의 : id, name, price, num, option 값을 객체 형식으로 local storage에 저장 (api호출 안하는걸로 결정)
 const productQuantity = document.querySelector('#productNumber');
 const cartBtn = document.querySelector('.cart');
-const option = document.querySelector('.option-select');
 const buyBtn = document.querySelector('.buy');
-let selectedOption = '';
+let selectedColorOption = '';
+let selectedSizeOption = '';
 let selectedQuantity = '';
 
 
 //카트 추가하는 함수
 function addCartItem(selectedOption,selectedQuantity){
     //원래방식대로라면 prooductInfo에는 id, option, quantity만 넣는방식 추천 
-    const productInfo = {id:productId,name:productName.innerHTML,price:productPrice.innerHTML,quantity:selectedQuantity,option:selectedOption};
+    const productInfo = {id:productId,name:productName.innerHTML,price:productPrice.innerHTML,quantity:selectedQuantity,option:selectedOption,imgsrc:productImg};
     //카트 배열 가져오기 -> string 형태의 prevCart를 배열로 변환 
-    //! 예외처리 필요 (카트 키가 없을수도 있음) -> cart 키 있는지, cart를 pars했을때 배열형태인지 검사 
     const previousCart = JSON.parse(localStorage.getItem('cart'));
     //console.log('isArray?',Array.isArray(previousCart),previousCart);
     if(previousCart===null){
@@ -124,16 +157,21 @@ function addCartItem(selectedOption,selectedQuantity){
 
 }
 
+//5. 구매하기 버튼 눌렀을 때 
+
 cartBtn.addEventListener('click',()=>{
     
-    selectedOption = option.options[option.selectedIndex].value;
+    selectedColorOption = colorOptionSelect.options[colorOptionSelect.selectedIndex].value;
+    //selectedSizeOption = sizeOptionSelect.options[sizeOptionSelect.selectedIndex].value;
     selectedQuantity = productQuantity.value;
+
+    console.log('selected : ', selectedColorOption, selectedSizeOption);
     
-    console.log(`옵션 : ${selectedOption}, 개수 : ${selectedQuantity}`);
-    addCartItem(selectedOption,selectedQuantity);
+    console.log(`옵션 : ${selectedColorOption}, 개수 : ${selectedQuantity}`);
+    addCartItem(selectedColorOption,selectedQuantity);
 })
 
-//5. 구매하기 버튼 눌렀을 때 
+
 
 buyBtn.addEventListener('click',()=>{
     
