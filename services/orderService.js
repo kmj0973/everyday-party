@@ -22,6 +22,7 @@ class OrderService {
      * @return
      */
     async cancelOrder(id, currentGrade, changeStatus) {
+        console.log(id, currentGrade, changeStatus);
         if (currentGrade === "user") {
             const order = await Order.findByIdAndUpdate(
                 id,

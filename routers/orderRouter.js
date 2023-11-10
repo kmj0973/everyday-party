@@ -79,8 +79,11 @@ orderRouter.patch("/:id", authenticateUserToken, async (req, res, next) => {
     const { id } = req.params;
 
     const { changedStatus } = req.body;
+    console.log(changedStatus);
+    console.log("b");
     try {
         const cancelledOrder = await OrderService.cancelOrder(id, currentGrade, changedStatus);
+        console.log("a");
         res.status(200).json({
             cancelledOrder,
         });

@@ -41,7 +41,7 @@ export const Header = () => {
                         : `<li>${userName} 님</li>`
                 }
                     <li style="padding-top:4px">
-                        <a href="${admin != `admin` ? `/myPage/myPage.html` : `/admin/admin.html`}">
+                        ${token ? `<a href="${admin != `admin` ? `/myPage/myPage.html` : `/admin/admin.html`}">` : `<a href="#">`}
                         <iconify-icon icon="ph:user-fill" style="color: #181619;" width="22"></iconify-icon>
                         </a>
                     </li>
