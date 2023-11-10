@@ -125,7 +125,9 @@ function removeFromCart(id) {
     itemDiv.setAttribute('class', 'itemDiv');
     itemsList.appendChild(itemDiv);
     
-    
+    const imageBox = document.createElement("img");
+    imageBox.setAttribute("src","item.url")
+    itemDiv.appendChild(imageBox)
 
     // 체크박스 생성
     const checkboxInput = document.createElement('input');
@@ -232,7 +234,7 @@ function calculateTotalPrice() {
   cartItems.forEach((item) => {
     price += item.price * item.quantity;
   });
-  return price // 3자리 마다 , 삽입
+  return Number(price) // 3자리 마다 , 삽입
  
 }
 
@@ -256,7 +258,7 @@ function calculateTotalPrice() {
 
 //총 결제금액 계산 함수
 function sumPrice() {
-  return calculateTotalPrice()+calculateShippingFee()
+  return calculateTotalPrice()===0?0:calculateTotalPrice()+3000;
 }
 
 
@@ -322,6 +324,8 @@ function removeCheckedItems() {
   const checkboxes = document.querySelectorAll('.checkboxInput');
   const itemsToRemove = [];
 
+  let items = JSON.parse(localStorage.getItem("cart"));
+  console.log(items)
   checkboxes.forEach((checkbox, index) => {
     if (checkbox.checked) {
       itemsToRemove.push(cartItems[index].id);
@@ -330,8 +334,14 @@ function removeCheckedItems() {
 
   itemsToRemove.forEach((id) => {
     removeFromCart(id);
+    items = items.filter((data)=>data.id!==id)
+    console.log(items)
   });
-}
+  localStorage.setItem("cart",JSON.stringify(items));
+  location.reload();
+};
+
+
 
 // 선택상품 삭제 이벤트리스너
 const deleteCheckedButton = document.querySelector('.delete_checked_button');
@@ -358,21 +368,6 @@ function selectedOrder() {
 
 
 
-
-
-//   fetch(`api/orders`, {
-//     method: 'POST',
-//     body: JSON.stringify({
-//       id: "6543563c88123149c933da9e"
-//     })
-//   }).then(result => {
-//     if(result.status === "200") {
-//       alert("주문 완료")
-//     }
-//   }).then(res => console.log(res.message))
-// }
-
-  
 
 // 선택상품 구매 이벤트리스너
 const selectedOrderButton = document.querySelector('.selected_order_button');
