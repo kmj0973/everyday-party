@@ -45,6 +45,7 @@ orderRouter.post("/", async (req, res, next) => {
     const userPhone = user ? user.phone : null;
     const userName = user ? user.name : null;
     const userId = user ? user.userId : null;
+    console.log(req.body)
 
 
     //console.log(userAddress); 
