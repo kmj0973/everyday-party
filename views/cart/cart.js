@@ -214,7 +214,7 @@ async function allOrder() {
                 (orderObj.orderedBy = userData.user.userId),
                 (orderObj.address = userData.user.address),
                 (orderObj.phoneNumber = userData.user.phone),
-                (orderObj.deliveryStatus = "주문 완료"),
+                (orderObj.deliveryStatus = "주문완료"),
                 (orderObj.products = [
                     {
                         product: newCartItems[i].id,
