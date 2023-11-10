@@ -105,13 +105,23 @@ router.get("/check", async (req, res, next) => {
 router.post("/sign-up", authenticateUserData, async (req, res, next) => {
     const { userId, password, grade, email, name, address, phone, birthday } = req.body;
 
+    if(userId !== undefined && userId !== null){
+        const existingUser = await userService.getUserById(userId);
+        if(existingUser){
+            const error = new Error("아이디 정보가 이미 존재합니다.");
+            error.status = 409;
+            return next(error);
+        }
+    }
+    
+
     const userInput = {
         userId,
         password,
         grade,
         email,
         name,
-        address,
+        address, 
         phone,
         birthday,
     };

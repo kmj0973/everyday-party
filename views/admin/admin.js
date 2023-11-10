@@ -90,57 +90,19 @@ async function onAddBtn(e) {
         form.append("price", productPrice.value);
         form.append("category", JSON.stringify(productCategory.value.split(",")));
         form.set("option", JSON.stringify({ color: productColor.value.split(","), size: productSize.value.split(",") }));
-        // form.append("color", productColor);
-        // form.append("size", productSize);
-        console.log(form);
-        // const data = { //객체데이터모음
-        //     name: productName.value,
-        //     price: productPrice.value,
-        //     category: "halloween",
-        //     option: { color: productColor.value.split(","), size: productSize.value.split(",") },
-        //     file: { name: fileImage.files[0].name, path: filePath },
-        // };
-        //console.log(data);
+
         const response = await fetch("/api/products", {
             method: "POST",
             headers: { Authorization: `Bearer ${token}` },
-            body: form, //JSON.stringify(data),
+            body: form,
         });
-        // window.location.href = "/admin/admin.html";
+        window.location.href = "/admin/admin.html";
     } catch (err) {
         alert(err.message);
     }
 }
 
 addProductBtn.addEventListener("click", onAddBtn);
-
-//db 상품 삭제 이벤트
-const deleteCheck = document.querySelectorAll(".delete-check");
-const deleteBtn = document.querySelector(".delete-product-btn");
-let deleteid = []; // 삭제 아이디 배열
-async function onDeleteBtn(e) {
-    if (!confirm("삭제하시겠습니까?")) {
-        return;
-    }
-    for (let i = 0; i < deleteCheck.length; i++) {
-        if (deleteCheck[i].checked) {
-            deleteid.push(deleteCheck[i].nextSibling.nextSibling.innerText.substr(3)); //삭제할 아이디 하나씩 넣기
-            deleteCheck[i].parentElement.parentElement.parentElement.remove();
-        }
-    }
-    try {
-        for (let i = 0; i < deleteid.length; i++) {
-            const response = await fetch(`/api/products/${deleteid[i]}`, {
-                method: "DELETE",
-                headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-            });
-        }
-    } catch (err) {
-        alert(err.message);
-    }
-}
-
-deleteBtn.addEventListener("click", onDeleteBtn);
 
 //db 상품 수정 이벤트
 const modifyBtn = document.querySelectorAll(".modify-btn");
@@ -185,8 +147,12 @@ async function onModifyCheckBtn(e) {
             throw new Error("상품 이름 또는 가격을 확인해주세요");
         }
         console.log(productCategory.value.split(","));
-        // const form = new FormData();
-        // form.append("product-image", fileImage.files[0]);
+        const form = new FormData();
+        form.append("product_name", { name: fileImage.files[0] !== undefined ? fileImage.files[0].name : fileName, path: path });
+        form.append("name", productName.value);
+        form.append("price", productPrice.value);
+        form.append("category", JSON.stringify(productCategory.value.split(",")));
+        form.set("option", JSON.stringify({ color: productColor.value.split(","), size: productSize.value.split(",") }));
 
         const data = {
             name: productName.value,
@@ -198,10 +164,11 @@ async function onModifyCheckBtn(e) {
         console.log(data);
         const response = await fetch(`/api/products/${imageId}`, {
             method: "PATCH",
-            headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-            body: JSON.stringify(data),
+            headers: { Authorization: `Bearer ${token}` },
+            body: form,
         });
-        window.location.href = "/admin/admin.html";
+        console.log(response);
+        //window.location.href = "/admin/admin.html";
     } catch (err) {
         alert(err.message);
     }
@@ -211,6 +178,35 @@ modifyBtn.forEach((m) => {
     m.addEventListener("click", onModifyBtn);
     m.addEventListener("click", onShowProductDetailsPage);
 });
+
+//db 상품 삭제 이벤트
+const deleteCheck = document.querySelectorAll(".delete-check");
+const deleteBtn = document.querySelector(".delete-product-btn");
+let deleteid = []; // 삭제 아이디 배열
+async function onDeleteBtn(e) {
+    if (!confirm("삭제하시겠습니까?")) {
+        return;
+    }
+    for (let i = 0; i < deleteCheck.length; i++) {
+        if (deleteCheck[i].checked) {
+            deleteid.push(deleteCheck[i].nextSibling.nextSibling.innerText.substr(3)); //삭제할 아이디 하나씩 넣기
+            deleteCheck[i].parentElement.parentElement.parentElement.remove();
+        }
+    }
+    try {
+        for (let i = 0; i < deleteid.length; i++) {
+            const response = await fetch(`/api/products/${deleteid[i]}`, {
+                method: "DELETE",
+                headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+            });
+        }
+    } catch (err) {
+        alert(err.message);
+    }
+}
+
+deleteBtn.addEventListener("click", onDeleteBtn);
+
 //오더 정보 가져오기
 const mainOrderList = document.querySelector(".main-order-list");
 
