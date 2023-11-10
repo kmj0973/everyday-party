@@ -1,8 +1,12 @@
 const { Schema, default: mongoose } = require("mongoose");
 
 const productInfoSchema = new Schema({
+    name: {
+        type:String,
+    },
     product: {
         type: Schema.Types.ObjectId,
+        
         ref: "Product",
         required: true,
     },
@@ -35,10 +39,9 @@ const orderSchema = new Schema({
     orderedBy: {
         type: String,
         required: true,
-        //default: "Anonymous",
     },
     phoneNumber: {
-        type: [String],
+        type: String,
     },
     address: {
         type: [String],
