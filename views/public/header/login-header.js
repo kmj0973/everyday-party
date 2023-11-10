@@ -1,4 +1,5 @@
 const token = localStorage.getItem("access-token");
+let userName = "";
 const userToken = await getUesrInfo(); //유저 정보 받아오기
 
 async function getUesrInfo() {
@@ -10,9 +11,12 @@ async function getUesrInfo() {
         });
 
         const userData = await data.json();
-        console.log(userData);
-        if (userData.message == "토큰이 만료되었습니다") {
+
+        if (data.status == 401 || data.status || 500) {
             localStorage.removeItem("access-token");
+            throw new Error(userData.message);
+        } else {
+            userName = userToken.user.name;
         }
         return userData;
     } catch (err) {
@@ -31,7 +35,7 @@ export const Header = () => {
                     token == null
                         ? `<li><a href="/login/login.html">로그인</a></li>
                 <li><a href="/auth/auth.html">회원가입</a></li>`
-                        : `<li>${userToken.user.name} 님</li>`
+                        : `<li>${userName} 님</li>`
                 }
                     <li style="padding-top:4px">
                         <a href="#">

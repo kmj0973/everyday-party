@@ -6,12 +6,14 @@ const headerRender = () => {
 };
 
 headerRender();
+
+const token = localStorage.getItem("access-token");
 //상품 정보 관련
-const productName = document.querySelector("#product-name");
-const productPrice = document.querySelector("#product-price");
-const productCategory = document.querySelector("#product-category");
-const productColor = document.querySelector("#product-color");
-const productSize = document.querySelector("#product-size");
+const productName = document.querySelector("#name");
+const productPrice = document.querySelector("#price");
+const productCategory = document.querySelector("#category");
+const productColor = document.querySelector("#color");
+const productSize = document.querySelector("#size");
 
 //상품 리스트
 const mainList = document.querySelector(".main-list");
@@ -25,6 +27,7 @@ async function getAllProductData() {
         const data = await fetch("/api/products").then((result) => result.json());
 
         const products = await data.products;
+        console.log(products);
         // console.log(products);
         mainList.appendChild(createProductList(products));
     } catch (err) {
@@ -72,6 +75,7 @@ fileImage.addEventListener("change", onFileChange);
 const addProductBtn = document.querySelector(".add-product-btn");
 
 async function onAddBtn(e) {
+    e.preventDefault();
     try {
         if (!confirm("추가하시겠습니까?")) {
             return;
@@ -80,22 +84,29 @@ async function onAddBtn(e) {
             throw new Error("상품 이름 또는 가격을 확인해주세요");
         }
         console.log(productCategory.value.split(","));
-        // const form = new FormData();
-        // form.append("product-image", fileImage.files[0]);
-        const data = {
-            name: productName.value,
-            price: productPrice.value,
-            category: "halloween",
-            option: { color: productColor.value.split(","), size: productSize.value.split(",") },
-            file: { name: fileImage.files[0].name, path: filePath },
-        };
-        console.log(data);
+        const form = new FormData();
+        form.append("product_name", fileImage.files[0]);
+        form.append("name", productName.value);
+        form.append("price", productPrice.value);
+        form.append("category", JSON.stringify(productCategory.value.split(",")));
+        form.set("option", JSON.stringify({ color: productColor.value.split(","), size: productSize.value.split(",") }));
+        // form.append("color", productColor);
+        // form.append("size", productSize);
+        console.log(form);
+        // const data = { //객체데이터모음
+        //     name: productName.value,
+        //     price: productPrice.value,
+        //     category: "halloween",
+        //     option: { color: productColor.value.split(","), size: productSize.value.split(",") },
+        //     file: { name: fileImage.files[0].name, path: filePath },
+        // };
+        //console.log(data);
         const response = await fetch("/api/products", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data),
+            headers: { Authorization: `Bearer ${token}` },
+            body: form, //JSON.stringify(data),
         });
-        window.location.href = "/admin/admin.html";
+        // window.location.href = "/admin/admin.html";
     } catch (err) {
         alert(err.message);
     }
@@ -121,6 +132,7 @@ async function onDeleteBtn(e) {
         for (let i = 0; i < deleteid.length; i++) {
             const response = await fetch(`/api/products/${deleteid[i]}`, {
                 method: "DELETE",
+                headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
             });
         }
     } catch (err) {
@@ -186,7 +198,7 @@ async function onModifyCheckBtn(e) {
         console.log(data);
         const response = await fetch(`/api/products/${imageId}`, {
             method: "PATCH",
-            headers: { "Content-Type": "application/json" },
+            headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
             body: JSON.stringify(data),
         });
         window.location.href = "/admin/admin.html";
@@ -206,27 +218,27 @@ await getAllOrderData();
 
 async function getAllOrderData() {
     try {
-        const response = await fetch("/api/orders").then((result) => result.json());
+        const response = await fetch("/api/orders", { headers: { Authorization: `Bearer ${token}` } }).then((result) => result.json());
 
         const orders = response.orderlist;
-        console.log(orders);
+
         mainOrderList.appendChild(createOrderList(orders));
     } catch (err) {
         console.log(err);
     }
 }
-async function findPhoto(id) {
-    //상품 사진 찾아주는 함수
-    try {
-        const data = await fetch(`/api/products?products=654a5b1c4b35e1a3bcf867c5`).then((result) => result.json());
+// async function findPhoto(id) {
+//     //상품 사진 찾아주는 함수
+//     try {
+//         const data = await fetch(`/api/products?products=654a5b1c4b35e1a3bcf867c5`).then((result) => result.json());
 
-        const products = data.products;
-        console.log(data);
-        return products[0].file.path;
-    } catch (err) {
-        console.log(err);
-    }
-}
+//         const products = data.products;
+//         console.log(data);
+//         return products[0].file.path;
+//     } catch (err) {
+//         console.log(err);
+//     }
+// }
 //${findPhoto(orders[i].products[0]._id)}
 function createOrderList(orders) {
     const listWrapper = document.createElement("div");
@@ -241,7 +253,7 @@ function createOrderList(orders) {
             </div>
         </div>
         <div class="list-body">
-            <img src="findPhoto(orders[0].products[0]._id)" />
+            <img src="" />
             <div class="ordered-at" style="margin-left:2%">${String(orders[i].orderedAt).substr(0, 10)}</div>
             <select class="select-order" style="margin-left:1%" >
                 <option value="배송준비" ${orders[i].deliveryStatus == "배송준비" ? "selected" : null}>배송준비</option>
@@ -276,6 +288,7 @@ async function onDeleteOrderBtn(e) {
         for (let i = 0; i < deleteOrderid.length; i++) {
             const response = await fetch(`/api/orders/${deleteOrderid[i]}`, {
                 method: "DELETE",
+                headers: { Authorization: `Bearer ${token}` },
             });
         }
     } catch (err) {
@@ -298,7 +311,7 @@ async function onModifyOrderBtn(e) {
 
         const response = await fetch(`/api/orders/${orderId}`, {
             method: "PATCH",
-            headers: { "Content-Type": "application/json" },
+            headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
             body: JSON.stringify({ changedStatus }),
         });
         console.log(response);

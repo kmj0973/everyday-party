@@ -1,9 +1,22 @@
 const { Router } = require("express");
-//const { authenticateUser, isAdmin } = require("../middleware/isAdmin");
+const multer = require("multer");
+
 const productService = require("../services/productService");
-const { authenticatePageData } = require("../middleware/index");
+
+const { authenticatePageData, authenticateProductData, authenticateUserToken } = require("../middleware/index");
+
+const validDataUtil = require("../utils/validDataUtil");
 
 const productRouter = Router();
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, "./images/product");
+    },
+    filename: function (req, file, cb) {
+        cb(null, `${Date.now()}_${file.originalname}`);
+    },
+});
+const upload = multer({ storage: storage });
 
 productRouter.get("/", authenticatePageData, async (req, res, next) => {
     const { products, category, page, perPage, orderBy, orderDirection } = req.query;
@@ -61,6 +74,34 @@ productRouter.get("/", authenticatePageData, async (req, res, next) => {
     //카테고리만 입력
     if (category !== undefined && category !== null) {
         try {
+            if (category === "new") {
+                const { products, totalPage } = await productService.getAllProducts({ ...pageData, orderBy: "stockedAt" });
+                if (totalPage !== undefined && totalPage !== null) {
+                    return res.status(200).json({
+                        products,
+                        totalPage,
+                    });
+                } else {
+                    return res.status(200).json({
+                        products,
+                    });
+                }
+            }
+
+            if (category === "best") {
+                const { products, totalPage } = await productService.getAllProducts({ ...pageData, orderBy: "sales" });
+                if (totalPage !== undefined && totalPage !== null) {
+                    return res.status(200).json({
+                        products,
+                        totalPage,
+                    });
+                } else {
+                    return res.status(200).json({
+                        products,
+                    });
+                }
+            }
+
             const { products, totalPage } = await productService.getProductsByCategory(category, pageData);
             if (totalPage !== undefined && totalPage !== null) {
                 return res.status(200).json({
@@ -115,23 +156,12 @@ productRouter.get("/", authenticatePageData, async (req, res, next) => {
     }
 });
 
-// productRouter.get('/:id', async (req, res, next) => {
-//     console.log("아이템 조회 라우터")
-//     const id = req.params.id;
-//     try {
-//         const newProduct = await Product.find({id});
-
-//         res.json(newProduct);
-//     } catch (err) {
-//         next(err);
-//     }
-// })
-
 //상품 생성
-productRouter.post("/", async (req, res, next) => {
-    //console.log("상품을 post합니다!");
-    const { name, price, stockedAt, discountRate, category, description, option, file } = req.body;
+productRouter.post("/", authenticateUserToken, upload.single("product_name"), authenticateProductData, async (req, res, next) => {
+    const { name, price, stockedAt, discountRate, category, description, option } = req.body;
 
+    const parsedCategory = JSON.parse(category);
+    const parsedOption = JSON.parse(option);
     try {
         const existingProduct = await productService.checkProductExists(name);
 
@@ -141,19 +171,15 @@ productRouter.post("/", async (req, res, next) => {
             throw error;
         }
 
+        const file = req.file !== undefined && req.file !== null ? { path: "/" + req.file.path.replaceAll("\\", "/"), name: req.file.filename } : undefined;
+
+        const productInput = { name, price, stockedAt, discountRate, category: parsedCategory, description, option: parsedOption, file };
+        const validInfoOfProductInput = validDataUtil.processDataWithPatch(productInput);
+
         //모든 조건을 거치고 상품 만들기
         newProduct = await productService.createProduct({
-            name,
-            price,
-            discountRate,
-            category,
-            stockedAt,
-            description,
-            option,
-            file,
+            validInfoOfProductInput,
         });
-
-        //console.log("상품이 생성되었습니다.");
 
         //생성된 아이템
         res.status(201).json(newProduct);
