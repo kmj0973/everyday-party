@@ -38,7 +38,7 @@ const orderSchema = new Schema({
         //default: "Anonymous",
     },
     phoneNumber: {
-        type: [String],
+        type: String,
     },
     address: {
         type: [String],
