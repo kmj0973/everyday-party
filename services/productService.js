@@ -308,11 +308,12 @@ class ProductService {
             productData.category = await Category.find({ categoryName: { $in: productData.category } });
         }
 
-        const category = await Category.findOne({ categoryName: productData.category });
-        const option = new Option({
-            size: productData.option.size,
-            color: productData.option.color
-        });
+        if (productData.option !== undefined && productData.option !== null) {
+            productData.option = new Option({
+                size: productData.option.size,
+                color: productData.option.color,
+            });
+        }
 
         if (productData.file !== undefined && productData.file !== null) {
             productData.file = new File({

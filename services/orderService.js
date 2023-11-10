@@ -5,37 +5,17 @@ class OrderService {
   constructor() { }
 
   /**
-   * 주문 내역 생성
-   *
-   * @param 받아온 orderData 객체
-   * @return 생성된 orderData 객체
-   */
+ * 주문 내역 생성
+ *
+ * @param 받아온 orderData 객체
+ * @return 생성된 orderData 객체
+ */
   async createOrder(orderData) {
-    orderData.address
+
     const newOrder = await Order.create(orderData);
     return newOrder;
   }
 
-  /**
-   * 주문 취소 진행해서 저장하는 함수
-   *
-   * @param (orderId, deliveryStatus) 사용자 아이디와 배송상태
-   * @return
-   */
-  async cancelOrder(id, changeStatus) {
-    const order = await Order.findByIdAndUpdate(
-      id,
-      {
-        $set: {
-          deliveryStatus: changeStatus,
-        },
-      },
-      { new: true, runValidators: true },
-    ).lean();
-
-    //console.log(order);
-  }
-
 
   /**
    * 주문 취소 진행해서 저장하는 함수
@@ -43,21 +23,42 @@ class OrderService {
    * @param (orderId, deliveryStatus) 사용자 아이디와 배송상태
    * @return
    */
-  async cancelOrder(id, totalPrice, changeStatus) {
-    const order = await Order.findByIdAndUpdate(
-      id,
-      {
-        $set: {
-          deliveryStatus: changeStatus,
+  async cancelOrder(id, currentGrade, changeStatus) {
+    if (currentGrade === 'user') {
+      const order = await Order.findByIdAndUpdate(
+        id,
+        {
+          $set: {
+            deliveryStatus: "주문취소",
+          },
         },
-      },
-      { new: true, runValidators: true },
-    ).lean();
-    //console.log(order);
-    if (!order) {
-      throw new Error("주문을 찾을 수 없습니다.");
+        { new: true, runValidators: true },
+      ).lean();
+      //console.log(order);
+      if (!order) {
+        throw new Error("주문을 찾을 수 없습니다.");
+      }
+      return order;
     }
-    return order;
+    if (currentGrade === 'admin') {
+      const order = await Order.findByIdAndUpdate(
+        id,
+        {
+          $set: {
+            deliveryStatus: changeStatus,
+          },
+        },
+        { new: true, runValidators: true },
+      ).lean();
+      //console.log(order);
+      if (!order) {
+        throw new Error("주문을 찾을 수 없습니다.");
+      }
+      return order;
+    }
+    else {
+      throw new Error("로그인이 필요합니다.");
+    }
   }
 
 

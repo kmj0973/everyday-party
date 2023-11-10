@@ -6,6 +6,7 @@ const headerRender = () => {
 
 headerRender();
 
+// 주문 상세 템플릿
 const orderTemplate = (latestOrderData) => {
 
     // 날짜, 시간 조합
@@ -18,11 +19,12 @@ const orderTemplate = (latestOrderData) => {
     // 주문 정보
     const orderId = latestOrderData[0]._id;
     const orderedById = latestOrderData[0].orderedBy;
-    const orderItem = latestOrderData[0].products[0].product;
+    const productName = latestOrderData[0].products[0].name;
     const deliveryStatus = latestOrderData[0].deliveryStatus;
     // 가격 정보
+    const deliveryPrice = 3000;
     const amountProductPrice = latestOrderData[0].totalPrice.toLocaleString();
-    const amountOfPayment = latestOrderData[0].totalPrice.toLocaleString();
+    const amountOfPayment = (latestOrderData[0].totalPrice + deliveryPrice).toLocaleString();
     
     return`
         <div class="order_time_wrap details">
@@ -39,7 +41,7 @@ const orderTemplate = (latestOrderData) => {
         </div>
         <div class="order_items_wrap details">
             <span>주문 상품</span>
-            <span class="order_item">${orderItem}</span>
+            <span class="order_item">${productName}</span>
         </div>
         <div class="order_status_wrap details">
             <span>주문 상태</span>
@@ -56,7 +58,7 @@ const orderTemplate = (latestOrderData) => {
             </li>
             <li>
                 <span>배송비</span>
-                <span class="order_delivery_price">0 원</span>
+                <span class="order_delivery_price">3,000 원</span>
             </li>
         </ul>
     `;
@@ -64,17 +66,16 @@ const orderTemplate = (latestOrderData) => {
 
 const orderRender = async () => {
     try{
+        // 모든 주문 목록을 보여주는 api 
         const response = await fetch(`/api/orders`);
         const orderData = await response.json();
         const orderList = orderData.orderlist;
 
-        console.log(orderList);
-
         // 배열에서 가장 마지막 값이 최근 주문이기 때문에
         // slice로 마지막 주문 하나만 가져옴
         const latestOrderData = orderList.slice(-1);
-        console.log(latestOrderData);
 
+        // 태그에 템플릿 넣기
         document.querySelector(".order_details").innerHTML = 
             orderTemplate(latestOrderData);
 

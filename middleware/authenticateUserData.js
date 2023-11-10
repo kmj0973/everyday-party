@@ -10,13 +10,6 @@ async function authenticateUserData(req, res, next) {
             error.status = 400;
             return next(error);
         }
-
-        const existingUser = await userService.getUserById(userId);
-        if (existingUser) {
-            const error = new Error("아이디 정보가 이미 존재합니다.");
-            error.status = 409;
-            return next(error);
-        }
     }
 
     //비밀번호
@@ -57,7 +50,7 @@ async function authenticateUserData(req, res, next) {
 
     //주소 - 문자열
     if (address !== undefined && address !== null) {
-        if (Array.isArray(address)) {
+        if (!Array.isArray(address)) {
             const error = new Error("주소 값이 유효하지 않습니다.");
             error.status = 400;
             return next(error);
