@@ -35,7 +35,6 @@ const orderSchema = new Schema({
     orderedBy: {
         type: String,
         required: true,
-        //default: "Anonymous",
     },
     phoneNumber: {
         type: String,
