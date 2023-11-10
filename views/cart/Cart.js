@@ -109,10 +109,7 @@ console.log(cartData);
 const cartItems = JSON.parse(cartData);
 
 const token = localStorage.getItem("access-token");
-
 console.log(token)
-
-
 
 
 
@@ -145,6 +142,7 @@ for (let i = 0; i < cartItems.length; i++) {
   updateCart()
 }
 
+console.log(newCartItems)
 
 
 // id값을 기준으로 상품을 제거하는 함수
@@ -280,26 +278,82 @@ function calculateTotalPrice() {
     price += item.price * item.quantity;
   });
   console.log('총 상품금액 계산이후:', cartItems);
-  return price.toLocaleString(); // 3자리 마다 , 삽입
+  return price; // 3자리 마다 , 삽입
 }
 
 //  총상품가격
 const total = calculateTotalPrice();
+
+console.log(total);
 
 //총 결제금액 계산 함수
 function sumPrice() {
   return calculateTotalPrice();
 }
 
+// async function getUserId() {
+
+
+//   console.log(userData.user.userId);
+
+//   allOrder(userData);
+// }
 
 //3. 상품 구매를 나타내는 부분
 //전체상품 구매 함수
 
-function allOrder() {
-  if (cartItems.length >= 1) {
-    alert('주문완료!');
-  } else if (cartItems.length < 1) {
-    alert('상품을 담아주세요!');
+async function allOrder() {
+  try {
+    const response = await fetch("/api/users/me", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const userData = await response.json();
+
+    const orderObj = {};
+
+    for (let i = 0; i < newCartItems.length; i++) {
+      orderObj.totalPrice = total,
+        orderObj.orderedBy = userData.user.userId,
+        orderObj.address = userData.user.address,
+        orderObj.phoneNumber = userData.user.phone,
+        orderObj.deliveryStatus = "주문 완료",
+        orderObj.products = [{
+          product: newCartItems[i].id,
+          name: newCartItems[i].name,
+          option: {
+            size: newCartItems[i].option,
+            color: newCartItems[i].option,
+          },
+          quantity: Number(newCartItems[i].quantity),
+        }]
+    };
+
+    if (cartItems.length >= 1) {
+      if (token !== null && userData.user._id !== null) {
+        fetch("/api/orders", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            id: userData.user._id,
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(orderObj),
+        })
+          .then(response => {
+            console.log(response.data);
+            localStorage.setItem('purchase_item', JSON.stringify(orderObj));
+            alert('주문이 완료되었습니다.');
+            location.href = "/order/orderDetail.html";
+          })
+      }
+    } else if (cartItems.length < 1) {
+      alert('상품을 담아주세요.');
+    }
+  } catch (error) {
+      alert('로그인 후 이용 가능합니다.');
   }
 }
 
@@ -383,7 +437,6 @@ function mainpage() {
 }
 const keepShoppingButton = document.querySelector('.keep_shopping_button')
 keepShoppingButton.addEventListener('click', mainpage)
-
 
 
 

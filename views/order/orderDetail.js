@@ -6,66 +6,59 @@ const headerRender = () => {
 
 headerRender();
 
-// "orderlist": [
-//     {
-//         "_id": "6549d50e6efbc2356c1efcd4",
-//         "orderedAt": "2023-11-06T13:00:00.697Z",
-//         "totalPrice": 16457547,
-//         "orderedBy": "user6",
-//         "phoneNumber": "010-3333-3333",
-//         "address": [
-//             "주소1",
-//             "주소2"
-//         ],
-//         "products": [
-//             {
-//                 "product": "65491fef6b0762c9aa44acf5",
-//                 "count": 7,
-//                 "_id": "6549d50e6efbc2356c1efcd5"
-//             }
-//         ],
-//         "deliveryStatus": "주문완료",
-//         "__v": 0
-//     },
+const orderTemplate = (latestOrderData) => {
 
-const orderTemplate = () => {
+    // 날짜, 시간 조합
+    const fullOrderedAt = latestOrderData[0].orderedAt;
+    const getYearMonthDate = fullOrderedAt.substr(0, 10);
+    const getHour = fullOrderedAt.substr(11, 2);
+    const getMinutes = fullOrderedAt.substr(14, 2);
+    const getSeconds = fullOrderedAt.substr(17, 2);
+    const getAllDate = `${getYearMonthDate} ${getHour}:${getMinutes}:${getSeconds}`;
+    // 주문 정보
+    const orderId = latestOrderData[0]._id;
+    const orderedById = latestOrderData[0].orderedBy;
+    const orderItem = latestOrderData[0].products[0].product;
+    const deliveryStatus = latestOrderData[0].deliveryStatus;
+    // 가격 정보
+    const amountProductPrice = latestOrderData[0].totalPrice.toLocaleString();
+    const amountOfPayment = latestOrderData[0].totalPrice.toLocaleString();
+    
     return`
-        <div class="order_details">
-            <div class="order_time_wrap details">
-                <span>주문 시간</span>
-                <span class="order-time">2023-11-06 19:53:00</span>
-            </div>
-            <div class="order_number_wrap details">
-                <span>주문 번호</span>
-                <span class="order-number">1231231213131313123</span>
-            </div>
-            <div class="order_id_wrap details">
-                <span>주문 아이디</span>
-                <span class="order_id">sdsfdd</span>
-            </div>
-            <div class="order_items_wrap details">
-                <span>주문 상품</span>
-                <span class="order_item">크리스마스 트리 중형 사이즈 150cm 외 3종</span>
-            </div>
-            <div class="order_status_wrap details">
-                <span>주문 상태</span>
-                <span class="order_status">주문 완료</span>
-            </div>
-            <ul class="order_amount_price_wrap details">
-                <li>
-                    <span>결제 금액</span>
-                    <span class="order_price">120,000 원</span>
-                </li>
-                <li>
-                    <span>총 상품 금액</span>
-                    <span class="order_amount_price">120,000 원</span>
-                </li>
-                <li>
-                    <span>배송비</span>
-                    <span class="order_delivery_price">0 원</span>
-                </li>
-            </ul>
+        <div class="order_time_wrap details">
+            <span>주문 시간</span>
+            <span class="order-time">${getAllDate}</span>
         </div>
+        <div class="order_number_wrap details">
+            <span>주문 아이디</span>
+            <span class="order-number">${orderId}</span>
+        </div>
+        <div class="order_id_wrap details">
+            <span>주문자 아이디</span>
+            <span class="order_id">${orderedById}</span>
+        </div>
+        <div class="order_items_wrap details">
+            <span>주문 상품</span>
+            <span class="order_item">${orderItem}</span>
+        </div>
+        <div class="order_status_wrap details">
+            <span>주문 상태</span>
+            <span class="order_status">${deliveryStatus}</span>
+        </div>
+        <ul class="order_amount_price_wrap details">
+            <li>
+                <span>결제 금액</span>
+                <span class="order_price">${amountOfPayment} 원</span>
+            </li>
+            <li>
+                <span>총 상품 금액</span>
+                <span class="order_amount_price">${amountProductPrice} 원</span>
+            </li>
+            <li>
+                <span>배송비</span>
+                <span class="order_delivery_price">0 원</span>
+            </li>
+        </ul>
     `;
 };
 
@@ -73,8 +66,18 @@ const orderRender = async () => {
     try{
         const response = await fetch(`/api/orders`);
         const orderData = await response.json();
+        const orderList = orderData.orderlist;
 
-        console.log(orderData);
+        console.log(orderList);
+
+        // 배열에서 가장 마지막 값이 최근 주문이기 때문에
+        // slice로 마지막 주문 하나만 가져옴
+        const latestOrderData = orderList.slice(-1);
+        console.log(latestOrderData);
+
+        document.querySelector(".order_details").innerHTML = 
+            orderTemplate(latestOrderData);
+
     } catch (error) {
         if (error.message === "404") {
             alert(`${error.message} 에러가 발생했습니다. 다시 시도해 주세요.`)

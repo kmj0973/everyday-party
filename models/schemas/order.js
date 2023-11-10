@@ -14,19 +14,19 @@ const productInfoSchema = new Schema({
             type: String,
         },
     },
-    count: {
+    quantity: {
         type: Number,
         required: true,
     },
 });
 
-const deliveryStatusEnum = ["주문완료", "배송준비", "배송중", "배송완료", "주문취소"];
+const deliveryStatusEnum = ["주문 완료", "배송 준비", "배송 중", "배송 완료", "주문 취소"];
 
 const orderSchema = new Schema({
     orderedAt: {
         type: Date,
         required: true,
-        default: Date.now,
+        default: new Date(),
     },
     totalPrice: {
         type: Number,
@@ -34,11 +34,11 @@ const orderSchema = new Schema({
     },
     orderedBy: {
         type: String,
-        required: true,
+        // required: true,
         //default: "Anonymous",
     },
     phoneNumber: {
-        type: [String],
+        type: String,
     },
     address: {
         type: [String],
