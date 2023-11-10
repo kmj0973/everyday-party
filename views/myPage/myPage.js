@@ -193,12 +193,12 @@ async function showUserInfo(){
 }
 
 let BtnClicked = false;
-
+let originalValues;
 const modifyBtn = document.querySelector('.modify-btn');
 
 modifyBtn.addEventListener('click',()=>{
     if(!BtnClicked){
-        const values = {
+        originalValues = {
             id: getUserId.textContent,
             name: getUserName.textContent,
             phone: getUserNumber.textContent,
@@ -206,12 +206,12 @@ modifyBtn.addEventListener('click',()=>{
             address: getUserAddress.textContent
         };
     
-        for (const key in values) {
+        for (const key in originalValues) {
                 //인풋 요소 생성 + 타입 : text, class이름 지정 
             const inputElement = document.createElement('input');
             inputElement.setAttribute('type', 'text');
             inputElement.setAttribute('class', 'modify-input-box modify-'+key);
-            inputElement.value = values[key];
+            inputElement.value = originalValues[key];
             
             //부모요소에 append Child 해주기 
             const parentElement = document.querySelector('.' + key + '-box');
@@ -241,8 +241,7 @@ modifyBtn.addEventListener('click',()=>{
             name: document.querySelector('.modify-name').value,
             phone: document.querySelector('.modify-phone').value,
             address: document.querySelector('.modify-address').value,
-            password:document.querySelector('.modify-password').value
-            // 비밀번호는 따로 처리 필요
+            password:document.querySelector('.modify-password').value,
         };
 
         // 수정된 값을 div에 집어넣기
@@ -261,21 +260,29 @@ modifyBtn.addEventListener('click',()=>{
             element.style.display = 'block';
         });
 
+        for(const key in updatedValues){
+            if(updatedValues[key]===originalValues[key]){
+                updatedValues[key]=null;
+            }
+        }
         
 
         modifyBtn.innerText = '수정하기';
         modifyBtn.style.backgroundColor = '#FCEDC4';
         BtnClicked = false;
-        setUserInfo(updatedValues.id,updatedValues.email,updatedValues.name,updatedValues.address,updatedValues.phone);
+        //수정 전과 후가 다르다면 null 전송 
+       
+        setUserInfo(updatedValues.id,updatedValues.password,updatedValues.name,updatedValues.address,updatedValues.phone);
     }
     
    
 
     
-})
+    }
+);
 
-async function setUserInfo(Id, email, name, address,phone){
-    //? put으로 어떤 정보를 어떻게 보내야하는지 api 명세서에서 어떻게 확인하지? 
+async function setUserInfo(Id, password, name, address,phone){
+    console.log('test : ', Id, password, name, address,phone);
     const response = await fetch('/api/users/me', {
         method: 'PUT',
         headers: {
@@ -284,7 +291,7 @@ async function setUserInfo(Id, email, name, address,phone){
         },
         body:JSON.stringify({
             userId: Id,
-            email: email, 
+            password:password, 
             name: name,
             address:address,
             phone: phone, 
