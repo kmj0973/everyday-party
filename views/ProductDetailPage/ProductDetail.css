@@ -105,7 +105,9 @@ input[type='number']::-webkit-outer-spin-button {
     text-align: center;
     cursor:pointer;
 }
-
+.option-tag{
+    width:50px;
+}
 
 .option-container{
     display: flex;
@@ -113,8 +115,9 @@ input[type='number']::-webkit-outer-spin-button {
 }
 
 select{
-    width:500px;
+    width:100px;
     margin-left:5%;
+    margin-right:5%;
 }
 option{
     min-width:100px; 
