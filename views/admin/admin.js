@@ -60,6 +60,7 @@ function createProductList(products) {
 //상품 추가 이미지 프리뷰 이벤트
 const fileImage = document.querySelector("#product-image");
 let filePath = "";
+let fileObject = "";
 function onFileChange(e) {
     let preview = new FileReader();
     preview.onload = function (e) {
@@ -67,6 +68,7 @@ function onFileChange(e) {
         filePath = e.target.result;
     };
     preview.readAsDataURL(fileImage.files[0]);
+    fileObject = fileImage.files[0];
 }
 
 fileImage.addEventListener("change", onFileChange);
@@ -84,8 +86,9 @@ async function onAddBtn(e) {
             throw new Error("상품 이름 또는 가격을 확인해주세요");
         }
         console.log(productCategory.value.split(","));
+        console.log(fileImage);
         const form = new FormData();
-        form.append("product_name", fileImage.files[0]);
+        form.append("product_name", fileObject);
         form.append("name", productName.value);
         form.append("price", productPrice.value);
         form.append("category", JSON.stringify(productCategory.value.split(",")));
@@ -96,6 +99,7 @@ async function onAddBtn(e) {
             headers: { Authorization: `Bearer ${token}` },
             body: form,
         });
+        console.log(response.json());
         window.location.href = "/admin/admin.html";
     } catch (err) {
         alert(err.message);
@@ -111,7 +115,7 @@ let fileName = "";
 let path = "";
 let imageId = "";
 async function onModifyBtn(e) {
-    console.log(e.target.previousElementSibling.children[1].innerText.substr(3));
+    //console.log(e.target.previousElementSibling.children[1].innerText.substr(3));
     imageId = e.target.previousElementSibling.children[1].innerText.substr(3);
     try {
         const data = await fetch(`/api/products?products=${imageId}`).then((result) => result.json());
@@ -122,7 +126,7 @@ async function onModifyBtn(e) {
         products[0].category.map((n) => {
             catelist.push(n.categoryName);
         });
-        console.log(products[0].file.name);
+        //console.log(products[0].file.name);
         productName.value = products[0].name;
         productPrice.value = products[0].price;
         productCategory.value = catelist.join(",");
@@ -133,7 +137,9 @@ async function onModifyBtn(e) {
         if (fileImage.files[0] === undefined) {
             fileName = products[0].file.name;
         }
-        console.log(fileImage);
+        console.log(products[0].file);
+        console.log(fileName);
+        console.log(fileImage.files[0]);
     } catch (err) {
         alert(err.message);
     }
@@ -146,29 +152,21 @@ async function onModifyCheckBtn(e) {
         if (!productName.value || !productPrice.value) {
             throw new Error("상품 이름 또는 가격을 확인해주세요");
         }
-        console.log(productCategory.value.split(","));
+        //{ name: fileImage.files[0] == undefined ? fileImage.files[0].name : fileName, path: path }
         const form = new FormData();
-        form.append("product_name", { name: fileImage.files[0] !== undefined ? fileImage.files[0].name : fileName, path: path });
+        form.append("product_name", fileObject);
         form.append("name", productName.value);
         form.append("price", productPrice.value);
         form.append("category", JSON.stringify(productCategory.value.split(",")));
         form.set("option", JSON.stringify({ color: productColor.value.split(","), size: productSize.value.split(",") }));
 
-        const data = {
-            name: productName.value,
-            price: productPrice.value,
-            //category: "halloween",
-            option: { color: productColor.value.split(","), size: productSize.value.split(",") },
-            file: { name: fileImage.files[0] !== undefined ? fileImage.files[0].name : fileName, path: path },
-        };
-        console.log(data);
         const response = await fetch(`/api/products/${imageId}`, {
             method: "PATCH",
             headers: { Authorization: `Bearer ${token}` },
             body: form,
         });
         console.log(response);
-        //window.location.href = "/admin/admin.html";
+        window.location.href = "/admin/admin.html";
     } catch (err) {
         alert(err.message);
     }
@@ -229,7 +227,7 @@ async function findPhoto(id) {
         const data = await fetch(`/api/products?products=${id}`).then((result) => result.json());
 
         const products = data.products;
-        console.log(products[0].file.path);
+        //console.log(products[0].file.path);
         return products[0].file.path;
     } catch (err) {
         console.log(err);
@@ -240,7 +238,7 @@ async function findPhoto(id) {
 function createOrderList(orders) {
     const listWrapper = document.createElement("div");
     listWrapper.setAttribute("class", "list-container");
-
+    console.log(orders[0].products[0].product);
     for (let i = 0; i < orders.length; i++) {
         listWrapper.innerHTML += `<div class="list-wrapper">
         <div class="list-top">
