@@ -2,7 +2,6 @@ const { Router } = require("express");
 const multer = require("multer");
 
 const productService = require("../services/productService");
-
 const { authenticatePageData, authenticateProductData, authenticateUserToken } = require("../middleware/index");
 
 const validDataUtil = require("../utils/validDataUtil");
@@ -162,64 +161,80 @@ productRouter.post("/", authenticateUserToken, upload.single("product_name"), au
 
     const parsedCategory = JSON.parse(category);
     const parsedOption = JSON.parse(option);
-    try {
-        const existingProduct = await productService.checkProductExists(name);
 
-        if (existingProduct) {
-            const error = new Error("이미 존재하는 상품입니다.");
-            error.status = 409;
-            throw error;
+    const  currentGrade  = req.user.grade;
+    if (currentGrade == "admin") {
+        try {
+            const existingProduct = await productService.checkProductExists(name);
+    
+            if (existingProduct) {
+                const error = new Error("이미 존재하는 상품입니다.");
+                error.status = 409;
+                throw error;
+            }
+    
+            const file = req.file !== undefined && req.file !== null ? { path: "/" + req.file.path.replaceAll("\\", "/"), name: req.file.filename } : undefined;
+    
+            const productInput = { name, price, stockedAt, discountRate, category: parsedCategory, description, option: parsedOption, file };
+            const validInfoOfProductInput = validDataUtil.processDataWithPatch(productInput);
+    
+            //모든 조건을 거치고 상품 만들기
+            newProduct = await productService.createProduct({
+                validInfoOfProductInput,
+            });
+    
+            //생성된 아이템
+            res.status(201).json(newProduct);
+        } catch (err) {
+            return next(err);
         }
-
-        const file = req.file !== undefined && req.file !== null ? { path: "/" + req.file.path.replaceAll("\\", "/"), name: req.file.filename } : undefined;
-
-        const productInput = { name, price, stockedAt, discountRate, category: parsedCategory, description, option: parsedOption, file };
-        const validInfoOfProductInput = validDataUtil.processDataWithPatch(productInput);
-
-        //모든 조건을 거치고 상품 만들기
-        newProduct = await productService.createProduct({
-            validInfoOfProductInput,
-        });
-
-        //생성된 아이템
-        res.status(201).json(newProduct);
-    } catch (err) {
-        return next(err);
     }
+    else {
+        return res.status(403).json({ message: "관리자 외에 접근할 수 없습니다." });
+    }
+    
+    
 });
 
 //상품 수정 -> admin만 가능하게끔
-productRouter.patch("/:id", async (req, res, next) => {
+productRouter.patch("/:id", authenticateUserToken, async (req, res, next) => {
     try {
         //console.log("수정하는 라우터입니다.");
         const { id } = req.params;
+        const  currentGrade  = req.user.grade;
+        if (currentGrade === "admin") {
+            const { name, price, sales, discountRate, category, description, option, file } = req.body;
 
-        const { name, price, sales, discountRate, category, description, option, file } = req.body;
+            const updatedProduct = await productService.updateProduct(id, {
+                name,
+                price,
+                sales,
+                discountRate,
+                category,
+                description,
+                option,
+                file,
+            });
 
-        const updatedProduct = await productService.updateProduct(id, {
-            name,
-            price,
-            sales,
-            discountRate,
-            category,
-            description,
-            option,
-            file,
-        });
-
-        if (!updatedProduct) {
-            return res.status(404).json({ message: "상품을 찾을 수 없습니다." });
+            if (!updatedProduct) {
+                return res.status(404).json({ message: "상품을 찾을 수 없습니다." });
+            }
+            res.status(200).json(updatedProduct);
+        } else {
+            return res.status(403).json({ message: "관리자 외에 접근할 수 없습니다." });
         }
 
-        res.status(200).json(updatedProduct);
+        
     } catch (err) {
         return next(err);
     }
 });
 
 //상품 삭제 -> admin만 가능하게끔
-productRouter.delete("/:id", async (req, res, next) => {
+productRouter.delete("/:id", authenticateUserToken, async (req, res, next) => {
     try {
+        const  currentGrade  = req.user.grade;
+
         const id = req.params.id;
         if (id === undefined) {
             res.status(404).json({
@@ -227,16 +242,22 @@ productRouter.delete("/:id", async (req, res, next) => {
             });
         }
 
-        const deleted = await productService.deleteProduct(id);
-
-        if (deleted.success) {
-            res.status(204).json({
-                message: deleted.message,
-                data: deleted.data,
-            });
-        } else {
-            res.status(404).json({ message: deleted.message });
+        if(currentGrade === 'admin')
+        {
+            const deleted = await productService.deleteProduct(id);
+            if (deleted.success) {
+                res.status(204).json({
+                    message: deleted.message,
+                    data: deleted.data,
+                });
+            } else {
+                res.status(404).json({ message: deleted.message });
+            }
         }
+        else {
+            return res.status(403).json({ message: "관리자 외에 접근할 수 없습니다." });
+        }
+        
     } catch (err) {
         return next(err);
     }
