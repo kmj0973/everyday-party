@@ -234,7 +234,6 @@ function calculateTotalPrice() {
   });
   return price // 3자리 마다 , 삽입
  
-  
 }
 
 
