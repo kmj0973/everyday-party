@@ -21,51 +21,24 @@ class OrderService {
      * @param (orderId, deliveryStatus) 사용자 아이디와 배송상태
      * @return
      */
-    async cancelOrder(id, currentGrade, changeStatus) {
-        console.log(id, currentGrade, changeStatus);
-        if (currentGrade === "user") {
-            const order = await Order.findByIdAndUpdate(
-                id,
-                {
-                    $set: {
-                        deliveryStatus: "주문취소",
-                    },
-                },
-                { new: true, runValidators: true },
-            ).lean();
-            //console.log(order);
-            if (!order) {
-                throw new Error("주문을 찾을 수 없습니다.");
-            }
-            return order;
-        }
-        if (currentGrade === "admin") {
-            const order = await Order.findByIdAndUpdate(
-                id,
-                {
-                    $set: {
-                        deliveryStatus: changeStatus,
-                    },
-                },
-                { new: true, runValidators: true },
-            ).lean();
-            //console.log(order);
-            if (!order) {
-                throw new Error("주문을 찾을 수 없습니다.");
-            }
-            return order;
-        } else {
-            throw new Error("로그인이 필요합니다.");
-        }
-    }
-
-    /**
-     * 주문 취소 진행해서 저장하는 함수
-     *
-     * @param (orderId, deliveryStatus) 사용자 아이디와 배송상태
-     * @return
-     */
     async cancelOrder(id, changeStatus) {
+        // if (currentGrade === "user") {
+        //     const order = await Order.findByIdAndUpdate(
+        //         id,
+        //         {
+        //             $set: {
+        //                 deliveryStatus: "주문취소",
+        //             },
+        //         },
+        //         { new: true, runValidators: true },
+        //     ).lean();
+        //     //console.log(order);
+        //     if (!order) {
+        //         throw new Error("주문을 찾을 수 없습니다.");
+        //     }
+        //     return order;
+        // }
+
         const order = await Order.findByIdAndUpdate(
             id,
             {

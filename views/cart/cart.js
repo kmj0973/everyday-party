@@ -328,7 +328,7 @@ selectedOrderButton.addEventListener("click", selectedOrder);
 // 계속 쇼핑하기 이벤트 리스너
 
 function mainpage() {
-    window.location.href = "http://localhost:5000/main/main.html";
+    window.location.origin = "http://localhost:5000/main/main.html";
 }
 const keepShoppingButton = document.querySelector(".keep_shopping_button");
 keepShoppingButton.addEventListener("click", mainpage);

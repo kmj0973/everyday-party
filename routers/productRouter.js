@@ -259,10 +259,7 @@ productRouter.delete("/:id", authenticateUserToken, async (req, res, next) => {
         if (currentGrade === "admin") {
             const deleted = await productService.deleteProduct(id);
             if (deleted.success) {
-                return res.status(204).json({
-                    message: deleted.message,
-                    data: deleted.data,
-                });
+                return res.status(204).json({});
             } else {
                 return res.status(404).json({ message: deleted.message });
             }

@@ -79,17 +79,15 @@ orderRouter.patch("/:id", authenticateUserToken, async (req, res, next) => {
 
     const { id } = req.params;
     const { changedStatus } = req.body;
-
     if (currentGrade !== "admin") {
         return res.status(403).json({ message: "관리자 외에 접근할 수 없습니다." });
     }
-
     try {
         if (!id) {
             return res.status(400).json({ message: "삭제할 주문의 아이디를 제공해야 합니다." });
         }
 
-        const cancelledOrder = await OrderService.cancelOrder(id, currentGrade, changedStatus);
+        const cancelledOrder = await OrderService.cancelOrder(id, changedStatus);
         console.log("a");
         res.status(200).json({
             cancelledOrder,

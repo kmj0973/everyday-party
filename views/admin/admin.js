@@ -115,6 +115,7 @@ let fileName = "";
 let path = "";
 let imageId = "";
 async function onModifyBtn(e) {
+    //수정 버튼 눌렀을 때 미리 아이템 배치하기
     //console.log(e.target.previousElementSibling.children[1].innerText.substr(3));
     imageId = e.target.previousElementSibling.children[1].innerText.substr(3);
     try {
@@ -137,14 +138,12 @@ async function onModifyBtn(e) {
         if (fileImage.files[0] === undefined) {
             fileName = products[0].file.name;
         }
-        console.log(products[0].file);
-        console.log(fileName);
-        console.log(fileImage.files[0]);
     } catch (err) {
         alert(err.message);
     }
 }
 async function onModifyCheckBtn(e) {
+    e.preventDefault();
     try {
         if (!confirm("수정하시겠습니까?")) {
             return;
@@ -160,15 +159,16 @@ async function onModifyCheckBtn(e) {
         form.append("category", JSON.stringify(productCategory.value.split(",")));
         form.set("option", JSON.stringify({ color: productColor.value.split(","), size: productSize.value.split(",") }));
 
+        console.log("dd");
         const response = await fetch(`/api/products/${imageId}`, {
             method: "PATCH",
             headers: { Authorization: `Bearer ${token}` },
             body: form,
-        });
+        }).then((data) => console.log(data));
         console.log(response);
         window.location.href = "/admin/admin.html";
     } catch (err) {
-        alert(err.message);
+        console.log(err);
     }
 }
 modifyCheckBtn.addEventListener("click", onModifyCheckBtn);
@@ -216,7 +216,7 @@ async function getAllOrderData() {
 
         const orders = response.orderlist;
 
-        mainOrderList.appendChild(createOrderList(orders));
+        mainOrderList.appendChild(await createOrderList(orders));
     } catch (err) {
         console.log(err);
     }
@@ -227,7 +227,7 @@ async function findPhoto(id) {
         const data = await fetch(`/api/products?products=${id}`).then((result) => result.json());
 
         const products = data.products;
-        //console.log(products[0].file.path);
+        console.log(products[0].file.path);
         return products[0].file.path;
     } catch (err) {
         console.log(err);
@@ -235,7 +235,7 @@ async function findPhoto(id) {
 }
 
 //${findPhoto(orders[i].products[0]._id)}
-function createOrderList(orders) {
+async function createOrderList(orders) {
     const listWrapper = document.createElement("div");
     listWrapper.setAttribute("class", "list-container");
     console.log(orders[0].products[0].product);
@@ -248,14 +248,14 @@ function createOrderList(orders) {
             </div>
         </div>
         <div class="list-body">
-            <img src="${findPhoto(orders[i].products[0].product)}" />
+            <img src="${await findPhoto(orders[i].products[0].product)}" />
             <div class="ordered-at" style="margin-left:2%">${String(orders[i].orderedAt).substr(0, 10)}</div>
             <select class="select-order" style="margin-left:1%" >
-                <option value="배송 준비" ${orders[i].deliveryStatus == "배송준비" ? "selected" : null}>배송준비</option>
-                <option value="배송 중" ${orders[i].deliveryStatus == "배송중" ? "selected" : null}>배송중</option>
-                <option value="배송 완료" ${orders[i].deliveryStatus == "배송완료" ? "selected" : null}>배송완료</option>
-                <option value="주문 완료" ${orders[i].deliveryStatus == "주문완료" ? "selected" : null}>주문완료</option>
-                <option value="주문 취소" ${orders[i].deliveryStatu == "주문취소" ? "selected" : null}>주문취소</option>
+                <option value="배송준비" ${orders[i].deliveryStatus == "배송준비" ? "selected" : null}>배송준비</option>
+                <option value="배송중" ${orders[i].deliveryStatus == "배송중" ? "selected" : null}>배송중</option>
+                <option value="배송완료" ${orders[i].deliveryStatus == "배송완료" ? "selected" : null}>배송완료</option>
+                <option value="주문완료" ${orders[i].deliveryStatus == "주문완료" ? "selected" : null}>주문완료</option>
+                <option value="주문취소" ${orders[i].deliveryStatu == "주문취소" ? "selected" : null}>주문취소</option>
             </select>
             <div style="padding-left:2%">${Number(orders[i].totalPrice).toLocaleString()}</div>
             <button class="modify-order-btn">수정</button>
