@@ -119,11 +119,11 @@ productRouter.get("/", authenticatePageData, async (req, res, next) => {
 
 
 //상품 생성
-productRouter.post("/",  async (req, res, next) => {
+productRouter.post("/", authenticateUserToken, async (req, res, next) => {
     //console.log("상품을 post합니다!");
     const { name, price, stockedAt, discountRate, category, description, option, file } = req.body;
 
-    const { currentGrade } = req.query;
+    const  currentGrade  = req.user.grade;
     if (currentGrade == "admin"){
         try {
         
@@ -197,8 +197,7 @@ productRouter.patch("/:id", authenticateUserToken, async (req, res, next) => {
 //상품 삭제 -> admin만 가능하게끔
 productRouter.delete("/:id", authenticateUserToken, async (req, res, next) => {
     try {
-        const {currentGrade} = req.query;
-        console.log(currentGrade);
+        const  currentGrade  = req.user.grade;
 
         const id = req.params.id;
         if (id === undefined) {
