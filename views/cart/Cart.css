@@ -110,11 +110,12 @@ input[type='checkbox'] {
 #itemNamePrice {
   display: flex;
   justify-content: space-evenly;
+  align-items: center;
   height: 180px;
-  width: 200px;
-  padding-left: 100px;
+  width: 450px;
+  /* padding-left: 100px; */
   font-size: 30px;
-  flex-direction: column;
+  flex-direction: row;
 }
 
 .itemQuantity {
@@ -142,11 +143,10 @@ input[type='checkbox'] {
 .quantityButtons {
   display: flex;
   height: 180px;
-  width: 150px;
-  padding-top: 120px;
-  padding-left: 50px;
+  width: 100px;
+  /* padding-top: 120px; */
   flex-direction: row;
-  justify-content: flex-end;
+  align-items: center;
 }
 
 .removeButton {

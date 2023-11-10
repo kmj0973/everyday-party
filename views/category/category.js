@@ -2,7 +2,7 @@ import { Header } from "../public/header/header.js";
 
 // import로 헤더 렌더링
 const headerRender = () => {
-  return Header();
+    return Header();
 };
 
 headerRender();
@@ -33,7 +33,7 @@ const cardTemplate = (categoryData) => {
 };
 
 const errorTemplate = () => {
-  return `
+    return `
         <div class="not_found_card">
             <iconify-icon 
                 icon="iconamoon:cloud-no-light" 
@@ -46,24 +46,22 @@ const errorTemplate = () => {
     `;
 };
 
-const categoryList = document.querySelectorAll('.category li a');
-const categoryTitle = document.querySelector('.category_title');
-const categoryBestCardElement = document.querySelector('.best_card_container');
-const categoryCardElement = document.querySelector('.card_container');
-const categoryBestErrorElement = document.querySelector(
-  '.best_error_container'
-);
-const categoryErrorElement = document.querySelector('.card_error_container');
-const cardAmountElement = document.querySelector('.card_amount');
-const selectElement = document.querySelectorAll('.option_list li');
+const categoryList = document.querySelectorAll(".category li a");
+const categoryTitle = document.querySelector(".category_title");
+const categoryBestCardElement = document.querySelector(".best_card_container");
+const categoryCardElement = document.querySelector(".card_container");
+const categoryBestErrorElement = document.querySelector(".best_error_container");
+const categoryErrorElement = document.querySelector(".card_error_container");
+const cardAmountElement = document.querySelector(".card_amount");
+const selectElement = document.querySelectorAll(".option_list li");
 
 // 페이지 로드 시 저장된 카테고리 정보를 렌더링
-document.addEventListener('DOMContentLoaded', () => {
-  const selectedCategory = localStorage.getItem('selectedCategory');
+document.addEventListener("DOMContentLoaded", () => {
+    const selectedCategory = localStorage.getItem("selectedCategory");
 
-  if (selectedCategory) {
-    cardRender(selectedCategory);
-  }
+    if (selectedCategory) {
+        cardRender(selectedCategory);
+    }
 });
 
 // 카테고리 버튼을 클릭했을 때 실행되는 이벤트 함수
@@ -73,27 +71,31 @@ for (let i = 0; i < categoryList.length; i++) {
         const href = categoryList[i].getAttribute("href");
         const newHref = `http://localhost:5000${href}`;
         const url = new URL(newHref.replace(/#/g, "?"));
+        const categoryParams = new URLSearchParams(url.search).get("category");
 
-    cardRender(categoryParams);
-  });
+        // localStorage에 categoryParams값 저장
+        localStorage.setItem("selectedCategory", categoryParams);
+
+        cardRender(categoryParams);
+    });
 }
 
 // 카테고리에 해당하는 상품 렌더링
 const cardRender = async (categoryParams) => {
-  try {
-    // 쿼리 파라미터에 해당 카테고리 id를 보내면
-    // 해당 카테고리의 데이터를 반환해주는 api
-    const response = await fetch(`/api/products?category=${categoryParams}`);
-    const data = await response.json();
+    try {
+        // 쿼리 파라미터에 해당 카테고리 id를 보내면
+        // 해당 카테고리의 데이터를 반환해주는 api
+        const response = await fetch(`/api/products?category=${categoryParams}`);
+        const data = await response.json();
 
-    // 최신순 정렬
-    const latest = [...data.products].sort((a, b) => b.stockedAt - a.stockedAt);
-    // 베스트순 정렬
-    const highSales = [...data.products].sort((a, b) => b.sales - a.sales);
-    // 가격 높은순 정렬
-    const highPrice = [...data.products].sort((a, b) => b.price - a.price);
-    // 가격 낮은순 정렬
-    const rowPrice = [...data.products].sort((a, b) => a.price - b.price);
+        // 최신순 정렬
+        const latest = [...data.products].sort((a, b) => b.stockedAt - a.stockedAt);
+        // 베스트순 정렬
+        const highSales = [...data.products].sort((a, b) => b.sales - a.sales);
+        // 가격 높은순 정렬
+        const highPrice = [...data.products].sort((a, b) => b.price - a.price);
+        // 가격 낮은순 정렬
+        const rowPrice = [...data.products].sort((a, b) => a.price - b.price);
 
         data.products.map((product) => {
             const categoryName = product.category[1].categoryName;
@@ -126,11 +128,9 @@ const cardRender = async (categoryParams) => {
                     });
                 });
             } else {
-              categoryCardElement.innerHTML = rowPrice
-                .map((categoryData) => cardTemplate(categoryData))
-                .join('');
+                categoryCardElement.innerHTML = rowPrice.map((categoryData) => cardTemplate(categoryData)).join("");
             }
-          });
+        });
     } catch (error) {
         if (error.message === "404") {
             alert(`${error.message}에러가 발생했습니다. 다시 시도해 주세요.`);
@@ -138,28 +138,28 @@ const cardRender = async (categoryParams) => {
     }
 };
 
-const label = document.querySelector('.label');
-const options = document.querySelectorAll('.option');
+const label = document.querySelector(".label");
+const options = document.querySelectorAll(".option");
 
 const dropDownFilter = () => {
-  // 클릭한 옵션의 텍스트를 라벨에 넣어주기
-  const handleSelect = (option) => {
-    label.firstElementChild.innerHTML = option.textContent;
-    label.parentNode.classList.remove('active');
-  };
+    // 클릭한 옵션의 텍스트를 라벨에 넣어주기
+    const handleSelect = (option) => {
+        label.firstElementChild.innerHTML = option.textContent;
+        label.parentNode.classList.remove("active");
+    };
 
-  options.forEach((option) => {
-    option.addEventListener('click', () => handleSelect(option));
-  });
+    options.forEach((option) => {
+        option.addEventListener("click", () => handleSelect(option));
+    });
 
-  // 라벨을 클릭했을 때 옵션 목록 열림/닫힘
-  label.addEventListener('click', function () {
-    if (label.parentNode.classList.contains('active')) {
-      label.parentNode.classList.remove('active');
-    } else {
-      label.parentNode.classList.add('active');
-    }
-  });
+    // 라벨을 클릭했을 때 옵션 목록 열림/닫힘
+    label.addEventListener("click", function () {
+        if (label.parentNode.classList.contains("active")) {
+            label.parentNode.classList.remove("active");
+        } else {
+            label.parentNode.classList.add("active");
+        }
+    });
 };
 
 dropDownFilter();
