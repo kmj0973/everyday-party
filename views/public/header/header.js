@@ -46,7 +46,7 @@ export const Header = () => {
                         </a>
                     </li>
                     <li>
-                        <a href="/cart/cart.html">
+                        <a href="/cart">
                             <iconify-icon 
                                 icon="ion:bag" 
                                 style="color: #181619;"
