@@ -42,13 +42,14 @@ orderRouter.post("/", async (req, res, next) => {
     const user = await User.findById({ _id: id });
     const userAddress = user ? user.address : null;
     const userPhone = user ? user.phoneNumber : null;
+    const userName = user ? user.name : null;
 
     //console.log(userAddress); 
     try {
         const newOrder = await OrderService.createOrder({
-            orderedAt,
+            orderedAt : new Date(),
             totalPrice,
-            orderedBy,
+            orderedBy : userName,
             phoneNumber: userPhone,
             address: userAddress,
             products,
