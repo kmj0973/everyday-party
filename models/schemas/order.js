@@ -14,7 +14,7 @@ const productInfoSchema = new Schema({
             type: String,
         },
     },
-    count: {
+    quantity: {
         type: Number,
         required: true,
     },

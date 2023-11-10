@@ -2,11 +2,10 @@ const { Router } = require("express");
 const { Order, ProductInfo, User } = require("../models");
 
 const OrderService = require("../services/orderService");
-const UserService = require("../services/userService");
 
 const orderRouter = Router();
 
-const mongoose = require("mongoose");
+const { authenticateUserToken } = require("../middleware/index");
 
 //주무내역 + 특정 주문 내역
 orderRouter.get("/", async (req, res, next) => {
@@ -18,10 +17,6 @@ orderRouter.get("/", async (req, res, next) => {
             const orderlist = await Order.find({});
             res.status(200).json({ orderlist });
         } else {
-
-            //console.log('부분 조회를 진입하였습니다.')
-
-
             // 특정 아이디로 주문 조회
             const oneOrder = await Order.findOne({ _id: id })//.populate("ProductInfo"); // 아이디를 기준으로 조회
             if (oneOrder) {
@@ -44,7 +39,7 @@ orderRouter.post("/", async (req, res, next) => {
     const id = req.header("id");
     //console.log(id);
     const { orderedAt, totalPrice, orderedBy, phoneNumber, address, products, deliveryStatus } = req.body;
-    const user = await User.findById({_id : id});
+    const user = await User.findById({ _id: id });
     const userAddress = user ? user.address : null;
     const userPhone = user ? user.phoneNumber : null;
 
@@ -54,8 +49,8 @@ orderRouter.post("/", async (req, res, next) => {
             orderedAt,
             totalPrice,
             orderedBy,
-            phoneNumber : userPhone,
-            address : userAddress,
+            phoneNumber: userPhone,
+            address: userAddress,
             products,
             deliveryStatus,
         });
@@ -78,11 +73,20 @@ orderRouter.post("/", async (req, res, next) => {
 //주문 취소 -> 배송상태만 업데이트
 orderRouter.patch("/:id", async (req, res, next) => {
     const { id } = req.params;
+    
+    console.log(req.user);
+
+    if(req.user.grade !== "admin") {
+        const cancel = "주문취소";
+        console.log("dirl;");
+        Order.deliveryStatus = cancel;
+        return Order;
+
+    }
 
     const { changedStatus } = req.body;
     try {
         const cancelledOrder = await OrderService.cancelOrder(id, changedStatus);
-
         res.status(200).json({
             cancelledOrder,
         });
@@ -93,6 +97,10 @@ orderRouter.patch("/:id", async (req, res, next) => {
 
 //주문 삭제 -> 회원탈퇴 후 삭제할 때 사용
 orderRouter.delete("/:id", async (req, res, next) => {
+    if(req.user.grade !== "admin")
+    {
+        return res.status(403).json({ message: "관리자 외에 접근할 수 없습니다." });
+    }
     try {
         const id = req.params.id;
         if (id === undefined) {
