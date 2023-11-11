@@ -1,91 +1,90 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ProductDetail</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR&display=swap');
-    </style> 
-    <link rel="stylesheet" href="ProductDetail.css">
-    <link rel="stylesheet" href="../public/header/header.css">
-    <script type='module' src="./ProductDetail.js"></script>
-</head>
-<body>
-    
-    <div class="container">
-
-    
-    <div class="content-container">
-        <div class="product-top-info-container">
-            <div class="product-top-info-right">
-                <img class='product-img' src="image 28.png" alt="상품이미지">
-            </div>
-            <div class="product-top-info-left">
-                <div class="product-name">할로윈 풍선 3종세트</div>
-                <div class="product-description">할로윈 파티에 사용할 수 있는 풍선 3종세트입니다. 해골, 거미줄, 호박 무늬 총 3가지로 구성되어있습니다. </div>
-                <div class="product-price">3200원</div>
-                <div class="line"></div>
-                <div class='number-container'>
-                    <div class="number-tag">개수</div>
-                    <div class="number-select"><span class="number-btn" id="down">−</span><input id="productNumber" type="number" value="1" /><span class="number-btn" id="up">+</span></div>
-                </div>
-                <div class="option-container">
-                    <div class="option-tag">색상</div>
-                    <select  class="option-select color">
-                        <!-- <option name="option-select" value="first">First Value</option>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>ProductDetail</title>
+        <!-- 폰트 -->
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
+        <!--로고 이름 폰트-->
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Gluten:wght@400;500;600&family=Noto+Sans+KR&display=swap");
+        </style>
+        <!-- 아이콘 -->
+        <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+        <link rel="stylesheet" href="ProductDetail.css" />
+        <link rel="stylesheet" href="../public/header/header.css" />
+        <script type="module" src="./ProductDetail.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="content-container">
+                <div class="product-top-info-container">
+                    <div class="product-top-info-right">
+                        <img class="product-img" src="image 28.png" alt="상품이미지" />
+                    </div>
+                    <div class="product-top-info-left">
+                        <div class="product-name">할로윈 풍선 3종세트</div>
+                        <div class="product-description">할로윈 파티에 사용할 수 있는 풍선 3종세트입니다. 해골, 거미줄, 호박 무늬 총 3가지로 구성되어있습니다.</div>
+                        <div class="product-price">3200원</div>
+                        <div class="line"></div>
+                        <div class="number-container">
+                            <div class="number-tag">개수</div>
+                            <div class="number-select"><span class="number-btn" id="down">−</span><input id="productNumber" type="number" value="1" /><span class="number-btn" id="up">+</span></div>
+                        </div>
+                        <div class="option-container">
+                            <div class="option-tag">색상</div>
+                            <select class="option-select color">
+                                <!-- <option name="option-select" value="first">First Value</option>
                         <option name="option-select" value="second" selected>Second Value</option>
                         <option name="option-select" value="third">Third Value</option> -->
-                    </select>
-                    <div class="option-tag">사이즈</div>
-                    <select  class="option-select size">
-                        <!-- <option name="option-select" value="first">First Value</option>
+                            </select>
+                            <div class="option-tag">사이즈</div>
+                            <select class="option-select size">
+                                <!-- <option name="option-select" value="first">First Value</option>
                         <option name="option-select" value="second" selected>Second Value</option>
                         <option name="option-select" value="third">Third Value</option> -->
-                    </select>
+                            </select>
+                        </div>
+                        <div class="btn-container">
+                            <div class="btn cart">장바구니</div>
+                            <div class="btn buy">구매하기</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="btn-container">
-                    <div class="btn cart">장바구니</div>
-                    <div class="btn buy">구매하기</div>
+                <div class="product-bottom-info-container">
+                    <div class="tab-container">
+                        <ul class="tab-list">
+                            <li class="active" id="productDetail">
+                                <a href="#tab1">상품 상세정보</a>
+                            </li>
+                            <li id="productReview">
+                                <a href="#tab2">리뷰</a>
+                            </li>
+                            <li>
+                                <a href="#tab3">상품 상세정보</a>
+                            </li>
+                            <li>
+                                <a href="#tab4">상품 상세정보</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content-container">
+                            <div id="tab1" class="tab active">
+                                <div>첫번째 탭 내용</div>
+                            </div>
+                            <div id="tab2" class="tab">
+                                <div>두번째 탭 내용</div>
+                            </div>
+                            <div id="tab3" class="tab">
+                                <div>세번째 탭 내용</div>
+                            </div>
+                            <div id="tab4" class="tab">
+                                <div>네번째 탭 내용</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
         </div>
-        <div class="product-bottom-info-container">
-            <div class="tab-container">
-                <ul class="tab-list">
-                    <li class="active" id="productDetail">
-                        <a href="#tab1">상품 상세정보</a>
-                    </li>
-                    <li id="productReview">
-                        <a href="#tab2">리뷰</a>
-                    </li>
-                    <li>
-                        <a href="#tab3">상품 상세정보</a>
-                    </li>
-                    <li>
-                        <a href="#tab4">상품 상세정보</a>
-                    </li>
-                </ul>
-                <div class="tab-content-container">
-                    <div id="tab1" class="tab active">
-                        <div>첫번째 탭 내용</div>
-                        
-                    </div>
-                    <div id="tab2" class="tab">
-                        <div>두번째 탭 내용</div>
-                    </div>
-                    <div id="tab3" class="tab">
-                        <div>세번째 탭 내용</div>
-                    </div>
-                    <div id="tab4" class="tab">
-                        <div>네번째 탭 내용</div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-</body>
+    </body>
 </html>

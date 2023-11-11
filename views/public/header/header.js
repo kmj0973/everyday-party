@@ -34,11 +34,12 @@ export const Header = () => {
                     <img class="logo" src="../public/image/logo.png" alt="로고">
                 </a>
                 <ul class="user_menu">
+                    
                 ${
-                    token == null || !userToken
+                    !token
                         ? `<li><a href="/login/login.html">로그인</a></li>
                 <li><a href="/auth/auth.html">회원가입</a></li>`
-                        : `<li>${userName} 님</li>`
+                        : `<li class="logout-btn" style="margin-top:5px"><iconify-icon icon="ic:baseline-logout" width="22" height="22"></iconify-icon></li><li>${userName} 님</li>`
                 }
                     <li style="padding-top:4px">
                         ${token ? `<a href="${admin != `admin` ? `/myPage/myPage.html` : `/admin/admin.html`}">` : `<a href="#">`}
@@ -81,4 +82,27 @@ export const Header = () => {
     `;
 
     document.body.prepend(headerElement);
+
+    if (token) {
+        const logoutBtn = document.querySelector(".logout-btn");
+
+        logoutBtn.addEventListener("click", logout);
+    }
+    async function logout(e) {
+        try {
+            if (!confirm("로그아웃 하시겠습니까?")) {
+                return;
+            }
+            const response = await fetch("/api/auth/logout", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            localStorage.removeItem("access-token");
+            window.location.href = "/main/main.html";
+            console.log(response);
+        } catch (err) {
+            console.log(err);
+        }
+    }
 };
