@@ -77,14 +77,20 @@ function updateCart() {
         // 상품명
         const itemName = document.createElement("p");
         itemName.setAttribute("class", "itemName");
-        itemName.textContent = item.name;
+        itemName.textContent = "상품:" + item.name;
         itemDiv.appendChild(itemName);
 
         // 상품옵션
         const itemOption = document.createElement("p");
         itemOption.setAttribute("class", "itemOption");
-        itemOption.textContent = "/ " + "옵션:" + item.option + " /";
+        itemOption.textContent = "옵션:" + item.option;
         itemDiv.appendChild(itemOption);
+
+        //상품명+상품옵션+상품가격
+        const itemNamePrice = document.createElement("div");
+        itemNamePrice.setAttribute("id", "itemNamePrice");
+        itemNamePrice.append(itemName, itemOption);
+        itemDiv.appendChild(itemNamePrice);
 
         // 상품가격
         const itemPrice = document.createElement("p");
@@ -92,12 +98,6 @@ function updateCart() {
         itemPrice.textContent = item.price.toLocaleString() + "원";
         itemDiv.appendChild(itemPrice);
         console.log(typeof itemPrice);
-
-        //상품명+상품옵션+상품가격
-        const itemNamePrice = document.createElement("div");
-        itemNamePrice.setAttribute("id", "itemNamePrice");
-        itemNamePrice.append(itemName, itemOption, itemPrice);
-        itemDiv.appendChild(itemNamePrice);
 
         // 수량 감소 버튼
         const minusButton = document.createElement("button");

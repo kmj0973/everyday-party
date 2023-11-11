@@ -34,7 +34,7 @@ body {
 .itemDiv {
     display: flex;
     justify-content: space-evenly;
-    width: 95%;
+    width: 97%;
     height: 180px;
     margin: 10px;
 
@@ -55,7 +55,7 @@ body {
 .order_container {
     margin-top: 50px;
     display: flex;
-    width: 1200px;
+    width: 1250px;
     height: 1000px;
     justify-content: space-evenly;
     align-content: center;
@@ -116,20 +116,20 @@ img {
     display: flex;
     margin-left: 20px;
     margin-right: 20px;
-    width: 135px;
-    height: 135px;
+    width: 120px;
+    height: 120px;
 }
 
 /* 상품명가격집합 */
 #itemNamePrice {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
     height: 180px;
-    width: 450px;
+    width: 300px;
     /* padding-left: 100px; */
-    font-size: 25px;
-    flex-direction: row;
+    font-size: 20px;
+    flex-direction: column;
 }
 
 .itemQuantity {
@@ -162,7 +162,8 @@ img {
     /* padding-top: 120px; */
     flex-direction: row;
     align-items: center;
-    margin-right: 20px;
+    margin-right: 10px;
+    margin-left: 10px;
 }
 
 .removeButton {
@@ -187,7 +188,7 @@ img {
 /* TODO: border삭제 */
 .purchase_container {
     display: flex;
-    width: 40%;
+    width: 35%;
     flex-direction: column;
     text-align: center;
     font-size: 12.5px;
