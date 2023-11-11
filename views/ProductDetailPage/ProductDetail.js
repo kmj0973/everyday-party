@@ -134,7 +134,7 @@ function addCartItem(selectedColorOption, selectedSizeOption, selectedQuantity) 
     //원래방식대로라면 prooductInfo에는 id, option, quantity만 넣는방식 추천
     const productInfo = {
         id: productId,
-        name: productName.innerHTML,
+        name: productName.innerText,
         price: productPrice.innerHTML,
         quantity: selectedQuantity,
         option: [selectedColorOption, selectedSizeOption],
