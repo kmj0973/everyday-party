@@ -1,10 +1,9 @@
 const token = localStorage.getItem("access-token");
 let admin = "";
 let userName = "";
-if (token) {
-    getUersInfo();
-} //유저 정보 받아오기
-async function getUersInfo() {
+
+const userToken = getUesrInfo(); //유저 정보 받아오기
+async function getUesrInfo() {
     try {
         const data = await fetch("/api/users/me", {
             headers: {
