@@ -32,7 +32,7 @@ export const Header = () => {
                 <a href="/main/main.html"><img class="logo" src="../public/image/logo.png" alt="로고"></a>
                 <ul class="user_menu">
                 ${
-                    token == null
+                    !token
                         ? `<li><a href="/login/login.html">로그인</a></li>
                 <li><a href="/auth/auth.html">회원가입</a></li>`
                         : `<li>${userName} 님</li>`

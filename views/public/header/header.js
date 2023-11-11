@@ -11,7 +11,7 @@ async function getUesrInfo() {
             },
         });
         const userData = await data.json();
-
+        console.log(userData);
         if (data.status == 401 || data.status == 500) {
             localStorage.removeItem("access-token");
             throw new Error(userData.message);
@@ -19,8 +19,6 @@ async function getUesrInfo() {
             admin = userData.user.grade;
             userName = userData.user.name;
         }
-
-        return userData;
     } catch (err) {
         console.log(err.message);
     }
@@ -43,7 +41,7 @@ export const Header = () => {
                         : `<li class="logout-btn" style="margin-top:5px"><iconify-icon icon="ic:baseline-logout" width="22" height="22"></iconify-icon></li><li>${userName} 님</li>`
                 }
                     <li style="padding-top:4px">
-                        ${token ? `<a href="${admin != `admin` ? `/myPage/myPage.html` : `/admin/admin.html`}">` : `<a href="#">`}
+                        ${token ? `<a href="${admin != `admin` ? `/myPage` : `/admin/admin.html`}">` : `<a href="#">`}
                         <iconify-icon icon="ph:user-fill" style="color: #181619;" width="22"></iconify-icon>
                         </a>
                     </li>
@@ -101,7 +99,6 @@ export const Header = () => {
             });
             localStorage.removeItem("access-token");
             window.location.href = "/main/main.html";
-            console.log(response);
         } catch (err) {
             console.log(err);
         }
