@@ -199,6 +199,8 @@ function sumPrice() {
     return calculateTotalPrice() === 0 ? 0 : calculateTotalPrice() + 3000;
 }
 
+console.log(sumPrice());
+
 //3. 상품 구매를 나타내는 부분
 //전체상품 구매 함수
 async function allOrder() {
@@ -232,6 +234,8 @@ async function allOrder() {
                 ]);
         }
 
+        console.log(orderObj);
+
         if (cartItems.length >= 1) {
             if (token !== null && userData.user._id !== null) {
                 fetch("/api/orders", {
@@ -243,11 +247,11 @@ async function allOrder() {
                     },
                     body: JSON.stringify(orderObj),
                 }).then((response) => {
-                    console.log(response.data);
+                    console.log(response);
                     localStorage.setItem("purchase_item", JSON.stringify(orderObj));
                     console.log("여기인가?");
                     alert("주문이 완료되었습니다.");
-                    // location.href = "/order/orderDetail.html";
+                    location.href = "/order/orderDetail.html";
                 });
             }
         } else if (cartItems.length < 1) {
@@ -334,7 +338,7 @@ selectedOrderButton.addEventListener("click", selectedOrder);
 // 계속 쇼핑하기 이벤트 리스너
 
 function mainpage() {
-    window.location.href = "http://localhost:5000/main/main.html";
+    window.location.href = `${window.location.origin}/main/main.html`;
 }
 const keepShoppingButton = document.querySelector(".keep_shopping_button");
 keepShoppingButton.addEventListener("click", mainpage);
