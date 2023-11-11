@@ -88,8 +88,6 @@ const cardRender = async (categoryParams) => {
     const response = await fetch(`/api/products?category=${categoryParams}`);
     const data = await response.json();
 
-    console.log(data);
-
     // 최신순 정렬
     const latest = [...data.products].sort((a, b) => b.stockedAt - a.stockedAt);
     // 베스트순 정렬
