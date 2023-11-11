@@ -1,30 +1,8 @@
-const token = localStorage.getItem("access-token");
-let admin = "";
-let userName = "";
-
-const userToken = getUesrInfo(); //유저 정보 받아오기
-async function getUesrInfo() {
-    try {
-        const data = await fetch("/api/users/me", {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-        const userData = await data.json();
-        console.log(userData);
-        if (data.status == 401 || data.status == 500) {
-            localStorage.removeItem("access-token");
-            throw new Error(userData.message);
-        } else {
-            admin = userData.user.grade;
-            userName = userData.user.name;
-        }
-    } catch (err) {
-        console.log(err.message);
-    }
-}
-
 export const Header = () => {
+    const token = localStorage.getItem("access-token");
+    const grade = localStorage.getItem("grade");
+    const userName = localStorage.getItem("name");
+
     const headerElement = document.createElement("header");
     headerElement.innerHTML = `
         <div class="top_menu_wrap">
@@ -38,10 +16,12 @@ export const Header = () => {
                     !token
                         ? `<li><a href="/login/login.html">로그인</a></li>
                 <li><a href="/auth/auth.html">회원가입</a></li>`
-                        : `<li class="logout-btn" style="margin-top:5px"><iconify-icon icon="ic:baseline-logout" width="22" height="22"></iconify-icon></li><li>${userName} 님</li>`
+                        : `<li class="logout-btn" style="margin-top:5px"><iconify-icon icon="ic:baseline-logout" width="22" height="22"></iconify-icon></li><li>${
+                              userName ? userName : "사용자"
+                          } 님</li>`
                 }
                     <li style="padding-top:4px">
-                        ${token ? `<a href="${admin != `admin` ? `/myPage` : `/admin/admin.html`}">` : `<a href="#">`}
+                        ${token ? `<a href="${grade != `admin` ? `/myPage` : `/admin/admin.html`}">` : `<a href="#">`}
                         <iconify-icon icon="ph:user-fill" style="color: #181619;" width="22"></iconify-icon>
                         </a>
                     </li>

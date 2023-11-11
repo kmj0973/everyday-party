@@ -10,7 +10,6 @@ const inputUserId = document.querySelector("#userId");
 const inputPassword = document.querySelector("#password");
 const loginBtn = document.querySelector("#login-btn");
 const loginAlert = document.querySelector(".login-alert");
-
 async function onClickLoginButton(e) {
     e.preventDefault();
 
@@ -37,14 +36,12 @@ async function onClickLoginButton(e) {
         const userTokens = await data.json().then((result) => result.token); // 토큰 생성
         // 로컬 스토리지에 "access-token"키 값에 토큰 저장
         localStorage.setItem("access-token", userTokens);
-
         window.location.href = "/main/main.html"; // 로그인 성공 시 메인페이지로 이동
     } catch (err) {
         loginAlert.classList.add("show"); // 일치하지 않는다는 경고문 보여주기
         console.log(err.message);
     }
 }
-
 // inputUserId.addEventListener("focus", () => {
 //     loginAlert.classList.remove("show"); // input 클릭시 경고문 사라짐
 // });

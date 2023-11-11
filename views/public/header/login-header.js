@@ -1,28 +1,28 @@
 const token = localStorage.getItem("access-token");
 let userName = "";
-const userToken = await getUesrInfo(); //유저 정보 받아오기
+// const userToken = await getUesrInfo(); //유저 정보 받아오기
 
-async function getUesrInfo() {
-    try {
-        const data = await fetch("/api/users/me", {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
+// async function getUesrInfo() {
+//     try {
+//         const data = await fetch("/api/users/me", {
+//             headers: {
+//                 Authorization: `Bearer ${token}`,
+//             },
+//         });
 
-        const userData = await data.json();
+//         const userData = await data.json();
 
-        if (data.status == 401 || data.status || 500) {
-            localStorage.removeItem("access-token");
-            throw new Error(userData.message);
-        } else {
-            userName = userToken.user.name;
-        }
-        return userData;
-    } catch (err) {
-        console.log(err);
-    }
-}
+//         if (data.status == 401 || data.status || 500) {
+//             localStorage.removeItem("access-token");
+//             throw new Error(userData.message);
+//         } else {
+//             userName = userToken.user.name;
+//         }
+//         return userData;
+//     } catch (err) {
+//         console.log(err);
+//     }
+// }
 
 export const Header = () => {
     const headerElement = document.createElement("header");

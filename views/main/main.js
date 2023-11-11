@@ -62,7 +62,7 @@ async function getReviewData() {
     try {
         const data = await fetch(`/api/reviews`);
         const reviews = await data.json().then((result) => result.reviews);
-        console.log(reviews);
+
         reviewCardContainer.appendChild(createReviewCard(reviews));
     } catch (err) {
         console.log(err);
