@@ -29,6 +29,7 @@ userRouter.put("/me", authenticateUserToken, authenticateUserData, async (req, r
     }
 
     const { userId, password, email, name, address, phone, birthday } = req.body;
+
     const userInput = {
         userId,
         password,
@@ -40,7 +41,9 @@ userRouter.put("/me", authenticateUserToken, authenticateUserData, async (req, r
     };
 
     const validInfoOfUserInput = validDataUtil.processDataWithPut(user, userInput);
-    validInfoOfUserInput.password = await passwordUtil.hashPassword(validInfoOfUserInput.password);
+    if(password !== undefined && password !== null){
+        validInfoOfUserInput.password = await passwordUtil.hashPassword(validInfoOfUserInput.password);
+    }
 
     const updatedUser = await userService.updateUser(user.userId, validInfoOfUserInput);
 

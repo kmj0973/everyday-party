@@ -240,7 +240,7 @@ async function createOrderList(orders) {
                 <option value="배송중" ${orders[i].deliveryStatus == "배송중" ? "selected" : null}>배송중</option>
                 <option value="배송완료" ${orders[i].deliveryStatus == "배송완료" ? "selected" : null}>배송완료</option>
                 <option value="주문완료" ${orders[i].deliveryStatus == "주문완료" ? "selected" : null}>주문완료</option>
-                <option value="주문취소" ${orders[i].deliveryStatu == "주문취소" ? "selected" : null}>주문취소</option>
+                <option value="주문취소" ${orders[i].deliveryStatus == "주문취소" ? "selected" : null}>주문취소</option>
             </select>
             <div style="padding-left:2%">${Number(orders[i].totalPrice).toLocaleString()}</div>
             <button class="modify-order-btn">수정</button>

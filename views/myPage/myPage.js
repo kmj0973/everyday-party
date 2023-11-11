@@ -31,7 +31,7 @@ async function pageRender() {
                 profileUserName.innerHTML = userData.user.name;
                 profileUserID.innerHTML = userData.user.userId;
                 //주문내역 뿌려주기
-                getOrderList(userData.user.name); //인자로 사용자 이름을 보내주는 방식 getOrderList(userData.user.name)
+                getOrderList(userData.user.userId); //인자로 사용자 이름을 보내주는 방식 getOrderList(userData.user.name)
             })
             .catch((error) => {
                 alert("유저 정보를 가져오지 못함");
@@ -54,14 +54,14 @@ async function getUserInfo() {
 }
 
 //3. 해당 사용자의 구매 목록 가져오기
-async function getOrderList(userName) {
+async function getOrderList(userId) {
     const ProductInfoBox = document.querySelector(".product-list-container");
 
     try {
         const data = await fetch("/api/orders");
         const orderList = await data.json().then((res) => res.orderlist);
         //주문 목록에서 구매자를 기준으로 필터링, 빈 배열일경우를 대비하여 OPTIONAL CHAINING 사용
-        const userOrders = orderList?.filter(({ orderedBy }) => orderedBy === userName);
+        const userOrders = orderList?.filter(({ orderedBy }) => orderedBy === userId);
         ProductInfoBox.appendChild(await createProductInfo(userOrders));
     } catch (error) {
         alert("주문 목록을 불러올 수 없습니다.");
@@ -83,7 +83,7 @@ async function createProductInfo(orderInfo) {
         const productDataArray = await Promise.all(
             orderInfo.map(async (order) => {
                 try {
-                    const productData = await getProductInfo(order.products[0]._id);
+                    const productData = await getProductInfo(order.products[0].product);
                     return productData.products[0];
                 } catch (error) {
                     throw new Error("상품데이터 반환 불가");
@@ -92,6 +92,7 @@ async function createProductInfo(orderInfo) {
         );
 
         productDataArray.forEach((productData, i) => {
+
             const orderContainer = document.createElement("div");
             orderContainer.setAttribute("class", "product-info-container");
 

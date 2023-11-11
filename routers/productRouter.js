@@ -246,6 +246,7 @@ productRouter.patch("/:id", authenticateUserToken, upload.single("product_name")
 //상품 삭제 -> admin만 가능하게끔
 productRouter.delete("/:id", authenticateUserToken, async (req, res, next) => {
     try {
+        
         const currentGrade = req.user.grade;
         const { id } = req.params;
 

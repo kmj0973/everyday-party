@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const fs = require('fs');
 
 const { Product, Option, Category, File } = require("../models/index");
 
@@ -367,17 +368,21 @@ class ProductService {
         try {
             const objectId = new mongoose.Types.ObjectId(id);
 
-            const deleteProduct = await Product.deleteOne({ _id: objectId }).catch((error) => {
+            const deleteProduct = await Product.findOneAndDelete({ _id: objectId }).catch((error) => {
                 const newError = new Error("물품 데이터를 삭제하던 중 오류를 발생했습니다.");
                 newError.status = 500;
                 throw newError;
             });
 
-            if (deleteProduct.deletedCount !== 0) {
+            if (deleteProduct) {
+                if(deleteProduct.file.path !== null && deleteProduct.file.path !== undefined){
+                    fs.unlink(`.${deleteProduct.file.path}`, (error) => {
+                        console.log(error);
+                    });
+                }
                 return {
                     success: true,
                     message: "제품이 성공적으로 삭제되었습니다.",
-                    data: deleteProduct,
                 };
             } else {
                 return {
