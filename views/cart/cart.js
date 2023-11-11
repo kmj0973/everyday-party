@@ -10,7 +10,6 @@ headerRender();
 // 로컬스토리지에서 상품 데이터 받아오기
 const cartData = localStorage.getItem("cart");
 const token = localStorage.getItem("access-token");
-console.log(cartData);
 
 // 1. 장바구니에 담겨온 상품이 표현되는 부분
 // id값을 기준으로 상품이 담겨오는 함수
@@ -19,18 +18,15 @@ const newCartItems = [];
 
 if (cartItems !== null) {
     for (let i = 0; i < cartItems.length; i++) {
-        console.log(i, newCartItems, cartItems);
         const productInCartIndex = newCartItems.findIndex((item) => item.id === cartItems[i].id);
         if (productInCartIndex !== -1) {
             newCartItems[productInCartIndex].quantity = parseInt(newCartItems[productInCartIndex].quantity) + parseInt(cartItems[i].quantity); // 해당제품 수량만 증가
-            console.log(newCartItems[productInCartIndex].quantity);
         } else {
             newCartItems.push({ id: cartItems[i].id, name: cartItems[i].name, price: cartItems[i].price, quantity: cartItems[i].quantity, option: cartItems[i].option, imgsrc: cartItems[i].imgsrc });
         }
     }
 }
 
-console.log(newCartItems);
 localStorage.setItem("cart", JSON.stringify(newCartItems));
 
 // JSON 문자열을 객체, 배열로 변환 (로컬스토리지)
@@ -97,7 +93,6 @@ function updateCart() {
         itemPrice.setAttribute("class", "itemPrice");
         itemPrice.textContent = item.price.toLocaleString() + "원";
         itemDiv.appendChild(itemPrice);
-        console.log(typeof itemPrice);
 
         // 수량 감소 버튼
         const minusButton = document.createElement("button");
@@ -110,7 +105,6 @@ function updateCart() {
                 //총 상품금액을 뿌려주는 함수 호출
                 calculateTotalPrice();
                 renderTotal();
-                console.log(cartItems);
             }
         };
         itemDiv.appendChild(minusButton);
@@ -199,8 +193,6 @@ function sumPrice() {
     return calculateTotalPrice() === 0 ? 0 : calculateTotalPrice() + 3000;
 }
 
-console.log(sumPrice());
-
 //3. 상품 구매를 나타내는 부분
 //전체상품 구매 함수
 async function allOrder() {
@@ -234,8 +226,6 @@ async function allOrder() {
                 ]);
         }
 
-        console.log(orderObj);
-
         if (cartItems.length >= 1) {
             if (token !== null && userData.user._id !== null) {
                 fetch("/api/orders", {
@@ -247,9 +237,7 @@ async function allOrder() {
                     },
                     body: JSON.stringify(orderObj),
                 }).then((response) => {
-                    console.log(response);
                     localStorage.setItem("purchase_item", JSON.stringify(orderObj));
-                    console.log("여기인가?");
                     alert("주문이 완료되었습니다.");
                     location.href = "/order/orderDetail.html";
                 });
@@ -273,9 +261,7 @@ function removeAllItems() {
     window.localStorage.removeItem("cart"); // 로컬스토리지에서도 삭제될 수 있도록
 
     calculateTotalPrice();
-    console.log(calculateTotalPrice());
     calculateShippingFee();
-    console.log(calculateShippingFee());
     updateCart();
     location.reload();
 }
@@ -292,7 +278,6 @@ function removeCheckedItems() {
     const itemsToRemove = [];
 
     let items = JSON.parse(localStorage.getItem("cart"));
-    console.log(items);
     checkboxes.forEach((checkbox, index) => {
         if (checkbox.checked) {
             itemsToRemove.push(cartItems[index].id);
@@ -302,7 +287,6 @@ function removeCheckedItems() {
     itemsToRemove.forEach((id) => {
         removeFromCart(id);
         items = items.filter((data) => data.id !== id);
-        console.log(items);
     });
     localStorage.setItem("cart", JSON.stringify(items));
     location.reload();
