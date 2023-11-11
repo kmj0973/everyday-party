@@ -25,7 +25,7 @@ if (cartItems !== null) {
             newCartItems[productInCartIndex].quantity = parseInt(newCartItems[productInCartIndex].quantity) + parseInt(cartItems[i].quantity); // 해당제품 수량만 증가
             console.log(newCartItems[productInCartIndex].quantity);
         } else {
-            newCartItems.push({ id: cartItems[i].id, name: cartItems[i].name, price: cartItems[i].price, quantity: cartItems[i].quantity, option: cartItems[i].option });
+            newCartItems.push({ id: cartItems[i].id, name: cartItems[i].name, price: cartItems[i].price, quantity: cartItems[i].quantity, option: cartItems[i].option, imgsrc: cartItems[i].imgsrc });
         }
     }
 }
@@ -71,7 +71,7 @@ function updateCart() {
 
         // 썸네일 이미지
         const imageBox = document.createElement("img");
-        imageBox.setAttribute("src", "item.url");
+        imageBox.setAttribute("src", item.imgsrc);
         itemDiv.appendChild(imageBox);
 
         // 상품명
