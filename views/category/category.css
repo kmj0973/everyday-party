@@ -42,6 +42,7 @@ button {
 .select {
     position: relative;
     width: 112px;
+    z-index: 20;
 }
 
 .select .label {
@@ -74,6 +75,8 @@ button {
 .select .option_list .option {
     padding: 6px;
     text-align: center;
+    background-color: #fff;
+    cursor: pointer;
 }
 
 .select .option_list .option:hover {
@@ -107,7 +110,6 @@ button {
     width: 285px;
     height: 320px;
     transition: all .6s;
-    z-index: 10;
 }
 
 .card_img:hover {
