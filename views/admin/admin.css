@@ -156,9 +156,14 @@ section {
     height: 100%;
     overflow-y: auto;
 }
+.img-part {
+    display: flex;
+    justify-content: start;
+    align-items: start;
+}
 .product-details-page img {
-    width: 200px;
-    height: 200px;
+    width: 100px;
+    height: 100px;
 }
 .product-details-page input {
     width: 100%;
@@ -190,7 +195,7 @@ section {
 /*============Footer============*/
 .footer-logo {
     margin-top: 80px;
-    height: 120px;
+    height: 80px;
     display: flex;
     justify-content: center;
     align-items: center;

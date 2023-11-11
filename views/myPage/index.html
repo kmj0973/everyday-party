@@ -1,67 +1,69 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Page</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR&display=swap');
-    </style> 
-    <link rel="stylesheet" href="myPage.css">
-    <link rel="stylesheet" href="../public/header/header.css">
-    <script type='module' src="./myPage.js"></script>
-</head>
-<body>
-    <div class="contents-container">
-    <div class="container">
-        <div class="title">마이페이지</div>
-        <div class="header-container">
-            <div class="user-profile">
-                <div class="profile-img-container">
-                    <img class='profile-img' src="/public/image/user.png" alt="이미지">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>My Page</title>
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Gluten:wght@400;500;600&family=Noto+Sans+KR&display=swap");
+        </style>
+        <!-- iconify -->
+        <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+        <link rel="stylesheet" href="myPage.css" />
+        <link rel="stylesheet" href="../public/header/header.css" />
+        <script type="module" src="./myPage.js"></script>
+    </head>
+    <body>
+        <div class="contents-container">
+            <div class="container">
+                <div class="title">마이페이지</div>
+                <div class="header-container">
+                    <div class="user-profile">
+                        <div class="profile-img-container">
+                            <img class="profile-img" src="/public/image/user.png" alt="이미지" />
+                        </div>
+                        <div class="profile-text-container">
+                            <div class="profile-userName">사용자님</div>
+                            <div class="profile-userID">user id</div>
+                        </div>
+                    </div>
+                    <div class="order-info-container">
+                        <div class="order-info-box">
+                            <div>주문접수</div>
+                            <div>0건</div>
+                        </div>
+                        <div class="order-info-box">
+                            <div>배송준비중</div>
+                            <div>0건</div>
+                        </div>
+                        <div class="order-info-box">
+                            <div>배송중</div>
+                            <div>0건</div>
+                        </div>
+                        <div class="order-info-box">
+                            <div>배송완료</div>
+                            <div>0건</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="profile-text-container">
-                    <div class="profile-userName">사용자님</div>
-                    <div class="profile-userID">user id</div>
-                </div>
-            </div>
-            <div class="order-info-container">
-                <div class="order-info-box">
-                    <div>주문접수</div>
-                    <div>0건</div>
-                </div>
-                <div class="order-info-box">
-                    <div>배송준비중</div>
-                    <div>0건</div>
-                </div>
-                <div class="order-info-box">
-                    <div>배송중</div>
-                    <div>0건</div>
-                </div>
-                <div class="order-info-box">
-                    <div>배송완료</div>
-                    <div>0건</div>
-                </div>
-            </div>
-        </div>
-        <div class="main-content-container">
-            <ul class="menu-tab-container">
-                <li>
-                    <a href="#order-tracking">주문/배송 조회</a>
-                </li>
-                <li>
-                    <a href="#update-profile">내 정보 수정</a>
-                </li>
-            </ul>
-            <!-- 주분배송 조회 탭 -->
-            <div class="tab-content-container">
-                <div id="order-tracking" class="tab active">
-                    <div class="product-list-container">
-                        <div class="product-list-title">주문상품 목록</div>
-                        
-                        <div class="product-info-container">
-                            주문한 상품이 없습니다.
-                            <!-- <div class="total-num">총 3건</div>
+                <div class="main-content-container">
+                    <ul class="menu-tab-container">
+                        <li>
+                            <a href="#order-tracking">주문/배송 조회</a>
+                        </li>
+                        <li>
+                            <a href="#update-profile">내 정보 수정</a>
+                        </li>
+                    </ul>
+                    <!-- 주분배송 조회 탭 -->
+                    <div class="tab-content-container">
+                        <div id="order-tracking" class="tab active">
+                            <div class="product-list-container">
+                                <div class="product-list-title">주문상품 목록</div>
+
+                                <div class="product-info-container">
+                                    주문한 상품이 없습니다.
+                                    <!-- <div class="total-num">총 3건</div>
                             <div class="order-date">주문일자 2023 01 02</div>
                             <div class="product-info">
                                 <img class='product-img' src='../public/image/favicon.png'alt="이미지" >
@@ -75,57 +77,54 @@
                             <div class="show-all">
                                 <div>총 49,500원 주문 전체보기</div>
                             </div> -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 내 정보 수정 탭 -->
+                        <div id="update-profile" class="tab">
+                            <div class="user-info-container">
+                                <div class="user-info-title">내 정보 수정</div>
+                                <div class="line"></div>
+                                <div class="user-info-container">
+                                    <div class="info-box id-box">
+                                        <div class="info-title">아이디</div>
+                                        <div class="vertical-line"></div>
+                                        <div class="info-content userID">castlegold22</div>
+                                    </div>
+                                    <div class="thin-line"></div>
+                                    <div class="info-box name-box">
+                                        <div class="info-title">이름</div>
+                                        <div class="vertical-line"></div>
+                                        <div class="info-content userName">윤혜원</div>
+                                    </div>
+                                    <div class="thin-line"></div>
+                                    <div class="info-box phone-box">
+                                        <div class="info-title">휴대폰 번호</div>
+                                        <div class="vertical-line"></div>
+                                        <div class="info-content userNumber">010-9815-2327</div>
+                                    </div>
+                                    <div class="thin-line"></div>
+                                    <div class="info-box password-box">
+                                        <div class="info-title">비밀번호</div>
+                                        <div class="vertical-line"></div>
+                                        <div class="info-content userPw">비밀번호를 바꾸려면 정보수정 버튼을 클릭하세요</div>
+                                    </div>
+                                    <div class="thin-line"></div>
+                                    <div class="info-box address-box">
+                                        <div class="info-title">배송지</div>
+                                        <div class="vertical-line"></div>
+                                        <div class="info-content userAdress">경기도 수원시 월드컵로 204</div>
+                                    </div>
+                                    <div class="line"></div>
+                                </div>
+                            </div>
+                            <div class="modify-btn-container">
+                                <button class="modify-btn">정보 수정하기</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <!-- 내 정보 수정 탭 -->
-                <div id="update-profile" class="tab">
-                    <div class="user-info-container">
-                        <div class="user-info-title">내 정보 수정</div>
-                        <div class="line"> </div>
-                        <div class="user-info-container">
-                            <div class="info-box id-box">
-                                <div class="info-title">아이디</div>
-                                <div class="vertical-line"></div>
-                                <div class="info-content userID">castlegold22</div>
-                            </div>
-                            <div class="thin-line"></div>
-                            <div class="info-box name-box">
-                                <div class="info-title">이름</div>
-                                <div class="vertical-line"></div>
-                                <div class="info-content userName">윤혜원</div>
-                            </div>
-                            <div class="thin-line"></div>
-                            <div class="info-box phone-box">
-                                <div class="info-title">휴대폰 번호</div>
-                                <div class="vertical-line"></div>
-                                <div class="info-content userNumber">010-9815-2327</div>
-                            </div>
-                            <div class="thin-line"></div>
-                            <div class="info-box password-box">
-                                <div class="info-title">비밀번호</div>
-                                <div class="vertical-line"></div>
-                                <div class="info-content userPw">비밀번호를 바꾸려면 정보수정 버튼을 클릭하세요</div>
-                            </div>
-                            <div class="thin-line"></div>
-                            <div class="info-box address-box">
-                                <div class="info-title">배송지</div>
-                                <div class="vertical-line"></div>
-                                <div class="info-content userAdress">경기도 수원시 월드컵로 204</div>
-                            </div>
-                            <div class="line"></div>
-
-                        </div>
-                    </div>
-                    <div class="modify-btn-container">
-                        <button class="modify-btn">정보 수정하기</button>
-                    </div>
-
                 </div>
             </div>
-
         </div>
-    </div>
-</div>
-</body>
+    </body>
 </html>

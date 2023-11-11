@@ -11,6 +11,7 @@ const token = localStorage.getItem("access-token");
 //상품 정보 관련
 const productName = document.querySelector("#name");
 const productPrice = document.querySelector("#price");
+const productDecrip = document.querySelector("#description");
 const productCategory = document.querySelector("#category");
 const productColor = document.querySelector("#color");
 const productSize = document.querySelector("#size");
@@ -27,7 +28,6 @@ async function getAllProductData() {
         const data = await fetch("/api/products").then((result) => result.json());
 
         const products = await data.products;
-        console.log(products);
         // console.log(products);
         mainList.appendChild(createProductList(products));
     } catch (err) {
@@ -91,6 +91,7 @@ async function onAddBtn(e) {
         form.append("product_name", fileObject);
         form.append("name", productName.value);
         form.append("price", productPrice.value);
+        form.append("description", productDecrip.value);
         form.append("category", JSON.stringify(productCategory.value.split(",")));
         form.set("option", JSON.stringify({ color: productColor.value.split(","), size: productSize.value.split(",") }));
 
@@ -130,6 +131,7 @@ async function onModifyBtn(e) {
         //console.log(products[0].file.name);
         productName.value = products[0].name;
         productPrice.value = products[0].price;
+        productDecrip.value = products[0].description;
         productCategory.value = catelist.join(",");
         productColor.value = products[0].option.color.join(",");
         productSize.value = products[0].option.size.join(",");
@@ -156,6 +158,7 @@ async function onModifyCheckBtn(e) {
         form.append("product_name", fileObject);
         form.append("name", productName.value);
         form.append("price", productPrice.value);
+        form.append("description", productDecrip.value);
         form.append("category", JSON.stringify(productCategory.value.split(",")));
         form.set("option", JSON.stringify({ color: productColor.value.split(","), size: productSize.value.split(",") }));
 
@@ -227,7 +230,7 @@ async function findPhoto(id) {
         const data = await fetch(`/api/products?products=${id}`).then((result) => result.json());
 
         const products = data.products;
-        console.log(products[0].file.path);
+        //console.log(products[0].file.path);
         return products[0].file.path;
     } catch (err) {
         console.log(err);
@@ -238,7 +241,7 @@ async function findPhoto(id) {
 async function createOrderList(orders) {
     const listWrapper = document.createElement("div");
     listWrapper.setAttribute("class", "list-container");
-    console.log(orders[0].products[0].product);
+    //console.log(orders[0].products[0].product);
     for (let i = 0; i < orders.length; i++) {
         listWrapper.innerHTML += `<div class="list-wrapper">
         <div class="list-top">
@@ -358,6 +361,7 @@ function onShowProductDetailsPage() {
     productName.value = "";
     productPrice.value = "";
     productCategory.value = "";
+    productDecrip.value = "";
     productColor.value = "";
     productSize.value = "";
     document.querySelector(".product-image-preview").src = "";
