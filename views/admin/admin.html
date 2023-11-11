@@ -43,13 +43,18 @@
 
                     <div class="product-details-page hide">
                         <form method="post" class="product-details-page">
-                            <div><input type="file" style="margin: 0px" name="product_name" id="product-image" accept="image/*" /> <img src="" class="product-image-preview" /></div>
+                            <div class="img-part">
+                                <input type="file" style="margin: 0px; width: auto" name="product_name" id="product-image" accept="image/*" /> <img src="" class="product-image-preview" />
+                            </div>
 
                             <label for="name">상품 이름</label>
                             <input tyoe="text" id="name" name="name" placeholder="상품 이름" />
 
                             <label for="price">상품 가격</label>
                             <input type="number" id="price" name="price" placeholder="상품 가격" />
+
+                            <label for="description">상품 설명</label>
+                            <input type="text" id="description" name="description" placeholder="상품 설명" />
 
                             <label for="category">상품 카테고리 <span>2가지 이상일 경우 콤마(,)를 사용하여 단어를 분리해주세요.</span></label>
                             <input type="text" id="category" name="category" placeholder="상품 카테고리" />
@@ -125,7 +130,7 @@
         <!-- Footer -->
         <footer class="footer">
             <div class="footer-logo">
-                <a href="/"><img class="logo-image" src="../public/image/logo.png" /></a>
+                <a href="/"><img class="logo-image" src="../public/image/logo.png" style="width: 150px" /></a>
             </div>
         </footer>
     </body>
