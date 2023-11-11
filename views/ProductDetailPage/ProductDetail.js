@@ -79,6 +79,7 @@ const productPrice = document.querySelector('.product-price');
 const productDescription = document.querySelector('.product-description');
 const colorOptionSelect = document.querySelector('.color');
 const sizeOptionSelect = document.querySelector('.size');
+let productImg='';
 //const productId = "654a60f295cd6f5052eaad3c";
 
 //api 호출하여 이름, 가격, 상품 설명을 보여준다. 
@@ -93,7 +94,7 @@ fetch(`/api/products?products=${productId}`)
         productName.innerHTML = product.name;
         productPrice.innerHTML = product.price;
         productDescription.innerHTML = product.description;
-        const productImg = product.file.path;
+        productImg = product.file.path;
         document.querySelector('.product-img').setAttribute('src', productImg);
         // product.option 배열의 길이 체크, 포문 돌면서 option 생성 
         
