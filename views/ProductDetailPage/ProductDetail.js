@@ -64,10 +64,7 @@ for (let i = 0; i < items.length; i++) {
 const currentUrl = new URL(window.location.href);
 
 const newSearch = currentUrl.hash.replace("#product", "");
-console.log(newSearch);
 const productId = new URLSearchParams(newSearch).get("id");
-
-console.log("id:", productId);
 
 //받아온 아이디를 기준으로 products 배열에서 객체를 찾음, 그리고 name, price 등등 조회하기
 
@@ -77,17 +74,13 @@ const productDescription = document.querySelector(".product-description");
 const colorOptionSelect = document.querySelector(".color");
 const sizeOptionSelect = document.querySelector(".size");
 let productImg = "";
-//const productId = "654a60f295cd6f5052eaad3c";
 
 //api 호출하여 이름, 가격, 상품 설명을 보여준다.
 
 fetch(`/api/products?products=${productId}`)
     .then((response) => response.json())
     .then((data) => {
-        console.log("아이디값으로 받아온 데이터", data);
-        //const product = data.products.find(({_id})=>_id===productId);
         const product = data.products[0];
-        //console.log(data.products[0]);
         productName.innerHTML = product.name;
         productPrice.innerHTML = product.price;
         productDescription.innerHTML = product.description;
@@ -97,13 +90,11 @@ fetch(`/api/products?products=${productId}`)
 
         const colorOption = product.option.color;
         const sizeOption = product.option.size;
-        //console.log(colorOption);
         for (let i = 0; i < colorOption.length; i++) {
             const optionElement = document.createElement("option");
             optionElement.setAttribute("class", "option-select");
 
             optionElement.innerText = colorOption[i];
-            console.log(optionElement.value);
             colorOptionSelect.appendChild(optionElement);
         }
 
@@ -112,7 +103,6 @@ fetch(`/api/products?products=${productId}`)
             optionElement.setAttribute("class", "option-select");
 
             optionElement.innerText = sizeOption[i];
-            console.log(optionElement.value);
             sizeOptionSelect.appendChild(optionElement);
         }
     })

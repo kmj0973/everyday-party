@@ -29,10 +29,8 @@ async function pageRender(){
     if(token === null){
         alert('접근불가. 로그인하세요')
     }else{
-        console.log('정상접근');
         getUserInfo()
             .then(userData=>{
-                console.log('유저 데이터',userData);
                 profileUserName.innerHTML = userData.user.name;
                 profileUserID.innerHTML = userData.user.userId
                 //주문내역 뿌려주기
@@ -75,10 +73,8 @@ async function getOrderList(userName){
     try{
         const data = await fetch('/api/orders');
         const orderList = await data.json().then((res)=>res.orderlist);
-        //console.log('orderlist ',orderList);
         //주문 목록에서 구매자를 기준으로 필터링, 빈 배열일경우를 대비하여 OPTIONAL CHAINING 사용
         const userOrders = orderList?.filter(({orderedBy})=>orderedBy===userName);
-        console.log('userOrders' , userOrders);
         ProductInfoBox.appendChild(await createProductInfo(userOrders));        
 
     }catch(error){
@@ -91,7 +87,6 @@ async function getOrderList(userName){
 //4. id를 기준으로 상품 정보 가져오기 
 async function getProductInfo(id){
     const productInfo = await fetch(`/api/products?products=${id}`).then((res)=>res.json());
-    //console.log('dkdkdk' , productInfo);
     return productInfo;
 }
 
@@ -103,7 +98,6 @@ async function createProductInfo(orderInfo){
     try {
         const productDataArray = await Promise.all(orderInfo.map(async (order) => {
             try {
-                console.log('order : ', order.products[0]._id);
                 const productData = await getProductInfo(order.products[0]._id);
                 return productData.products[0];
             } catch (error) {
@@ -155,7 +149,6 @@ for(let i=0;i<items.length;i++){
         //items의 a 태그의 href 속성을 불러와서 어떤 탭을 선택했는지 확인
         //tab-content-container 안에 있는 .tab, .tab-list li 을 모두 불러온 후, active class를 제거
         //items에만 active 클래스 추가 
-        //console.log(this);
         const tabId = this.querySelector('a').getAttribute('href');
         document.querySelectorAll('.menu-tab-container li, .tab-content-container .tab').forEach(function(item){
             item.classList.remove('active');
@@ -229,12 +222,7 @@ modifyBtn.addEventListener('click',()=>{
         modifyBtn.style.backgroundColor = '#F9E103'; 
         BtnClicked = true;
     }else{
-        console.log('저장되었습니다');
-        //input value 가져오기 
-
-        //getUser -- 에 innerHTML 로 바뀐 value 집어넣기 
-
-        // 기존 input 창은 삭제하기 
+       
         // 입력 값 가져오기
         const updatedValues = {
             id: document.querySelector('.modify-id').value,
@@ -282,7 +270,6 @@ modifyBtn.addEventListener('click',()=>{
 );
 
 async function setUserInfo(Id, password, name, address,phone){
-    console.log('test : ', Id, password, name, address,phone);
     const response = await fetch('/api/users/me', {
         method: 'PUT',
         headers: {
