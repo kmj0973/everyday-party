@@ -1,30 +1,8 @@
-const token = localStorage.getItem("access-token");
-let userName = "";
-const userToken = await getUesrInfo(); //유저 정보 받아오기
-
-async function getUesrInfo() {
-    try {
-        const data = await fetch("/api/users/me", {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-
-        const userData = await data.json();
-
-        if (data.status == 401 || data.status || 500) {
-            localStorage.removeItem("access-token");
-            throw new Error(userData.message);
-        } else {
-            userName = userToken.user.name;
-        }
-        return userData;
-    } catch (err) {
-        console.log(err);
-    }
-}
-
 export const Header = () => {
+    const token = localStorage.getItem("access-token");
+    const grade = localStorage.getItem("grade");
+    const userName = localStorage.getItem("name");
+
     const headerElement = document.createElement("header");
     headerElement.innerHTML = `
         <div class="top_menu_wrap">
