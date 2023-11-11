@@ -2,6 +2,7 @@ const token = localStorage.getItem("access-token");
 let admin = "";
 let userName = "";
 
+
 const userToken = getUesrInfo(); //유저 정보 받아오기
 async function getUesrInfo() {
     try {
