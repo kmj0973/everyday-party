@@ -68,6 +68,7 @@ function updateCart() {
         // 썸네일 이미지
         const imageBox = document.createElement("img");
         imageBox.setAttribute("src", item.imgsrc);
+        imageBox.setAttribute("id", "imageBox");
         itemDiv.appendChild(imageBox);
 
         // 상품명
