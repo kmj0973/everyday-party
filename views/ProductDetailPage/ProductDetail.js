@@ -14,7 +14,6 @@ const minusBtn = document.querySelector('#down');
 const numInput = document.querySelector('.number-select input');
 
 plusBtn.onclick = function(){
-    //console.log('+ clicked');
     numInput.value++; 
 }
 minusBtn.onclick=function(){
@@ -42,7 +41,6 @@ for(let i=0;i<items.length;i++){
         //items의 a 태그의 href 속성을 불러와서 어떤 탭을 선택했는지 확인
         //tab-content-container 안에 있는 .tab, .tab-list li 을 모두 불러온 후, active class를 제거
         //items에만 active 클래스 추가 
-        //console.log(this);
         const tabId = this.querySelector('a').getAttribute('href');
         document.querySelectorAll('.tab-list li, .tab-content-container .tab').forEach(function(item){
             item.classList.remove('active');
@@ -67,10 +65,7 @@ for(let i=0;i<items.length;i++){
 const currentUrl = new URL(window.location.href);
 
 const newSearch = currentUrl.hash.replace('#product', '');
-console.log(newSearch);
 const productId = new URLSearchParams(newSearch).get("id");
-
-console.log('id:', productId);
 
 //받아온 아이디를 기준으로 products 배열에서 객체를 찾음, 그리고 name, price 등등 조회하기 
 
@@ -87,10 +82,7 @@ let productImg='';
 fetch(`/api/products?products=${productId}`)
     .then((response) => response.json())
     .then((data) => {
-        console.log('아이디값으로 받아온 데이터' , data);
-        //const product = data.products.find(({_id})=>_id===productId);
         const product = data.products[0];
-        //console.log(data.products[0]);
         productName.innerHTML = product.name;
         productPrice.innerHTML = product.price;
         productDescription.innerHTML = product.description;
@@ -100,13 +92,11 @@ fetch(`/api/products?products=${productId}`)
         
         const colorOption = product.option.color;
         const sizeOption = product.option.size; 
-        //console.log(colorOption);
         for(let i=0; i<colorOption.length; i++){
             const optionElement = document.createElement('option');
             optionElement.setAttribute('class', 'option-select');
             
             optionElement.innerText = colorOption[i];
-            console.log(optionElement.value);
             colorOptionSelect.appendChild(optionElement)
         }
 
@@ -115,7 +105,6 @@ fetch(`/api/products?products=${productId}`)
             optionElement.setAttribute('class', 'option-select');
             
             optionElement.innerText = sizeOption[i];
-            console.log(optionElement.value);
             sizeOptionSelect.appendChild(optionElement)
         }
 
@@ -136,10 +125,9 @@ let selectedQuantity = '';
 //카트 추가하는 함수
 function addCartItem(selectedColorOption,selectedSizeOption,selectedQuantity){
     //원래방식대로라면 prooductInfo에는 id, option, quantity만 넣는방식 추천 
-    const productInfo = {id:productId,name:productName.innerHTML,price:productPrice.innerHTML,quantity:selectedQuantity,option:[selectedColorOption,selectedSizeOption],imgsrc:productImg};
+    const productInfo = {id:productId,name:productName.innerText,price:productPrice.innerHTML,quantity:selectedQuantity,option:[selectedColorOption,selectedSizeOption],imgsrc:productImg};
     //카트 배열 가져오기 -> string 형태의 prevCart를 배열로 변환 
     const previousCart = JSON.parse(localStorage.getItem('cart'));
-    //console.log('isArray?',Array.isArray(previousCart),previousCart);
     if(previousCart===null){
         localStorage.setItem('cart',JSON.stringify([productInfo]));
     }else{
