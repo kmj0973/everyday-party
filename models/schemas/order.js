@@ -2,11 +2,10 @@ const { Schema, default: mongoose } = require("mongoose");
 
 const productInfoSchema = new Schema({
     name: {
-        type:String,
+        type: String,
     },
     product: {
         type: Schema.Types.ObjectId,
-        
         ref: "Product",
         required: true,
     },

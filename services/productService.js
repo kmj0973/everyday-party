@@ -245,9 +245,7 @@ class ProductService {
      */
     async createOption(size, color) {
         const newOption = new Option({ size, color });
-        //console.log("정상적으로 옵션이 생성되었습니다.")
         await newOption.save();
-        //console.log("정상적으로 옵션이 저장되었습니다.")
         return newOption.toObject();
     }
 
@@ -289,9 +287,7 @@ class ProductService {
         }
 
         product.option.push(option);
-        //console.log("정상적으로 상품에 옵션 객체를 연결하였습니다.")
         await product.save();
-        //console.log("정상적으로 상품이 저장되었습니다.")
         return product;
     }
 
@@ -331,19 +327,19 @@ class ProductService {
         return newProduct;
     }
 
-    async updateProduct(id, {productData}) {
+    async updateProduct(id, { productData }) {
         try {
             if (productData.category !== undefined && productData.category !== null) {
                 productData.category = await Category.find({ categoryName: { $in: productData.category } });
             }
-    
+
             if (productData.option !== undefined && productData.option !== null) {
                 productData.option = new Option({
                     size: productData.option.size,
                     color: productData.option.color,
                 });
             }
-    
+
             if (productData.file !== undefined && productData.file !== null) {
                 productData.file = new File({
                     name: productData.file.name,
@@ -361,7 +357,6 @@ class ProductService {
 
             return updatedProduct;
         } catch (error) {
-            console.log(error);
             const newError = new Error("서버 내 오류가 발생하였습니다.");
             newError.status = 500;
             throw newError;
@@ -415,11 +410,9 @@ class ProductService {
         const sortConfig = orderBy !== undefined && orderBy !== null ? { [orderBy]: orderDirection ?? -1 } : { _id: 1 };
 
         if (offset !== undefined && offset !== null && limit !== undefined && limit !== null) {
-            //console.log("여기들어옴");
             const result = await Product.find({}).sort(sortConfig).skip(offset).limit(limit).lean();
             return { offset, orderBy, orderDirection, result, totalPage };
         }
-        //console.log("놉 여기임");
         return await Product.find({}).sort(sortConfig).lean();
     }
 }

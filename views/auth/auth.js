@@ -51,7 +51,6 @@ async function onAuthorize(e) {
         objectData.name = nameInput.value;
         objectData.address = addressArr;
         // objectData.birthday = birthday.valueAsNumber;
-        console.log(objectData);
 
         //db로 객체 정보 저장
         const data = await fetch("/api/auth/sign-up", {
@@ -59,7 +58,6 @@ async function onAuthorize(e) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(objectData), // JSON 문자열로 변환
         });
-        console.log(JSON.stringify(objectData));
         window.location.href = "/login/login.html";
     } catch (err) {
         alert(err.message);
@@ -69,7 +67,6 @@ async function onAuthorize(e) {
 //아이디 검증 이벤트
 async function onUserIdCheck(e) {
     e.preventDefault();
-    console.log(birthday.value);
     const userId = userIdInput.value;
 
     try {
@@ -78,7 +75,6 @@ async function onUserIdCheck(e) {
         }
 
         const data = await fetch(`/api/auth/check?userId=${userId}`);
-        console.log(data);
         const status = data.status;
 
         if (status === 409) {
@@ -90,7 +86,6 @@ async function onUserIdCheck(e) {
         }
 
         objectData.userId = userId;
-        console.log(objectData);
         alert("사용 가능한 아이디입니다");
     } catch (err) {
         objectData.userId = null; //검증 완료 이후 정보 변화로 인해 에러가 나는 경우
@@ -113,7 +108,6 @@ async function onEmailCheck(e) {
         }
 
         const data = await fetch(`/api/auth/check?email=${email}`);
-        console.log(data);
         const status = data.status;
 
         if (status === 409) {
@@ -125,7 +119,6 @@ async function onEmailCheck(e) {
         }
 
         objectData.email = email;
-        console.log(objectData);
         alert("사용 가능한 이메일입니다.");
     } catch (err) {
         objectData.email = null; //검증 완료 이후 정보 변화로 인해 에러가 나는 경우
@@ -157,7 +150,6 @@ async function onPhoneCheck(e) {
         }
 
         objectData.phone = phone;
-        console.log(objectData);
         alert("사용 가능한 전화번호입니다.");
     } catch (err) {
         objectData.phone = null; //검증 완료 이후 정보 변화로 인해 에러가 나는 경우
@@ -171,7 +163,6 @@ const postBtn = document.querySelector(".post-btn");
 function checkPost() {
     //daum 우편번호 API
     // 주소 검색 이벤트
-    console.log("우편번호");
     new daum.Postcode({
         oncomplete: function (data) {
             let addr = "";
@@ -197,7 +188,6 @@ function checkPost() {
             addressArr.push(data.zonecode);
             addressArr.push(addr);
             document.getElementById("detailAddress").focus();
-            console.log(data.zonecode, addr);
         },
     }).open();
 }

@@ -8,7 +8,6 @@ headerRender();
 
 // 주문 상세 템플릿
 const orderTemplate = (latestOrderData) => {
-
     // 날짜, 시간 조합
     const fullOrderedAt = latestOrderData[0].orderedAt;
     const getYearMonthDate = fullOrderedAt.substr(0, 10);
@@ -25,8 +24,8 @@ const orderTemplate = (latestOrderData) => {
     const deliveryPrice = 3000;
     const amountProductPrice = latestOrderData[0].totalPrice.toLocaleString();
     const amountOfPayment = (latestOrderData[0].totalPrice + deliveryPrice).toLocaleString();
-    
-    return`
+
+    return `
         <div class="order_time_wrap details">
             <span>주문 시간</span>
             <span class="order-time">${getAllDate}</span>
@@ -65,8 +64,8 @@ const orderTemplate = (latestOrderData) => {
 };
 
 const orderRender = async () => {
-    try{
-        // 모든 주문 목록을 보여주는 api 
+    try {
+        // 모든 주문 목록을 보여주는 api
         const response = await fetch(`/api/orders`);
         const orderData = await response.json();
         const orderList = orderData.orderlist;
@@ -76,12 +75,10 @@ const orderRender = async () => {
         const latestOrderData = orderList.slice(-1);
 
         // 태그에 템플릿 넣기
-        document.querySelector(".order_details").innerHTML = 
-            orderTemplate(latestOrderData);
-
+        document.querySelector(".order_details").innerHTML = orderTemplate(latestOrderData);
     } catch (error) {
         if (error.message === "404") {
-            alert(`${error.message} 에러가 발생했습니다. 다시 시도해 주세요.`)
+            alert(`${error.message} 에러가 발생했습니다. 다시 시도해 주세요.`);
         }
     }
 };

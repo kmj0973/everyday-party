@@ -79,8 +79,6 @@ export const Header = () => {
             });
             localStorage.removeItem("access-token");
             window.location.href = "/main/main.html";
-        } catch (err) {
-            console.log(err);
-        }
+        } catch (err) {}
     }
 };

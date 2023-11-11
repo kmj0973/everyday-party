@@ -4,8 +4,8 @@
     box-sizing: border-box;
 }
 
-body{
-    font-family: 'Noto Sans KR', sans-serif;
+body {
+    font-family: "Noto Sans KR", sans-serif;
     font-size: 16px;
     font-weight: 400;
     color: #181619;
@@ -13,7 +13,6 @@ body{
 
 li {
     list-style: none;
-    
 }
 
 header li {

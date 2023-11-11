@@ -29,9 +29,7 @@ async function getBestProductData() {
         newProductsArr.sort((a, b) => b.sales - a.sales); //판매량 많은 순
 
         bestCardContainer.appendChild(createBestCard(newProductsArr));
-    } catch (err) {
-        console.log(err);
-    }
+    } catch (err) {}
 }
 
 function createBestCard(products) {
@@ -40,7 +38,7 @@ function createBestCard(products) {
     for (let i = 0; i < 8; i++) {
         cardContainer.innerHTML += `<div class="menu_card">
         <div class="card_img_wrap">
-        <a href="/ProductDetailPage/productDetail.html#product?id=${products[i]._id}"><img class="card_img" src="${products[i].file.path}" alt="테스트 이미지" /></a>
+        <a href="/ProductDetailPage/ProductDetail.html#product?id=${products[i]._id}"><img class="card_img" src="${products[i].file.path}" alt="테스트 이미지" /></a>
         </div>
     <div class="card_contents">
         <h3 class="card_title">${products[i].name}</h3>
@@ -64,9 +62,7 @@ async function getReviewData() {
         const reviews = await data.json().then((result) => result.reviews);
 
         reviewCardContainer.appendChild(createReviewCard(reviews));
-    } catch (err) {
-        console.log(err);
-    }
+    } catch (err) {}
 }
 function createReviewCard(reviews) {
     const cardContainer = document.createElement("ul");

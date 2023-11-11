@@ -27,7 +27,6 @@ async function onClickLoginButton(e) {
             body: JSON.stringify({ userId, password }), // JSON 문자열로 변환
         });
 
-        console.log(data);
         if (data.status === 400) {
             // 아이디와 비밀번호 일치하지 않는 경우 Error전달
             throw new Error("아이디 또는 비밀번호를 확인해주세요");
@@ -35,14 +34,12 @@ async function onClickLoginButton(e) {
 
         const userdata = await data.json().then((result) => result); // 토큰 생성
         // 로컬 스토리지에 "access-token"키 값에 토큰 저장
-        console.log(userdata);
         localStorage.setItem("access-token", userdata.token);
         localStorage.setItem("name", userdata.name);
         localStorage.setItem("grade", userdata.grade);
         window.location.href = "/main/main.html"; // 로그인 성공 시 메인페이지로 이동
     } catch (err) {
         loginAlert.classList.add("show"); // 일치하지 않는다는 경고문 보여주기
-        console.log(err.message);
     }
 }
 // inputUserId.addEventListener("focus", () => {

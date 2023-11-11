@@ -11,7 +11,7 @@ const token = localStorage.getItem("access-token");
 //상품 정보 관련
 const productName = document.querySelector("#name");
 const productPrice = document.querySelector("#price");
-const productDecrip = document.querySelector("#description");
+const productDescription = document.querySelector("#description");
 const productCategory = document.querySelector("#category");
 const productColor = document.querySelector("#color");
 const productSize = document.querySelector("#size");
@@ -28,11 +28,8 @@ async function getAllProductData() {
         const data = await fetch("/api/products").then((result) => result.json());
 
         const products = await data.products;
-        // console.log(products);
         mainList.appendChild(createProductList(products));
-    } catch (err) {
-        console.log(err);
-    }
+    } catch (err) {}
 }
 
 function createProductList(products) {
@@ -85,13 +82,11 @@ async function onAddBtn(e) {
         if (!productName.value || !productPrice.value) {
             throw new Error("상품 이름 또는 가격을 확인해주세요");
         }
-        console.log(productCategory.value.split(","));
-        console.log(fileImage);
         const form = new FormData();
         form.append("product_name", fileObject);
         form.append("name", productName.value);
         form.append("price", productPrice.value);
-        form.append("description", productDecrip.value);
+        form.append("description", productDescription.value);
         form.append("category", JSON.stringify(productCategory.value.split(",")));
         form.set("option", JSON.stringify({ color: productColor.value.split(","), size: productSize.value.split(",") }));
 
@@ -100,7 +95,6 @@ async function onAddBtn(e) {
             headers: { Authorization: `Bearer ${token}` },
             body: form,
         });
-        console.log(response.json());
         window.location.href = "/admin/admin.html";
     } catch (err) {
         alert(err.message);
@@ -117,7 +111,6 @@ let path = "";
 let imageId = "";
 async function onModifyBtn(e) {
     //수정 버튼 눌렀을 때 미리 아이템 배치하기
-    //console.log(e.target.previousElementSibling.children[1].innerText.substr(3));
     imageId = e.target.previousElementSibling.children[1].innerText.substr(3);
     try {
         const data = await fetch(`/api/products?products=${imageId}`).then((result) => result.json());
@@ -128,10 +121,9 @@ async function onModifyBtn(e) {
         products[0].category.map((n) => {
             catelist.push(n.categoryName);
         });
-        //console.log(products[0].file.name);
         productName.value = products[0].name;
         productPrice.value = products[0].price;
-        productDecrip.value = products[0].description;
+        productDescription.value = products[0].description;
         productCategory.value = catelist.join(",");
         productColor.value = products[0].option.color.join(",");
         productSize.value = products[0].option.size.join(",");
@@ -158,21 +150,17 @@ async function onModifyCheckBtn(e) {
         form.append("product_name", fileObject);
         form.append("name", productName.value);
         form.append("price", productPrice.value);
-        form.append("description", productDecrip.value);
+        form.append("description", productDescription.value);
         form.append("category", JSON.stringify(productCategory.value.split(",")));
         form.set("option", JSON.stringify({ color: productColor.value.split(","), size: productSize.value.split(",") }));
 
-        console.log("dd");
         const response = await fetch(`/api/products/${imageId}`, {
             method: "PATCH",
             headers: { Authorization: `Bearer ${token}` },
             body: form,
-        }).then((data) => console.log(data));
-        console.log(response);
+        });
         window.location.href = "/admin/admin.html";
-    } catch (err) {
-        console.log(err);
-    }
+    } catch (err) {}
 }
 modifyCheckBtn.addEventListener("click", onModifyCheckBtn);
 modifyBtn.forEach((m) => {
@@ -220,9 +208,7 @@ async function getAllOrderData() {
         const orders = response.orderlist;
 
         mainOrderList.appendChild(await createOrderList(orders));
-    } catch (err) {
-        console.log(err);
-    }
+    } catch (err) {}
 }
 async function findPhoto(id) {
     //상품 사진 찾아주는 함수
@@ -230,18 +216,14 @@ async function findPhoto(id) {
         const data = await fetch(`/api/products?products=${id}`).then((result) => result.json());
 
         const products = data.products;
-        //console.log(products[0].file.path);
         return products[0].file.path;
-    } catch (err) {
-        console.log(err);
-    }
+    } catch (err) {}
 }
 
 //${findPhoto(orders[i].products[0]._id)}
 async function createOrderList(orders) {
     const listWrapper = document.createElement("div");
     listWrapper.setAttribute("class", "list-container");
-    //console.log(orders[0].products[0].product);
     for (let i = 0; i < orders.length; i++) {
         listWrapper.innerHTML += `<div class="list-wrapper">
         <div class="list-top">
@@ -306,16 +288,12 @@ async function onModifyOrderBtn(e) {
         }
         const orderId = e.target.parentElement.previousSibling.previousSibling.children[0].children[1].innerText.substr(3);
         const changedStatus = e.target.previousSibling.previousSibling.previousSibling.previousSibling.value;
-        console.log(JSON.stringify({ changedStatus }));
         const response = await fetch(`/api/orders/${orderId}`, {
             method: "PATCH",
             headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
             body: JSON.stringify({ changedStatus }),
         });
-        console.log(response);
-    } catch (err) {
-        console.log(err);
-    }
+    } catch (err) {}
 }
 
 modifyOrderBtn.forEach((m) => {
@@ -324,11 +302,11 @@ modifyOrderBtn.forEach((m) => {
 //페이지 이동
 const productPage = document.querySelector(".product-page");
 const orderPage = document.querySelector(".order-page");
-const productInfolPage = document.querySelectorAll(".product-info-page");
+const productInfoPage = document.querySelectorAll(".product-info-page");
 const orderInfoPage = document.querySelectorAll(".product-order-page");
 const productDetailPage = document.querySelector(".product-details-page");
 
-productInfolPage.forEach((n) =>
+productInfoPage.forEach((n) =>
     n.addEventListener("click", async function (e) {
         mainList.classList.remove("hide");
         mainCategory.classList.remove("hide");
@@ -361,7 +339,7 @@ function onShowProductDetailsPage() {
     productName.value = "";
     productPrice.value = "";
     productCategory.value = "";
-    productDecrip.value = "";
+    productDescription.value = "";
     productColor.value = "";
     productSize.value = "";
     document.querySelector(".product-image-preview").src = "";

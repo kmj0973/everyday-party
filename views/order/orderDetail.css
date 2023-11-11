@@ -4,8 +4,8 @@
     box-sizing: border-box;
 }
 
-body{
-    font-family: 'Noto Sans KR', sans-serif;
+body {
+    font-family: "Noto Sans KR", sans-serif;
     font-size: 16px;
     font-weight: 400;
     color: #181619;
@@ -32,7 +32,7 @@ body{
 /* 구매 상세 내역 */
 .order_details {
     width: 100%;
-    background-color: #F6F6F6;
+    background-color: #f6f6f6;
     padding: 30px;
 }
 
@@ -64,7 +64,7 @@ body{
 .order_amount_price_wrap li:nth-child(2),
 .order_amount_price_wrap li:nth-child(3) {
     font-size: 13px;
-} 
+}
 
 .order_number_wrap,
 .order_items_wrap,
@@ -95,13 +95,12 @@ body{
     cursor: pointer;
 }
 
-
 .page_movement_button .main_button a {
     color: #fff;
 }
 
 .page_movement_button .mypage_button {
     margin-left: 10px;
-    background-color: #F9E103;
+    background-color: #f9e103;
     font-weight: 600;
 }

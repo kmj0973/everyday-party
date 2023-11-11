@@ -13,7 +13,6 @@ const minusBtn = document.querySelector("#down");
 const numInput = document.querySelector(".number-select input");
 
 plusBtn.onclick = function () {
-    //console.log('+ clicked');
     numInput.value++;
 };
 minusBtn.onclick = function () {
@@ -40,7 +39,6 @@ for (let i = 0; i < items.length; i++) {
         //items의 a 태그의 href 속성을 불러와서 어떤 탭을 선택했는지 확인
         //tab-content-container 안에 있는 .tab, .tab-list li 을 모두 불러온 후, active class를 제거
         //items에만 active 클래스 추가
-        //console.log(this);
         const tabId = this.querySelector("a").getAttribute("href");
         document.querySelectorAll(".tab-list li, .tab-content-container .tab").forEach(function (item) {
             item.classList.remove("active");
@@ -108,7 +106,6 @@ fetch(`/api/products?products=${productId}`)
     })
     .catch((error) => {
         alert("상품 상세 정보를 불러오지 못했습니다.");
-        console.log(error);
     });
 
 //4. 장바구니,구매하기 버튼 클릭했을 때 로컬스토리지에 개수,옵션값 저장
@@ -121,7 +118,7 @@ let selectedQuantity = "";
 
 //카트 추가하는 함수
 function addCartItem(selectedColorOption, selectedSizeOption, selectedQuantity) {
-    //원래방식대로라면 prooductInfo에는 id, option, quantity만 넣는방식 추천
+    //원래방식대로라면 productInfo에는 id, option, quantity만 넣는방식 추천
     const productInfo = {
         id: productId,
         name: productName.innerText,
@@ -132,7 +129,6 @@ function addCartItem(selectedColorOption, selectedSizeOption, selectedQuantity) 
     };
     //카트 배열 가져오기 -> string 형태의 prevCart를 배열로 변환
     const previousCart = JSON.parse(localStorage.getItem("cart"));
-    //console.log('isArray?',Array.isArray(previousCart),previousCart);
     if (previousCart === null) {
         localStorage.setItem("cart", JSON.stringify([productInfo]));
     } else {
@@ -142,7 +138,6 @@ function addCartItem(selectedColorOption, selectedSizeOption, selectedQuantity) 
             previousCart.push(productInfo);
             localStorage.setItem("cart", JSON.stringify(previousCart));
         } else {
-            console.log("배열이 존재하지 않거나 데이터가 배열 형태가 아님");
         }
     }
 }

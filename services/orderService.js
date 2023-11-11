@@ -22,23 +22,6 @@ class OrderService {
      * @return
      */
     async cancelOrder(id, changeStatus) {
-        // if (currentGrade === "user") {
-        //     const order = await Order.findByIdAndUpdate(
-        //         id,
-        //         {
-        //             $set: {
-        //                 deliveryStatus: "주문취소",
-        //             },
-        //         },
-        //         { new: true, runValidators: true },
-        //     ).lean();
-        //     //console.log(order);
-        //     if (!order) {
-        //         throw new Error("주문을 찾을 수 없습니다.");
-        //     }
-        //     return order;
-        // }
-
         const order = await Order.findByIdAndUpdate(
             id,
             {
@@ -48,7 +31,6 @@ class OrderService {
             },
             { new: true, runValidators: true },
         ).lean();
-        //console.log(order);
         if (!order) {
             throw new Error("주문을 찾을 수 없습니다.");
         }

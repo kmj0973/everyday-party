@@ -237,7 +237,6 @@ productRouter.patch("/:id", authenticateUserToken, upload.single("product_name")
             return res.status(403).json({ message: "관리자 외에 접근할 수 없습니다." });
         }
     } catch (error) {
-        console.log(error);
         const newError = new Error("서버 내 오류가 발생했습니다.");
         newError.status = 500;
         return next(newError);
@@ -267,7 +266,6 @@ productRouter.delete("/:id", authenticateUserToken, async (req, res, next) => {
             return res.status(403).json({ message: "관리자 외에 접근할 수 없습니다." });
         }
     } catch (error) {
-        console.log(error);
         const newError = new Error("서버 내 오류가 발생했습니다.");
         newError.status = 500;
         return next(newError);
