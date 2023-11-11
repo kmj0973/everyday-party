@@ -35,6 +35,8 @@ router.post("/login", async (req, res, next) => {
     const token = jwtUtil.createUserToken(existingUser);
 
     return res.json({
+        name: existingUser.name,
+        grade: existingUser.grade,
         token,
     });
 });
