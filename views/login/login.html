@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- css파일 가져오기 -->
+        <link rel="stylesheet" href="./login.css" />
+        <link rel="stylesheet" href="../public/header/login-header.css" />
+        <!--로고 이름 폰트-->
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Gluten:wght@400;500;600&family=Noto+Sans+KR&display=swap");
+        </style>
+        <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+        <!-- js -->
+        <script type="module" src="./login.js"></script>
+        <title>Document</title>
+    </head>
+    <body>
+        <section class="login-section">
+            <div class="login-wrapper">
+                <div class="login-container">
+                    <div class="login-welcome">
+                        <span>Welcome to <span style="color: #f9e103">Everyday Party</span></span>
+                    </div>
+                    <form method="post" class="login-form">
+                        <input id="userId" type="text" placeholder="아이디" />
+                        <input id="password" type="password" placeholder="패스워드" />
+                        <div class="login-alert none">아이디 또는 비밀번호를 확인해주세요</div>
+                        <button id="login-btn" type="submit">로그인</button>
+                    </form>
+                    <div class="register">
+                        <div><a href="/auth/auth.html">회원가입</a></div>
+                        <div>|</div>
+                        <div>아이디 찾기</div>
+                        <div>|</div>
+                        <div>비밀번호 찾기</div>
+                    </div>
+                </div>
+                <div class="login-banner-container">
+                    <a href="/main/main.html">
+                        <img class="login-banner" src="images/login-banner.png" />
+                        <div class="login-logo-container">
+                            <div class="login-logo">
+                                <img src="images/login-logo.png" /><span class="login-logo-name">EVERYDAY<br />PARTY</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </body>
+</html>

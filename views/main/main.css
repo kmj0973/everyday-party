@@ -4,104 +4,12 @@
     padding: 0;
     font-family: "Noto Sans KR", sans-serif;
 }
-/*============header Part============*/
-
-.header {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    background-color: #f9e103;
-}
-.header-container {
-    width: 1200px;
-    display: flex;
-    border-top-right-radius: 5px;
-    border-top-left-radius: 5px;
-    justify-content: space-between;
-    align-items: center;
-}
-.navbar-logo {
-    margin: 10px;
-}
-.navbar-logo a {
-    text-decoration: none;
-    display: flex;
-    justify-content: space-between;
-    text-align: center;
-}
-.logo-image {
-    margin: 0 5px;
-}
-.logo-name {
-    margin-top: 5px;
-    color: black;
-    font-family: "Gluten", cursive;
-}
-.navbar-end {
-    display: flex;
-    margin: 10px;
-}
-#navbar {
-    display: flex;
-    list-style: none;
-}
-#navbar li:not(:last-child) {
-    cursor: pointer;
-    margin-right: 15px;
-}
-/*============header Part============*/
-
-/*============menu Part============*/
-
-.menu-container {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.menu {
-    list-style: none;
-    width: 1200px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 10px;
-}
-.menu li a {
-    text-decoration: none;
-    color: black;
-}
-#all-category-btn {
-    padding-top: 5px;
-}
-.all-category-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    overflow: hidden;
-    width: 100%;
-    z-index: 10;
-}
-.semi-container {
-    width: 1200px;
-    height: 0px;
-    transition: all 0.5s ease-out;
-}
-.all-category {
-    background-color: white;
-    width: 1200px;
-    height: 250px;
-    list-style: none;
-}
-
-/*============menu Part============*/
 
 /*============Event Slider Part============*/
 .swiper {
     width: 100%;
     height: 450px;
-    background-color: #f0f0f5;
+    background-color: #181619;
 }
 .swiper-wrapper {
     width: 100% !important;
@@ -137,7 +45,7 @@
 .title-best-products {
     margin-top: 80px;
     margin-bottom: 30px;
-    font-size: 20px;
+    font-size: 24px;
     text-align: center;
 }
 .best-products-section {
@@ -210,8 +118,7 @@
 }
 
 .card_cart_button:hover {
-    background: url("https://api.iconify.design/bi/bag-fill.svg?color=%23181619&width=24") no-repeat center center /
-        contain;
+    background: url("https://api.iconify.design/bi/bag-fill.svg?color=%23181619&width=24") no-repeat center center / contain;
 }
 
 .card_review {
@@ -225,8 +132,7 @@
     width: 12px;
     height: 12px;
     margin-right: 5px;
-    background: url("https://api.iconify.design/teenyicons/chat-outline.svg?color=%23888&width=12") no-repeat center
-        center / contain;
+    background: url("https://api.iconify.design/teenyicons/chat-outline.svg?color=%23888&width=12") no-repeat center center / contain;
 }
 /*============Best Products Card Part============*/
 
@@ -234,7 +140,7 @@
 .title-events-collection {
     margin-top: 50px;
     margin-bottom: 30px;
-    font-size: 20px;
+    font-size: 24px;
     text-align: center;
 }
 .events-collection-section {
@@ -251,15 +157,15 @@
 }
 .events-collection-list {
     list-style: none;
-    width: 1080px;
+    width: 1200px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
 }
 .events-collection-list li img {
-    width: 350px;
-    height: 200px;
+    width: 390px;
+    height: 310px;
     margin: 5px;
 }
 /*============Events Collection Part============*/
@@ -268,7 +174,7 @@
 .title-reviews {
     margin-top: 80px;
     margin-bottom: 30px;
-    font-size: 20px;
+    font-size: 24px;
     text-align: center;
 }
 .reviews-section {
@@ -331,7 +237,7 @@
 /*============Footer Part============*/
 .footer-logo {
     margin-top: 80px;
-    height: 120px;
+    height: 80px;
     display: flex;
     justify-content: center;
     align-items: center;

@@ -35,6 +35,8 @@ router.post("/login", async (req, res, next) => {
     const token = jwtUtil.createUserToken(existingUser);
 
     return res.json({
+        name: existingUser.name,
+        grade: existingUser.grade,
         token,
     });
 });
@@ -59,7 +61,7 @@ router.get("/check", async (req, res, next) => {
             error.status = 409;
             return next(error);
         } else {
-            return res.sendStatus(200).json({});
+            return res.status(200).json({});
         }
     }
 
@@ -77,7 +79,7 @@ router.get("/check", async (req, res, next) => {
             error.status = 409;
             return next(error);
         } else {
-            return res.sendStatus(200).json({});
+            return res.status(200).json({});
         }
     }
 
@@ -95,24 +97,46 @@ router.get("/check", async (req, res, next) => {
             error.status = 409;
             return next(error);
         } else {
-            return res.sendStatus(200).json({});
+            return res.status(200).json({});
         }
     }
+
+    return res.status(200).json({});
 });
 
 router.post("/sign-up", authenticateUserData, async (req, res, next) => {
     const { userId, password, grade, email, name, address, phone, birthday } = req.body;
 
-    const userInput = { userId, password, grade, email, name, address, phone, birthday };
+    if (userId !== undefined && userId !== null) {
+        const existingUser = await userService.getUserById(userId);
+        if (existingUser) {
+            const error = new Error("아이디 정보가 이미 존재합니다.");
+            error.status = 409;
+            return next(error);
+        }
+    }
+
+    const userInput = {
+        userId,
+        password,
+        grade,
+        email,
+        name,
+        address,
+        phone,
+        birthday,
+    };
 
     const validInfoOfUserInput = validDataUtil.processDataWithPatch(userInput);
     validInfoOfUserInput.password = await passwordUtil.hashPassword(validInfoOfUserInput.password);
 
     try {
         await userService.createUser(validInfoOfUserInput);
-        return res.sendStatus(200).json({});
+        return res.status(200).json({});
     } catch (error) {
-        next(error);
+        const newError = new Error("서버 내 오류가 발생하였습니다.");
+        newError.status = 500;
+        throw newError;
     }
 });
 

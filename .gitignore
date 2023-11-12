@@ -131,3 +131,8 @@ dist
 
 # 테스트용 데이터를 생성하기 위한 폴더
 data/dummy
+
+.vscode
+
+# images/product/*.png
+# images/product/*.jpg

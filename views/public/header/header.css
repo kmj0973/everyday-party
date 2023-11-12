@@ -1,5 +1,21 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Noto Sans KR", sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: #181619;
+}
+
 li {
     list-style: none;
+}
+
+header li {
     cursor: pointer;
 }
 
@@ -11,8 +27,8 @@ a {
 /* 탑메뉴 */
 .top_menu_wrap {
     padding: 12px 0;
-    background-color: #F9E103;
-}   
+    background-color: #f9e103;
+}
 
 .logo {
     width: 52%;
@@ -65,9 +81,9 @@ nav {
 
 .category > li a {
     display: block;
-    transition: all .4s;
+    transition: all 0.4s;
 }
 
 .category > li a:hover {
-    color: #F9E103;
+    color: #f9e103;
 }

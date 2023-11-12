@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="./auth.css" />
+        <link rel="stylesheet" href="../public/header/login-header.css" />
+        <!--로고 이름 폰트-->
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Gluten:wght@400;500;600&family=Noto+Sans+KR&display=swap");
+        </style>
+        <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+        <!-- js -->
+        <script type="module" src="./auth.js"></script>
+        <!-- 구글 주소 api -->
+        <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+        <title>Document</title>
+    </head>
+    <body>
+        <section class="login-section">
+            <div class="login-wrapper">
+                <!-- 회원가입 부분 -->
+                <div class="auth-container">
+                    <form method="post" class="auth-wrapper">
+                        <div class="container">
+                            <label for="id">아이디</label>
+                            <div>
+                                <input type="text" id="id" class="id-input" placeholder="아이디" />
+                                <button class="id-check-btn">중복 확인</button>
+                            </div>
+                        </div>
+                        <div class="container">
+                            <label for="password">비밀번호</label>
+                            <input type="password" id="password" class="password-input" placeholder="비밀번호(8자 이상)" />
+                            <input type="password" class="password-check-input" placeholder="비밀번호 확인" />
+                        </div>
+                        <div class="container">
+                            <label for="name">이름</label>
+                            <input type="text" id="name" class="name-input" placeholder="사용자 이름" />
+                        </div>
+                        <div class="container">
+                            <label for="email">이메일</label>
+                            <div>
+                                <input type="email" id="email" class="email-input" placeholder="이메일" />
+                                <button class="email-check-btn">중복 확인</button>
+                            </div>
+                        </div>
+                        <div class="container">
+                            <label for="phone">전화번호</label>
+                            <div>
+                                <select class="tel1" style="width: 60px; border-radius: 10px">
+                                    <option value="010">010</option>
+                                    <option value="011">011</option>
+                                    <option value="017">017</option>
+                                </select>
+                                -
+                                <input type="text" class="tel2" size="4" style="padding: 0; padding-left: 5px" id="phone" />
+                                -
+                                <input type="text" class="tel3" size="4" style="padding: 0; padding-left: 5px" />
+                                <button class="phone-check-btn">중복 확인</button>
+                            </div>
+                        </div>
+                        <div class="container">
+                            <label for="postcode">주소</label>
+                            <div>
+                                <input type="text" id="postcode" name="zipcode" size="5" readonly />
+                                <input type="button" value="우편번호검색" class="post-btn" />
+                            </div>
+
+                            <input type="text" id="address" name="addr1" size="50" placeholder="주소" readonly />
+                            <input type="text" id="detailAddress" name="addr2" size="50" placeholder="상세주소" />
+                        </div>
+                        <div class="container">
+                            <label for="birth">생년월일</label>
+                            <input type="date" id="birth" />
+                        </div>
+                        <button type="submit" class="auth-btn">회원가입</button>
+                    </form>
+                </div>
+                <!-- 배너 부분 -->
+                <div class="login-banner-container">
+                    <a href="/main/main.html">
+                        <img class="login-banner" src="images/login-banner.png" />
+                        <div class="login-logo-container">
+                            <div class="login-logo">
+                                <img src="images/login-logo.png" /><span class="login-logo-name">EVERYDAY<br />PARTY</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </body>
+</html>

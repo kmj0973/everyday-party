@@ -4,8 +4,8 @@
     box-sizing: border-box;
 }
 
-body{
-    font-family: 'Noto Sans KR', sans-serif;
+body {
+    font-family: "Noto Sans KR", sans-serif;
     font-size: 16px;
     font-weight: 400;
     color: #181619;
@@ -42,6 +42,7 @@ button {
 .select {
     position: relative;
     width: 112px;
+    z-index: 20;
 }
 
 .select .label {
@@ -74,6 +75,8 @@ button {
 .select .option_list .option {
     padding: 6px;
     text-align: center;
+    background-color: #fff;
+    cursor: pointer;
 }
 
 .select .option_list .option:hover {
@@ -106,8 +109,7 @@ button {
     display: block;
     width: 285px;
     height: 320px;
-    transition: all .6s;
-    z-index: 10;
+    transition: all 0.6s;
 }
 
 .card_img:hover {
@@ -119,7 +121,6 @@ button {
     font-weight: 400;
     padding: 10px 0;
 }
-
 
 .purchase_info_wrap {
     display: flex;
@@ -137,12 +138,12 @@ button {
     height: 24px;
     text-indent: -9999px;
     border: none;
-    transition: all .4s;
-    background: url('https://api.iconify.design/bi/bag.svg?color=%23181619&width=24') no-repeat center center / contain;
+    transition: all 0.4s;
+    background: url("https://api.iconify.design/bi/bag.svg?color=%23181619&width=24") no-repeat center center / contain;
 }
 
 .card_cart_button:hover {
-    background: url('https://api.iconify.design/bi/bag-fill.svg?color=%23181619&width=24') no-repeat center center / contain;
+    background: url("https://api.iconify.design/bi/bag-fill.svg?color=%23181619&width=24") no-repeat center center / contain;
 }
 
 .card_review {
@@ -152,11 +153,11 @@ button {
 
 .card_review::before {
     display: inline-block;
-    content: '';
+    content: "";
     width: 12px;
     height: 12px;
     margin-right: 5px;
-    background: url('https://api.iconify.design/teenyicons/chat-outline.svg?color=%23888&width=12') no-repeat center center / contain;
+    background: url("https://api.iconify.design/teenyicons/chat-outline.svg?color=%23888&width=12") no-repeat center center / contain;
 }
 
 /* 에러 페이지 */
@@ -164,7 +165,6 @@ button {
 .card_error_container {
     margin-bottom: 60px;
 }
-
 
 .not_found_card {
     display: flex;

@@ -1,0 +1,106 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Noto Sans KR", sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: #181619;
+}
+
+.order_section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 460px;
+    margin: 0 auto;
+}
+
+.order_title {
+    font-size: 32px;
+    margin: 80px 0 10px 0;
+}
+
+.delivery_icon {
+    width: 70%;
+    padding: 60px 0;
+}
+
+/* 구매 상세 내역 */
+.order_details {
+    width: 100%;
+    background-color: #f6f6f6;
+    padding: 30px;
+}
+
+.details:not(:last-child) {
+    border-bottom: 1px solid #e4e4e4;
+    padding-bottom: 10px;
+}
+
+.order_number_wrap,
+.order_items_wrap,
+.order_status_wrap,
+.order_id_wrap,
+.order_time_wrap,
+.order_amount_price_wrap li {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+}
+
+.order_time_wrap span:first-child,
+.order_number_wrap span:first-child,
+.order_items_wrap span:first-child,
+.order_status_wrap span:first-child,
+.order_id_wrap span:first-child,
+.order_amount_price_wrap li span:first-child {
+    color: #878787;
+}
+
+.order_amount_price_wrap li:nth-child(2),
+.order_amount_price_wrap li:nth-child(3) {
+    font-size: 13px;
+}
+
+.order_number_wrap,
+.order_items_wrap,
+.order_status_wrap,
+.order_id_wrap,
+.order_amount_price_wrap {
+    padding-top: 10px;
+}
+
+.order_price {
+    font-weight: 700;
+}
+
+/* 페이지 버튼 */
+.page_movement_button {
+    display: flex;
+    width: 100%;
+    margin-top: 40px;
+}
+
+.page_movement_button button {
+    width: 100%;
+    padding: 10px 12px;
+    border: none;
+    background-color: #181619;
+    font-size: 16px;
+    color: #fff;
+    cursor: pointer;
+}
+
+.page_movement_button .main_button a {
+    color: #fff;
+}
+
+.page_movement_button .mypage_button {
+    margin-left: 10px;
+    background-color: #f9e103;
+    font-weight: 600;
+}

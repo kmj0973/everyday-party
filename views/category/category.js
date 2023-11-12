@@ -1,4 +1,4 @@
-import { Header } from "../../public/header/header.js";
+import { Header } from "../public/header/header.js";
 
 // import로 헤더 렌더링
 const headerRender = () => {
@@ -10,12 +10,10 @@ headerRender();
 // card_container에 innerHTML로 넣어줄 템플릿
 const cardTemplate = (categoryData) => {
     // 숫자 천 단위로(,)
-    const priceComma = categoryData.price
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    const priceComma = categoryData.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     return `
         <div class="category_card">
-            <a href=${`http://localhost:5000/ProductDetailPage/productDetail.html#product?id=${categoryData._id}`}>
+            <a href=${`/ProductDetailPage/ProductDetail.html#product?id=${categoryData._id}`}>
                 <div class="card_img_wrap">
                     <img class="card_img" src=${categoryData.file.path} 
                         alt=${categoryData.file.name}
@@ -32,7 +30,7 @@ const cardTemplate = (categoryData) => {
             </a>
         </div>    
     `;
-}
+};
 
 const errorTemplate = () => {
     return `
@@ -46,7 +44,7 @@ const errorTemplate = () => {
             <p>상품이 존재하지 않습니다.</p>
         </div>    
     `;
-}
+};
 
 const categoryList = document.querySelectorAll(".category li a");
 const categoryTitle = document.querySelector(".category_title");
@@ -58,7 +56,7 @@ const cardAmountElement = document.querySelector(".card_amount");
 const selectElement = document.querySelectorAll(".option_list li");
 
 // 페이지 로드 시 저장된 카테고리 정보를 렌더링
-document.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("load", () => {
     const selectedCategory = localStorage.getItem("selectedCategory");
 
     if (selectedCategory) {
@@ -69,10 +67,10 @@ document.addEventListener("DOMContentLoaded", () => {
 // 카테고리 버튼을 클릭했을 때 실행되는 이벤트 함수
 for (let i = 0; i < categoryList.length; i++) {
     categoryList[i].addEventListener("click", () => {
-
         // URLSearchParams로 쿼리 파라미터 값 가져오기
         const href = categoryList[i].getAttribute("href");
-        const url = new URL(href.replace(/#/g, "?"));
+        const newHref = `${window.location.origin}${href}`;
+        const url = new URL(newHref.replace(/#/g, "?"));
         const categoryParams = new URLSearchParams(url.search).get("category");
 
         // localStorage에 categoryParams값 저장
@@ -93,66 +91,56 @@ const cardRender = async (categoryParams) => {
         // 최신순 정렬
         const latest = [...data.products].sort((a, b) => b.stockedAt - a.stockedAt);
         // 베스트순 정렬
+        const highSale = [...data.products].sort((a, b) => b.sales - a.sales).slice(0, 4);
         const highSales = [...data.products].sort((a, b) => b.sales - a.sales);
         // 가격 높은순 정렬
         const highPrice = [...data.products].sort((a, b) => b.price - a.price);
         // 가격 낮은순 정렬
         const rowPrice = [...data.products].sort((a, b) => a.price - b.price);
 
-        data.products.map(product => {
-            const categoryName = product.category[1].categoryName;
+        for (let i = 0; i < data.products.length; i++) {
+            const categoryName = data.products[i].category[1].categoryName;
 
-            if (categoryParams == categoryName) {
-                // 카테고리 타이틀, 상품 몇건인지 
+            // 카테고리 타이틀
+            if (categoryParams === categoryName) {
                 categoryTitle.innerHTML = categoryName;
-                cardAmountElement.innerHTML = `총 ${data.products.length}건`;
-
-                // 카테고리에 해당하는 베스트 상품을 렌더링
-                categoryBestCardElement.innerHTML =
-                    highSales.map(categoryData => cardTemplate(categoryData))
-                        .join("");
-
-                // 카테고리에 상품을 렌더링
-                categoryCardElement.innerHTML =
-                    data.products.map(categoryData => cardTemplate(categoryData))
-                        .join("");
-
-                // 드롭다운 정렬 클릭 이벤트
-                selectElement.forEach(select => {
-                    select.addEventListener("click", () => {
-                        const selectContents = select.textContent;
-
-                        if(selectContents === "최신순") {
-                            categoryCardElement.innerHTML =
-                            latest.map(categoryData => cardTemplate(categoryData))
-                                .join("");
-                        }
-                        else if(selectContents === "인기순") {
-                            categoryCardElement.innerHTML =
-                            highSales.map(categoryData => cardTemplate(categoryData))
-                                .join("");
-                        }
-                        else if(selectContents === "높은 가격순") {
-                            categoryCardElement.innerHTML =
-                            highPrice.map(categoryData => cardTemplate(categoryData))
-                                .join("");
-                        }
-                        else {
-                            categoryCardElement.innerHTML =
-                            rowPrice.map(categoryData => cardTemplate(categoryData))
-                                .join("");
-                        }
-                    })
-                });
-            } else {
-                categoryBestErrorElement.innerHTML = errorTemplate();
-                categoryErrorElement.innerHTML = errorTemplate();
+            } else if (categoryParams === "new") {
+                categoryTitle.innerHTML = "new";
+            } else if (categoryParams === "best") {
+                categoryTitle.innerHTML = "best";
             }
-        });
-    }
-    catch (error) {
+
+            // 상품이 몇 건인지
+            cardAmountElement.innerHTML = `총 ${data.products.length}건`;
+
+            // 카테고리에 해당하는 베스트 상품을 렌더링
+            categoryBestCardElement.innerHTML = highSale.map((categoryData) => cardTemplate(categoryData)).join("");
+
+            // 카테고리에 상품을 렌더링
+            categoryCardElement.innerHTML = data.products.map((categoryData) => cardTemplate(categoryData)).join("");
+
+            // 드롭다운 정렬 클릭 이벤트
+            selectElement.forEach((select) => {
+                select.addEventListener("click", () => {
+                    const selectContents = select.textContent;
+
+                    if (selectContents === "최신순") {
+                        categoryCardElement.innerHTML = latest.map((categoryData) => cardTemplate(categoryData)).join("");
+                    } else if (selectContents === "인기순") {
+                        categoryCardElement.innerHTML = highSales.map((categoryData) => cardTemplate(categoryData)).join("");
+                    } else if (selectContents === "높은 가격순") {
+                        categoryCardElement.innerHTML = highPrice.map((categoryData) => cardTemplate(categoryData)).join("");
+                    } else {
+                        categoryCardElement.innerHTML = rowPrice.map((categoryData) => cardTemplate(categoryData)).join("");
+                    }
+                });
+            });
+        }
+    } catch (error) {
         if (error.message === "404") {
             alert(`${error.message}에러가 발생했습니다. 다시 시도해 주세요.`);
+            categoryBestErrorElement.innerHTML = errorTemplate;
+            categoryErrorElement.innerHTML = errorTemplate;
         }
     }
 };

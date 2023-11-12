@@ -16,7 +16,7 @@ const reviewSchema = new Schema(
     },
     {
         timestamps: true,
-    }
+    },
 );
 
 module.exports = reviewSchema;

@@ -10,6 +10,10 @@ dotenv.config();
 
 mongoose.connect(process.env.MONGODB_URL);
 
+app.get("/", (req, res) => {
+    res.redirect("/main/main.html");
+});
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -35,8 +39,4 @@ app.use((err, req, res, next) => {
     });
 });
 
-app.listen(process.env.PORT, () => {
-    console.log(`server on port ${process.env.PORT}`);
-});
-
-console.log(path.join(__dirname, "views"));
+app.listen(process.env.PORT);
