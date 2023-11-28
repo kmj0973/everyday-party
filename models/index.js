@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 
-const categorySchema = require("./schemas/category");
-const { orderSchema, productInfoSchema } = require("./schemas/order");
-const { optionSchema, productSchema } = require("./schemas/product");
-const reviewSchema = require("./schemas/review");
-const userSchema = require("./schemas/user");
-const fileSchema = require("./schemas/types/file");
+const categorySchema = require("./schemas/category.js");
+const { orderSchema } = require("./schemas/order.js");
+const { optionSchema, productSchema, productInfoSchema } = require("./schemas/product.js");
+const reviewSchema = require("./schemas/review.js");
+const userSchema = require("./schemas/user.js");
+const fileSchema = require("./schemas/types/file.js");
 
 const Category = mongoose.model("Category", categorySchema);
 const Order = mongoose.model("Order", orderSchema);
@@ -24,6 +24,5 @@ module.exports = {
     Option,
     Review,
     User,
-    ProductInfo,
     File,
 };

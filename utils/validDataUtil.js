@@ -1,7 +1,8 @@
 function processDataWithPatch(data) {
-    for (let [key, value] of Object.entries(data)) {
-        if (value === undefined || value === null) {
-            Reflect.deleteProperty(data, key);
+    const objects = Object.entries(data);
+    for (let objIndex = 0; objIndex < objects.length; objIndex += 1) {
+        if (objects[objIndex][1] === undefined || objects[objIndex][1] === null) {
+            Reflect.deleteProperty(data, objects[objIndex][0]);
         }
     }
 
@@ -9,13 +10,15 @@ function processDataWithPatch(data) {
 }
 
 function processDataWithPut(originalData, newData) {
-    for (let [key, value] of Object.entries(newData)) {
-        if (value === undefined || value === null) {
-            newData[key] = originalData[key];
+    const objects = Object.entries(newData);
+    const newDataWithPut = { ...newData };
+    for (let objIndex = 0; objIndex < objects.length; objIndex += 1) {
+        if (objects[objIndex][1] === undefined || objects[objIndex][1] === null) {
+            newDataWithPut[objects[objIndex][0]] = originalData[objects[objIndex][0]];
         }
     }
 
-    return newData;
+    return newDataWithPut;
 }
 
 module.exports = {

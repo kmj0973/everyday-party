@@ -43,7 +43,7 @@ async function getUserInfo() {
     const response = await fetch("/api/users/me", {
         method: "GET",
         headers: {
-            Authorization: `Bearer ${token}`,
+            authorization: `Bearer ${token}`,
         },
     });
 
@@ -79,24 +79,22 @@ async function createProductInfo(orderInfo) {
     const productInfoContainer = document.createElement("div");
     productInfoContainer.setAttribute("class", "product-info-container");
 
-    try {
-        const productDataArray = await Promise.all(
-            orderInfo.map(async (order) => {
-                try {
-                    const productData = await getProductInfo(order.products[0].product);
-                    return productData.products[0];
-                } catch (error) {
-                    throw new Error("상품데이터 반환 불가");
-                }
-            }),
-        );
+    const productDataArray = await Promise.all(
+        orderInfo.map(async (order) => {
+            try {
+                const productData = await getProductInfo(order.products[0].product);
+                return productData.products[0];
+            } catch (error) {
+                throw new Error("상품데이터 반환 불가");
+            }
+        }),
+    );
 
-        productDataArray.forEach((productData, i) => {
+    productDataArray.forEach((productData, i) => {
+        const orderContainer = document.createElement("div");
+        orderContainer.setAttribute("class", "product-info-container");
 
-            const orderContainer = document.createElement("div");
-            orderContainer.setAttribute("class", "product-info-container");
-
-            productInfoContainer.innerHTML += `
+        productInfoContainer.innerHTML += `
                 <div class="total-num">총 ${orderInfo[i].products.length}건</div>
                 <div class="order-date">주문일자 ${orderInfo[i].orderedAt}</div>
                 <div class="product-info">
@@ -112,9 +110,7 @@ async function createProductInfo(orderInfo) {
                     <div>총 ${Number(orderInfo[i].totalPrice).toLocaleString()}원 주문 전체보기</div>
                 </div>
             </div>`;
-        });
-    } catch (error) {
-    }
+    });
 
     return productInfoContainer;
 }
@@ -249,7 +245,7 @@ async function setUserInfo(Id, password, name, address, phone) {
     const response = await fetch("/api/users/me", {
         method: "PUT",
         headers: {
-            Authorization: `Bearer ${token}`,
+            authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
         },
         body: JSON.stringify({

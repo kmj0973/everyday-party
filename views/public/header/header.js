@@ -74,7 +74,7 @@ export const Header = () => {
             }
             const response = await fetch("/api/auth/logout", {
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    authorization: `Bearer ${token}`,
                 },
             });
             localStorage.removeItem("access-token");

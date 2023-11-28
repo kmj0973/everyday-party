@@ -1,15 +1,16 @@
 const { Router } = require("express");
+
 const userRouter = Router();
 
-const { authenticateUserToken, authenticateUserData } = require("../middleware/index");
+const { authenticateUserToken, authenticateUserData } = require("../middleware/index.js");
 
-const validDataUtil = require("../utils/validDataUtil");
-const passwordUtil = require("../utils/passwordUtil");
+const validDataUtil = require("../utils/validDataUtil.js");
+const passwordUtil = require("../utils/passwordUtil.js");
 
-const userService = require("../services/userService");
+const userService = require("../services/userService.js");
 
-// 일반 유저가 마이페이지 접속 시, 관리자 라우터는 따로 생성 예정
-userRouter.get("/me", authenticateUserToken, async (req, res, next) => {
+// 일반 유저가 마이페이지 접속 시
+userRouter.get("/me", authenticateUserToken, async (req, res) => {
     const decoded = req.user;
     const user = await userService.getUserById(decoded.userId);
 
@@ -18,6 +19,7 @@ userRouter.get("/me", authenticateUserToken, async (req, res, next) => {
     });
 });
 
+// 개인 정보 업데이트
 userRouter.put("/me", authenticateUserToken, authenticateUserData, async (req, res, next) => {
     const decoded = req.user;
     const user = await userService.getUserById(decoded.userId);
@@ -41,7 +43,7 @@ userRouter.put("/me", authenticateUserToken, authenticateUserData, async (req, r
     };
 
     const validInfoOfUserInput = validDataUtil.processDataWithPut(user, userInput);
-    if(password !== undefined && password !== null){
+    if (password !== undefined && password !== null) {
         validInfoOfUserInput.password = await passwordUtil.hashPassword(validInfoOfUserInput.password);
     }
 

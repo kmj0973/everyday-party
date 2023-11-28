@@ -3,6 +3,17 @@
     "rules": {
         "react/prop-types": "off",
         "react/react-in-jsx-scope": "off",
-        "react/jsx-props-no-spreading": "off"
+        "react/jsx-props-no-spreading": "off",
+        "no-underscore-dangle": ["error", { "allow": ["_id"] }],
+        "import/extensions": [
+            "error",
+            "always",
+            {
+                "js": "always"
+            }
+        ]
+    },
+    "env": {
+        "browser": true
     }
 }

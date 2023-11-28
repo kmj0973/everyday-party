@@ -201,7 +201,7 @@ async function allOrder() {
         const response = await fetch("/api/users/me", {
             method: "GET",
             headers: {
-                Authorization: `Bearer ${token}`,
+                authorization: `Bearer ${token}`,
             },
         });
         const userData = await response.json();
@@ -234,7 +234,7 @@ async function allOrder() {
                     headers: {
                         "Content-Type": "application/json",
                         id: userData.user._id,
-                        Authorization: `Bearer ${token}`,
+                        authorization: `Bearer ${token}`,
                     },
                     body: JSON.stringify(orderObj),
                 }).then((response) => {

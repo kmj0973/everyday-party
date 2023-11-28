@@ -1,6 +1,6 @@
 const { Schema } = require("mongoose");
-const fileSchema = require("./types/file");
-const ReviewSchema = require("./review");
+const fileSchema = require("./types/file.js");
+const ReviewSchema = require("./review.js");
 
 const optionSchema = new Schema({
     size: {
@@ -8,6 +8,29 @@ const optionSchema = new Schema({
     },
     color: {
         type: [String],
+    },
+});
+
+const productInfoSchema = new Schema({
+    name: {
+        type: String,
+    },
+    product: {
+        type: Schema.Types.ObjectId,
+        ref: "Product",
+        required: true,
+    },
+    option: {
+        size: {
+            type: String,
+        },
+        color: {
+            type: String,
+        },
+    },
+    quantity: {
+        type: Number,
+        required: true,
     },
 });
 
@@ -37,7 +60,7 @@ const productSchema = new Schema({
         max: 1,
     },
     category: {
-        type: [Schema.Types.ObjectId] /* categorySchema를 ref*/,
+        type: [Schema.Types.ObjectId] /* categorySchema를 ref */,
         ref: "Category",
     },
     description: {
@@ -55,4 +78,4 @@ const productSchema = new Schema({
     },
 });
 
-module.exports = { optionSchema, productSchema };
+module.exports = { optionSchema, productSchema, productInfoSchema };

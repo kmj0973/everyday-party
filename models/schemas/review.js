@@ -1,6 +1,6 @@
 const { Schema } = require("mongoose");
-const fileSchema = require("./types/file");
-const article = require("./types/article");
+const fileSchema = require("./types/file.js");
+const article = require("./types/article.js");
 
 const reviewSchema = new Schema(
     {

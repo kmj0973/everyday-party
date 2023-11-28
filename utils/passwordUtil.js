@@ -7,7 +7,8 @@ const bcrypt = require("bcryptjs");
  * @return {String} 암호화된 비밀번호 값
  */
 async function hashPassword(password) {
-    return await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
+    return hashedPassword;
 }
 
 /**
@@ -18,7 +19,8 @@ async function hashPassword(password) {
  * @return {boolean} 비밀번호 값의 일치 여부
  */
 async function comparePassword(password, savedPassword) {
-    return await bcrypt.compare(password, savedPassword);
+    const isSamePassword = await bcrypt.compare(password, savedPassword);
+    return isSamePassword;
 }
 
 module.exports = {

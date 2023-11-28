@@ -8,7 +8,7 @@ const headerRender = () => {
 headerRender();
 
 const token = localStorage.getItem("access-token");
-//상품 정보 관련
+// 상품 정보 관련
 const productName = document.querySelector("#name");
 const productPrice = document.querySelector("#price");
 const productDescription = document.querySelector("#description");
@@ -16,17 +16,14 @@ const productCategory = document.querySelector("#category");
 const productColor = document.querySelector("#color");
 const productSize = document.querySelector("#size");
 
-//상품 리스트
+// 상품 리스트
 const mainList = document.querySelector(".main-list");
 const mainCategory = document.querySelector(".main-category");
-
-await getAllProductData();
 
 async function getAllProductData() {
     //전체 상품데이터 받아오기
     try {
         const data = await fetch("/api/products").then((result) => result.json());
-
         const products = await data.products;
         mainList.appendChild(createProductList(products));
     } catch (err) {}
@@ -92,7 +89,7 @@ async function onAddBtn(e) {
 
         const response = await fetch("/api/products", {
             method: "POST",
-            headers: { Authorization: `Bearer ${token}` },
+            headers: { authorization: `Bearer ${token}` },
             body: form,
         });
         window.location.href = "/admin/admin.html";
@@ -156,7 +153,7 @@ async function onModifyCheckBtn(e) {
 
         const response = await fetch(`/api/products/${imageId}`, {
             method: "PATCH",
-            headers: { Authorization: `Bearer ${token}` },
+            headers: { authorization: `Bearer ${token}` },
             body: form,
         });
         window.location.href = "/admin/admin.html";
@@ -168,42 +165,78 @@ modifyBtn.forEach((m) => {
     m.addEventListener("click", onShowProductDetailsPage);
 });
 
-//db 상품 삭제 이벤트
-const deleteCheck = document.querySelectorAll(".delete-check");
+// DB 상품 삭제 이벤트
 const deleteBtn = document.querySelector(".delete-product-btn");
-let deleteid = []; // 삭제 아이디 배열
 async function onDeleteBtn(e) {
+    const deleteCheck = document.querySelectorAll(".delete-check");
+
+    const deleteIds = []; // 삭제 아이디 배열
     if (!confirm("삭제하시겠습니까?")) {
         return;
     }
+
     for (let i = 0; i < deleteCheck.length; i++) {
         if (deleteCheck[i].checked) {
-            deleteid.push(deleteCheck[i].nextSibling.nextSibling.innerText.substr(3)); //삭제할 아이디 하나씩 넣기
-            deleteCheck[i].parentElement.parentElement.parentElement.remove();
+            deleteIds.push(deleteCheck[i].nextSibling.nextSibling.innerText.substr(3)); //삭제할 아이디 하나씩 넣기
         }
     }
+
     try {
-        for (let i = 0; i < deleteid.length; i++) {
-            const response = await fetch(`/api/products/${deleteid[i]}`, {
-                method: "DELETE",
-                headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-            });
+        const result = await Promise.allSettled(
+            deleteIds.map(
+                async (deleteId) =>
+                    new Promise((resolve, reject) => {
+                        fetch(`/api/products/${deleteId}`, {
+                            method: "DELETE",
+                            headers: { authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+                        })
+                            .then((data) => {
+                                if (data.ok) {
+                                    return resolve(deleteId);
+                                } else {
+                                    return reject(deleteId);
+                                }
+                            })
+                            .catch((error) => {
+                                console.log("catch");
+                                return error;
+                            })
+                            .finally(() => console.log("finally"));
+                    }),
+            ),
+        );
+        const deletedResult = result.reduce(
+            (result, deletedPromise) => {
+                if (deletedPromise.status === "fulfilled") {
+                    result.resolved.push(deletedPromise.value);
+                } else if (deletedPromise.status === "rejected") {
+                    result.rejected.push(deletedPromise.reason);
+                }
+                return result;
+            },
+            { rejected: [], resolved: [] },
+        );
+
+        if (deletedResult.rejected.length > 0) {
+            alert(`물품 삭제에 실패했습니다. 삭제 못한 물품 아이디: ${deletedResult.rejected.join(", ")}`);
+        } else {
+            alert(`물품 삭제에 성공했습니다.`);
         }
+        window.location.reload();
     } catch (err) {
+        console.log(err);
         alert(err.message);
     }
 }
 
 deleteBtn.addEventListener("click", onDeleteBtn);
 
-//오더 정보 가져오기
+// 오더 정보 가져오기
 const mainOrderList = document.querySelector(".main-order-list");
-
-await getAllOrderData();
 
 async function getAllOrderData() {
     try {
-        const response = await fetch("/api/orders", { headers: { Authorization: `Bearer ${token}` } }).then((result) => result.json());
+        const response = await fetch("/api/orders", { headers: { authorization: `Bearer ${token}` } }).then((result) => result.json());
 
         const orders = response.orderlist;
 
@@ -268,7 +301,7 @@ async function onDeleteOrderBtn(e) {
         for (let i = 0; i < deleteOrderid.length; i++) {
             const response = await fetch(`/api/orders/${deleteOrderid[i]}`, {
                 method: "DELETE",
-                headers: { Authorization: `Bearer ${token}` },
+                headers: { authorization: `Bearer ${token}` },
             });
         }
     } catch (err) {
@@ -290,7 +323,7 @@ async function onModifyOrderBtn(e) {
         const changedStatus = e.target.previousSibling.previousSibling.previousSibling.previousSibling.value;
         const response = await fetch(`/api/orders/${orderId}`, {
             method: "PATCH",
-            headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+            headers: { authorization: `Bearer ${token}`, "Content-Type": "application/json" },
             body: JSON.stringify({ changedStatus }),
         });
     } catch (err) {}
@@ -346,3 +379,8 @@ function onShowProductDetailsPage() {
 }
 
 addProductPageBtn.addEventListener("click", onShowProductDetailsPage);
+
+document.addEventListener("DOMContentLoaded", async () => {
+    await getAllOrderData();
+    await getAllProductData();
+});

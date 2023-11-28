@@ -1,4 +1,4 @@
-const { User } = require("../models/index");
+const { User } = require("../models/index.js");
 
 class UserService {
     /**
@@ -8,12 +8,13 @@ class UserService {
      * @return {User} 유저 객체
      *
      */
-    async getUserById(userId) {
+    static async getUserById(userId) {
         const user = await User.findOne({ userId })
             .lean()
             .catch((error) => {
                 const newError = new Error("유저 정보를 불러오던 중 서버 내에 문제가 발생했습니다.");
                 newError.status = 500;
+                newError.cause = error;
                 throw newError;
             });
         return user;
@@ -25,12 +26,13 @@ class UserService {
      * @param email {String} 유저의 이메일(email)
      * @return {User} 유저 객체
      */
-    async getUserByEmail(email) {
+    static async getUserByEmail(email) {
         const user = await User.findOne({ email })
             .lean()
             .catch((error) => {
                 const newError = new Error("유저 정보를 불러오던 중 서버 내에 문제가 발생했습니다.");
                 newError.status = 500;
+                newError.cause = error;
                 throw newError;
             });
         return user;
@@ -42,12 +44,13 @@ class UserService {
      * @param phone {String} 유저의 전화번호(email)
      * @return {User} 유저 객체
      */
-    async getUserByPhone(phone) {
+    static async getUserByPhone(phone) {
         const user = await User.findOne({ phone })
             .lean()
             .catch((error) => {
                 const newError = new Error("유저 정보를 불러오던 중 서버 내에 문제가 발생했습니다.");
                 newError.status = 500;
+                newError.cause = error;
                 throw newError;
             });
         return user;
@@ -60,12 +63,13 @@ class UserService {
      * @return {User} 유저 객체
      *
      */
-    async createUser(data) {
+    static async createUser(data) {
         const newUser = new User(data);
 
         await newUser.save().catch((error) => {
             const newError = new Error("회원가입 중 오류가 발생했습니다.");
             newError.status = 500;
+            newError.cause = error;
             throw newError;
         });
         return newUser;
@@ -79,10 +83,11 @@ class UserService {
      * @return {User} 유저 객체
      *
      */
-    async updateUser(originalUserId, data) {
+    static async updateUser(originalUserId, data) {
         const updatedUser = await User.findOneAndUpdate({ userId: originalUserId }, data, { new: true }).catch((error) => {
             const newError = new Error("유저 정보를 업데이트 하던 중 서버 내에 문제가 발생했습니다.");
             newError.status = 500;
+            newError.cause = error;
             throw newError;
         });
 
@@ -90,4 +95,4 @@ class UserService {
     }
 }
 
-module.exports = new UserService();
+module.exports = UserService;

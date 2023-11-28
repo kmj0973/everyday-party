@@ -3,7 +3,7 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
-const router = require("./routers/index");
+const router = require("./routers/index.js");
 
 const app = express();
 dotenv.config();
@@ -24,7 +24,7 @@ app.use(cookieParser());
 
 app.use("/api", router.router);
 
-app.use((req, res, next) => {
+app.use((req, res) => {
     res.status(404);
     res.send({
         result: "fail",
@@ -33,7 +33,6 @@ app.use((req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-    console.error(err);
     return res.status(err.status || 500).json({
         message: err.message,
     });

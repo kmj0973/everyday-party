@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const { Review, User } = require("../models/index");
+const { Review, User } = require("../models/index.js");
 
 class ReviewService {
     /**
@@ -9,7 +9,7 @@ class ReviewService {
      * @param curDataNum {Number} 가져오고자 하는 최신 리뷰 수
      * @return {[Review]} 리뷰 객체의 배열
      */
-    async getCurrentReview(curDataNum) {
+    static async getCurrentReview(curDataNum) {
         const curReview = await Review.find({})
             .sort({ createdAt: -1 })
             .limit(curDataNum)
@@ -19,6 +19,7 @@ class ReviewService {
             .catch((error) => {
                 const newError = new Error("리뷰를 불러오던 중 서버 내 문제가 발생했습니다.");
                 newError.status = 500;
+                newError.cause = error;
                 throw newError;
             });
 
@@ -31,7 +32,7 @@ class ReviewService {
      * @param arrOfProductId {[String]} 물품의 아이디(_id) 배열
      * @return {[Review]} 리뷰 객체의 배열
      */
-    async getReviewsByProductId(arrOfProductId) {
+    static async getReviewsByProductId(arrOfProductId) {
         const arrOfProductsIdObject = arrOfProductId.map((eachId) => {
             return new mongoose.Types.ObjectId(eachId);
         });
@@ -45,6 +46,7 @@ class ReviewService {
             .catch((error) => {
                 const newError = new Error("리뷰를 불러오던 중 서버 내 문제가 발생했습니다.");
                 newError.status = 500;
+                newError.cause = error;
                 throw newError;
             });
 
@@ -57,7 +59,7 @@ class ReviewService {
      * @param arrOfUserId {[String]} 유저의 아이디(userId) 배열
      * @return {[Review]} 리뷰 객체의 배열
      */
-    async getReviewsByUserId(arrOfUserId) {
+    static async getReviewsByUserId(arrOfUserId) {
         const userByUserId = await User.find({
             userId: { $in: arrOfUserId },
         }).lean();
@@ -74,6 +76,7 @@ class ReviewService {
             .catch((error) => {
                 const newError = new Error("리뷰를 불러오던 중 서버 내 문제가 발생했습니다.");
                 newError.status = 500;
+                newError.cause = error;
                 throw newError;
             });
 
@@ -81,4 +84,4 @@ class ReviewService {
     }
 }
 
-module.exports = new ReviewService();
+module.exports = ReviewService;
